@@ -29,8 +29,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import net.miginfocom.swing.MigLayout;
-
 import com.floreantpos.Messages;
 import com.floreantpos.POSConstants;
 import com.floreantpos.PosException;
@@ -40,6 +38,8 @@ import com.floreantpos.extension.TicketImportPlugin;
 import com.floreantpos.ui.dialog.POSDialog;
 import com.floreantpos.ui.dialog.POSMessageDialog;
 import com.floreantpos.util.POSUtil;
+
+import net.miginfocom.swing.MigLayout;
 
 public class ConfigurationDialog extends POSDialog implements ChangeListener, ActionListener {
 	private static final String OK = com.floreantpos.POSConstants.OK;
@@ -66,7 +66,8 @@ public class ConfigurationDialog extends POSDialog implements ChangeListener, Ac
 		addView(new TaxConfigurationView());
 		addView(new PeripheralConfigurationView());
 
-		TicketImportPlugin ticketImportPlugin = (TicketImportPlugin) ExtensionManager.getPlugin(TicketImportPlugin.class);
+		TicketImportPlugin ticketImportPlugin = (TicketImportPlugin) ExtensionManager
+				.getPlugin(TicketImportPlugin.class);
 		if (ticketImportPlugin != null) {
 			addView(new TicketImportConfigurationView());
 		}
@@ -75,18 +76,18 @@ public class ConfigurationDialog extends POSDialog implements ChangeListener, Ac
 
 		JButton btnOk = new JButton(CANCEL);
 		btnOk.addActionListener(this);
-		bottomPanel.add(btnOk, "dock east, gaptop 5"); //$NON-NLS-1$
+		bottomPanel.add(btnOk, "dock east, gaptop 5, gapbottom 10, gapright 10"); //$NON-NLS-1$
 		JButton btnCancel = new JButton(OK);
 		btnCancel.addActionListener(this);
-		bottomPanel.add(btnCancel, "dock east, gapright 5, gaptop 5"); //$NON-NLS-1$
+		bottomPanel.add(btnCancel, "dock east, gapright 5, gaptop 5, gapbottom 10"); //$NON-NLS-1$
 
-		add(bottomPanel, BorderLayout.SOUTH); //$NON-NLS-1$
+		add(bottomPanel, BorderLayout.SOUTH);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		for (FloreantPlugin plugin : ExtensionManager.getPlugins()) {
 			plugin.initConfigurationView(this);
 		}
-		//addView(new OtherConfigurationView());
+		// addView(new OtherConfigurationView());
 
 		add(contentPanel, BorderLayout.CENTER);
 	}
@@ -120,10 +121,14 @@ public class ConfigurationDialog extends POSDialog implements ChangeListener, Ac
 		if (OK.equalsIgnoreCase(e.getActionCommand())) {
 			try {
 				for (ConfigurationView view : views) {
-					if (view.isInitialized())
-						view.save();
+					if (view.isInitialized()) {
+						if (!view.save()) {
+							return;
+						}
+					}
 				}
 				setCanceled(false);
+				TerminalConfigurationView.restartPOS();
 				dispose();
 			} catch (PosException x) {
 				POSMessageDialog.showError(this, x.getMessage());

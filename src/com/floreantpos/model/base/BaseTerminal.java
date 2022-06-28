@@ -64,6 +64,9 @@ public abstract class BaseTerminal  implements Comparable, Serializable {
 	// many to one
 	private com.floreantpos.model.User assignedUser;
 
+	// collections
+	private java.util.Map<String, String> properties;
+
 
 
 	/**
@@ -254,6 +257,23 @@ public abstract class BaseTerminal  implements Comparable, Serializable {
 	 */
 	public void setAssignedUser (com.floreantpos.model.User assignedUser) {
 		this.assignedUser = assignedUser;
+	}
+
+
+
+	/**
+	 * Return the value associated with the column: properties
+	 */
+	public java.util.Map<String, String> getProperties () {
+					return properties;
+			}
+
+	/**
+	 * Set the value related to the column: properties
+	 * @param properties the properties value
+	 */
+	public void setProperties (java.util.Map<String, String> properties) {
+		this.properties = properties;
 	}
 
 

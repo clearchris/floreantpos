@@ -463,7 +463,7 @@ public class Application {
 
 		if (!user.isClockedIn()) {
 
-			int option = POSMessageDialog.showYesNoQuestionDialog(posWindow, Messages.getString("Application.43"), Messages.getString("Application.44")); //$NON-NLS-1$ //$NON-NLS-2$
+			int option = POSMessageDialog.showYesNoQuestionDialog(posWindow, user.getFullName() + ", " + Messages.getString("Application.43"), Messages.getString("Application.44")); //$NON-NLS-1$ //$NON-NLS-2$
 			if (option == JOptionPane.YES_OPTION) {
 
 				Calendar currentTime = Calendar.getInstance();

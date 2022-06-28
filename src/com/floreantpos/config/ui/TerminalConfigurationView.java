@@ -25,6 +25,7 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -47,8 +48,6 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import net.miginfocom.swing.MigLayout;
-
 import org.apache.commons.lang.StringUtils;
 
 import com.floreantpos.Messages;
@@ -59,14 +58,19 @@ import com.floreantpos.main.Main;
 import com.floreantpos.model.OrderType;
 import com.floreantpos.model.Restaurant;
 import com.floreantpos.model.Terminal;
+import com.floreantpos.model.User;
 import com.floreantpos.model.dao.RestaurantDAO;
 import com.floreantpos.model.dao.TerminalDAO;
+import com.floreantpos.model.dao.UserDAO;
 import com.floreantpos.swing.DoubleTextField;
 import com.floreantpos.swing.IntegerTextField;
 import com.floreantpos.swing.PosUIManager;
 import com.floreantpos.ui.dialog.POSMessageDialog;
 import com.floreantpos.ui.views.SwitchboardOtherFunctionsView;
 import com.floreantpos.ui.views.SwitchboardView;
+import com.floreantpos.util.POSUtil;
+
+import net.miginfocom.swing.MigLayout;
 
 public class TerminalConfigurationView extends ConfigurationView {
 	private IntegerTextField tfTerminalNumber;
@@ -79,12 +83,14 @@ public class TerminalConfigurationView extends ConfigurationView {
 	private JCheckBox cbUseSettlementPrompt = new JCheckBox(Messages.getString("TerminalConfigurationView.4")); //$NON-NLS-1$
 	private JCheckBox cbShowDbConfiguration = new JCheckBox(Messages.getString("TerminalConfigurationView.5")); //$NON-NLS-1$
 	private JCheckBox cbShowBarCodeOnReceipt = new JCheckBox(Messages.getString("TerminalConfigurationView.21")); //$NON-NLS-1$
-	private JCheckBox cbGroupKitchenReceiptItems = new JCheckBox("Group by Categories in kitchen Receipt");
-	private JCheckBox chkEnabledMultiCurrency = new JCheckBox("Enable multi currency");
-	private JCheckBox chkAllowToDelPrintedItem = new JCheckBox("Allow to delete printed ticket item");
-	private JCheckBox chkAllowQuickMaintenance = new JCheckBox("Allow quick maintenance");
-	private JCheckBox chkModifierCannotExceedMaxLimit = new JCheckBox("Allow adding modifier when it reaches max limit");
+	private JCheckBox cbGroupKitchenReceiptItems = new JCheckBox(Messages.getString("TerminalConfigurationView.7")); //$NON-NLS-1$
+	private JCheckBox chkEnabledMultiCurrency = new JCheckBox(Messages.getString("TerminalConfigurationView.29")); //$NON-NLS-1$
+	private JCheckBox chkAllowToDelPrintedItem = new JCheckBox(Messages.getString("TerminalConfigurationView.33")); //$NON-NLS-1$
+	private JCheckBox chkAllowQuickMaintenance = new JCheckBox(Messages.getString("TerminalConfigurationView.35")); //$NON-NLS-1$
+	private JCheckBox chkModifierCannotExceedMaxLimit = new JCheckBox(Messages.getString("TerminalConfigurationView.36")); //$NON-NLS-1$
+	private JCheckBox chkAutoLoginConfig = new JCheckBox(Messages.getString("TerminalConfigurationView.37")); //$NON-NLS-1$
 
+	private JComboBox cbUsers = new JComboBox<>();
 	private JComboBox<String> cbFonts = new JComboBox<String>();
 	private JComboBox<String> cbDefaultView;
 
@@ -154,9 +160,11 @@ public class TerminalConfigurationView extends ConfigurationView {
 		contentPanel.add(chkAllowToDelPrintedItem, "newline,span"); //$NON-NLS-1$
 		contentPanel.add(chkAllowQuickMaintenance, "newline,span"); //$NON-NLS-1$
 		contentPanel.add(chkModifierCannotExceedMaxLimit, "newline,span"); //$NON-NLS-1$
+		contentPanel.add(chkAutoLoginConfig, "newline"); //$NON-NLS-1$
+		contentPanel.add(cbUsers, "span 2"); //$NON-NLS-1$
 
 		contentPanel.add(new JLabel(Messages.getString("TerminalConfigurationView.17")), "newline"); //$NON-NLS-1$//$NON-NLS-2$
-		contentPanel.add(cbFonts, "span 2, wrap"); //$NON-NLS-1$
+		contentPanel.add(cbFonts, "span 2"); //$NON-NLS-1$
 
 		Vector<String> defaultViewList = new Vector<String>();
 
@@ -261,6 +269,12 @@ public class TerminalConfigurationView extends ConfigurationView {
 			POSMessageDialog.showError(Application.getPosWindow(), Messages.getString("TerminalConfigurationView.14")); //$NON-NLS-1$
 			return false;
 		}
+		
+		Object selectedUser = cbUsers.getSelectedItem();
+		if (chkAutoLoginConfig.isSelected() && "<select>".equals(selectedUser.toString())) {			 //$NON-NLS-1$
+			POSMessageDialog.showError(POSUtil.getFocusedWindow(), Messages.getString("TerminalConfigurationView.42")); //$NON-NLS-1$
+			return false;
+		}
 
 		int defaultPassLen = tfSecretKeyLength.getInteger();
 		if (defaultPassLen == 0)
@@ -312,13 +326,19 @@ public class TerminalConfigurationView extends ConfigurationView {
 		terminal.setLocation(taTerminalLocation.getText());
 		terminal.setOpeningBalance(tfDrawerInitialBalance.getDouble());
 
+		if (chkAutoLoginConfig.isSelected() && !"<select>".equals(selectedUser.toString())) { //$NON-NLS-1$
+			terminal.putProperty(Terminal.PROP_AUTO_LOGIN_ENABLE, String.valueOf(chkAutoLoginConfig.isSelected()));
+			terminal.putProperty(Terminal.PROP_AUTO_LOGIN_USER_AUTO_ID, ((User) selectedUser).getAutoId().toString());
+		} else {
+			terminal.putProperty(Terminal.PROP_AUTO_LOGIN_ENABLE, String.valueOf(chkAutoLoginConfig.isSelected()));
+		}
 		terminalDAO.saveOrUpdate(terminal);
 
 		Restaurant restaurant = RestaurantDAO.getRestaurant();
 		restaurant.setAllowModifierMaxExceed(chkModifierCannotExceedMaxLimit.isSelected());
 		RestaurantDAO.getInstance().saveOrUpdate(restaurant);
 
-		restartPOS();
+//		restartPOS();
 		return true;
 	}
 
@@ -346,6 +366,8 @@ public class TerminalConfigurationView extends ConfigurationView {
 		tfLogoffTime.setText("" + TerminalConfig.getAutoLogoffTime()); //$NON-NLS-1$
 		tfLogoffTime.setEnabled(cbAutoLogoff.isSelected());
 
+		initializeAutoLoginConfig();
+		
 		initializeFontConfig();
 
 		cbDefaultView.setSelectedItem(TerminalConfig.getDefaultView());
@@ -359,6 +381,32 @@ public class TerminalConfigurationView extends ConfigurationView {
 		Restaurant restaurant = RestaurantDAO.getRestaurant();
 		chkModifierCannotExceedMaxLimit.setSelected(restaurant.isAllowModifierMaxExceed());
 		setInitialized(true);
+	}
+	
+	private void initializeAutoLoginConfig() {
+		Terminal terminal = Application.getInstance().refreshAndGetTerminal();
+		
+		boolean isAutoLoginEnable = terminal.hasProperty(Terminal.PROP_AUTO_LOGIN_ENABLE) && Boolean.parseBoolean(terminal.getProperty(Terminal.PROP_AUTO_LOGIN_ENABLE));
+		chkAutoLoginConfig.setSelected(isAutoLoginEnable);
+		cbUsers.setEnabled(chkAutoLoginConfig.isSelected());
+		
+		chkAutoLoginConfig.addItemListener(e -> cbUsers.setEnabled(e.getStateChange() == ItemEvent.SELECTED));
+		
+		DefaultComboBoxModel model = (DefaultComboBoxModel) cbUsers.getModel();
+		model.addElement("<select>"); //$NON-NLS-1$
+		
+		UserDAO userDao = UserDAO.getInstance();
+		List<User> allUser = userDao.findAll();
+		allUser.forEach(user -> model.addElement(user));
+		
+		if (terminal.hasProperty(Terminal.PROP_AUTO_LOGIN_USER_AUTO_ID)) {			
+			int userId = Integer.parseInt(terminal.getProperty(Terminal.PROP_AUTO_LOGIN_USER_AUTO_ID));
+			allUser.forEach(user -> {
+				if(user.getAutoId().equals(userId)) {
+					cbUsers.setSelectedItem(user);
+				}
+			});
+		}
 	}
 
 	private void initializeFontConfig() {
@@ -382,7 +430,7 @@ public class TerminalConfigurationView extends ConfigurationView {
 		return Messages.getString("TerminalConfigurationView.47"); //$NON-NLS-1$
 	}
 
-	public void restartPOS() {
+	public static void restartPOS() {
 		JOptionPane optionPane = new JOptionPane(Messages.getString("TerminalConfigurationView.26"), JOptionPane.QUESTION_MESSAGE, //$NON-NLS-1$
 				JOptionPane.OK_CANCEL_OPTION, Application.getApplicationIcon(), new String[] {
 				/*Messages.getString("TerminalConfigurationView.28"),*/Messages.getString("TerminalConfigurationView.30") }); //$NON-NLS-1$ //$NON-NLS-2$

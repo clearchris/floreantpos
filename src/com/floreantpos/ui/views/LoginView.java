@@ -50,7 +50,9 @@ import com.floreantpos.extension.ExtensionManager;
 import com.floreantpos.extension.OrderServiceExtension;
 import com.floreantpos.extension.OrderServiceFactory;
 import com.floreantpos.main.Application;
+import com.floreantpos.model.Terminal;
 import com.floreantpos.model.User;
+import com.floreantpos.model.dao.UserDAO;
 import com.floreantpos.swing.MessageDialog;
 import com.floreantpos.swing.OrderTypeLoginButton;
 import com.floreantpos.swing.PosButton;
@@ -233,7 +235,7 @@ public class LoginView extends ViewPanel {
 			public void actionPerformed(ActionEvent e) {
 				setBackOfficeLogin(true);
 				TerminalConfig.setDefaultView(SwitchboardView.VIEW_NAME);
-				doLogin();
+				doLogin(true);
 			}
 		});
 
@@ -277,13 +279,24 @@ public class LoginView extends ViewPanel {
 	}
 
 	public synchronized void doLogin() {
+		doLogin(false);
+	}
+	public synchronized void doLogin(boolean isBackOffice) {
 		try {
-			final User user = PasswordEntryDialog.getUser(Application.getPosWindow(), Messages.getString("LoginView.1"), Messages.getString("LoginView.2")); //$NON-NLS-1$ //$NON-NLS-2$
+			Application application = Application.getInstance();
+			Terminal terminal = application.refreshAndGetTerminal();
+			boolean isAutoLoginEnable = terminal.hasProperty(Terminal.PROP_AUTO_LOGIN_ENABLE) && Boolean.parseBoolean(terminal.getProperty(Terminal.PROP_AUTO_LOGIN_ENABLE));
+			User user = null;
+			if (isAutoLoginEnable && terminal.hasProperty(Terminal.PROP_AUTO_LOGIN_USER_AUTO_ID) && !isBackOffice) {
+				int userId = Integer.parseInt(terminal.getProperty(Terminal.PROP_AUTO_LOGIN_USER_AUTO_ID));
+				user = UserDAO.getInstance().get(userId);
+			} else {			
+				user = PasswordEntryDialog.getUser(Application.getPosWindow(), Messages.getString("LoginView.1"), Messages.getString("LoginView.2")); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 			if (user == null) {
 				setBackOfficeLogin(false);
 				return;
 			}
-			Application application = Application.getInstance();
 			application.doLogin(user);
 
 		} catch (UserNotFoundException e) {

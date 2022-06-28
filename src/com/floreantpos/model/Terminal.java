@@ -17,6 +17,8 @@
  */
 package com.floreantpos.model;
 
+import java.util.HashMap;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.floreantpos.model.base.BaseTerminal;
@@ -24,6 +26,9 @@ import com.floreantpos.model.base.BaseTerminal;
 @XmlRootElement(name = "terminal")
 public class Terminal extends BaseTerminal {
 	private static final long serialVersionUID = 1L;
+	
+	public final static String PROP_AUTO_LOGIN_ENABLE = "auto.login.enable";
+	public final static String PROP_AUTO_LOGIN_USER_AUTO_ID = "auto.login.userAutoId";
 
 	/*[CONSTRUCTOR MARKER BEGIN]*/
 	public Terminal () {
@@ -54,5 +59,25 @@ public class Terminal extends BaseTerminal {
 	@Override
 	public String toString() {
 		return getName();
+	}
+	
+	public void putProperty(String name, String value) {
+		if (getProperties() == null) {
+			setProperties(new HashMap<String, String>());
+		}
+
+		getProperties().put(name, value);
+	}
+
+	public boolean hasProperty(String key) {
+		return getProperty(key) != null;
+	}
+
+	public String getProperty(String key) {
+		if (getProperties() == null) {
+			return null;
+		}
+
+		return getProperties().get(key);
 	}
 }

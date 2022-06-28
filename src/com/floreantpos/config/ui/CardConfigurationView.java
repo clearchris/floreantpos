@@ -29,8 +29,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 
-import net.miginfocom.swing.MigLayout;
-
 import com.floreantpos.Messages;
 import com.floreantpos.config.CardConfig;
 import com.floreantpos.extension.ExtensionManager;
@@ -38,6 +36,8 @@ import com.floreantpos.extension.FloreantPlugin;
 import com.floreantpos.extension.PaymentGatewayPlugin;
 import com.floreantpos.swing.DoubleTextField;
 import com.floreantpos.ui.dialog.POSMessageDialog;
+
+import net.miginfocom.swing.MigLayout;
 
 public class CardConfigurationView extends ConfigurationView {
 
@@ -105,7 +105,9 @@ public class CardConfigurationView extends ConfigurationView {
 	@Override
 	public boolean save() throws Exception {
 		PaymentGatewayPlugin plugin = (PaymentGatewayPlugin) cbGateway.getSelectedItem();
-		plugin.getConfigurationPane().save();
+		if(!plugin.getConfigurationPane().save()) {
+			return false;
+		}
 
 		CardConfig.setPaymentGateway(plugin);
 

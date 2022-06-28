@@ -82,26 +82,26 @@ public class AuthorizableTicketBrowser extends POSDialog {
 
 		authWaitingTab.add(authWaitingListView);
 
-		JPanel buttonPanel = new JPanel(new MigLayout("al center", "sg, fill", ""));
+		JPanel buttonPanel = new JPanel(new MigLayout("al center", "sg, fill", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		ActionHandler actionHandler = new ActionHandler();
-		buttonPanel.add(new PosButton(ActionCommand.EDIT_TIPS, actionHandler), "grow");
-		buttonPanel.add(new PosButton(ActionCommand.SETTLE, actionHandler), "grow");
-		buttonPanel.add(new PosButton(ActionCommand.SETTLE_ALL, actionHandler), "grow");
-		buttonPanel.add(new PosButton(ActionCommand.VOID, actionHandler), "grow");
+		buttonPanel.add(new PosButton(ActionCommand.EDIT_TIPS, actionHandler), "grow"); //$NON-NLS-1$
+		buttonPanel.add(new PosButton(ActionCommand.SETTLE, actionHandler), "grow"); //$NON-NLS-1$
+		buttonPanel.add(new PosButton(ActionCommand.SETTLE_ALL, actionHandler), "grow"); //$NON-NLS-1$
+		buttonPanel.add(new PosButton(ActionCommand.VOID, actionHandler), "grow"); //$NON-NLS-1$
 		buttonPanel.add(new PosButton(new CloseDialogAction(this)));
 
 		authWaitingTab.add(buttonPanel, BorderLayout.SOUTH);
 
 		JPanel authClosedTab = new JPanel(new BorderLayout());
-		JPanel buttonPanel2 = new JPanel(new MigLayout("al center", "sg, fill", ""));
-		buttonPanel2.add(new PosButton(ActionCommand.TIP_ADJUST, actionHandler), "grow");
-		buttonPanel2.add(new PosButton(ActionCommand.VOID, actionHandler), "grow");
+		JPanel buttonPanel2 = new JPanel(new MigLayout("al center", "sg, fill", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		buttonPanel2.add(new PosButton(ActionCommand.TIP_ADJUST, actionHandler), "grow"); //$NON-NLS-1$
+		buttonPanel2.add(new PosButton(ActionCommand.VOID, actionHandler), "grow"); //$NON-NLS-1$
 		buttonPanel2.add(new PosButton(new CloseDialogAction(this)));
 		authClosedTab.add(authClosedListView);
 		authClosedTab.add(buttonPanel2, BorderLayout.SOUTH);
 
-		tabbedPane.addTab("Unsettled", authWaitingTab);
-		tabbedPane.addTab("Settled", authClosedTab);
+		tabbedPane.addTab(Messages.getString("AuthorizableTicketBrowser.1"), authWaitingTab); //$NON-NLS-1$
+		tabbedPane.addTab(Messages.getString("AuthorizableTicketBrowser.14"), authClosedTab); //$NON-NLS-1$
 
 		add(tabbedPane);
 
@@ -232,17 +232,18 @@ public class AuthorizableTicketBrowser extends POSDialog {
 			return;
 		}
 
-		int option = POSMessageDialog.showYesNoQuestionDialog(AuthorizableTicketBrowser.this, "Selected transaction will be voided, proceed?", "Confirm");
+		int option = POSMessageDialog.showYesNoQuestionDialog(AuthorizableTicketBrowser.this, Messages.getString("AuthorizableTicketBrowser.15"), Messages.getString("AuthorizableTicketBrowser.16")); //$NON-NLS-1$ //$NON-NLS-2$
 		if (option != JOptionPane.YES_OPTION) { //$NON-NLS-1$
 			return;
 		}
 		CardProcessor cardProcessor = CardConfig.getPaymentGateway().getProcessor();
 		try {
 			cardProcessor.voidTransaction(transaction);
+			POSMessageDialog.showMessage(this, Messages.getString("AuthorizableTicketBrowser.17")); //$NON-NLS-1$
 		} catch (Exception e) {
 			POSMessageDialog.showError(this, e.getMessage(), e);
 		}
-		POSMessageDialog.showMessage(this, "Voided!");
+		
 		updateTransactiontList();
 	}
 
@@ -304,10 +305,10 @@ public class AuthorizableTicketBrowser extends POSDialog {
 				cardProcessor.adjustTips(transaction);
 			}
 			else {
-				throw new PosException("Payment Gateway can not process Tip Adjustment!!!");
+				throw new PosException(Messages.getString("AuthorizableTicketBrowser.18")); //$NON-NLS-1$
 			}
 			updateTransactiontList();
-			POSMessageDialog.showMessage(POSUtil.getFocusedWindow(), "Success!");
+			POSMessageDialog.showMessage(POSUtil.getFocusedWindow(), Messages.getString("AuthorizableTicketBrowser.19")); //$NON-NLS-1$
 		}
 	}
 }
