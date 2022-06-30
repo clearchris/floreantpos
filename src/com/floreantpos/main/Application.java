@@ -18,9 +18,11 @@
 package com.floreantpos.main;
 
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.io.File;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,6 +47,7 @@ import com.floreantpos.Messages;
 import com.floreantpos.POSConstants;
 import com.floreantpos.PosLog;
 import com.floreantpos.bo.ui.BackOfficeWindow;
+import com.floreantpos.config.AppConfig;
 import com.floreantpos.config.AppProperties;
 import com.floreantpos.config.CardConfig;
 import com.floreantpos.config.TerminalConfig;
@@ -70,6 +73,7 @@ import com.floreantpos.model.util.DateUtil;
 import com.floreantpos.posserver.PosServer;
 import com.floreantpos.services.PosWebService;
 import com.floreantpos.swing.PosUIManager;
+import com.floreantpos.ui.dialog.LicenseDialog;
 import com.floreantpos.ui.dialog.POSMessageDialog;
 import com.floreantpos.ui.dialog.PasswordEntryDialog;
 import com.floreantpos.ui.dialog.UpdateDialog;
@@ -170,6 +174,10 @@ public class Application {
 			loadPrinters();
 			initLengthUnit();
 			initPlugins();
+			
+			if (!AppConfig.getBoolean(LicenseDialog.DO_NOT_SHOW_LICENSE, Boolean.FALSE)) {				
+				licenseDialog();
+			}
 
 			RootView.getInstance().initializeViews();
 			LoginView.getInstance().initializeOrderButtonPanel();
@@ -197,6 +205,12 @@ public class Application {
 		} finally {
 			getPosWindow().setGlassPaneVisible(false);
 		}
+	}
+
+	private void licenseDialog() {
+		LicenseDialog dialog = new LicenseDialog();
+		dialog.setSize(PosUIManager.getSize(900, 700));
+		dialog.open();
 	}
 
 	private void checkAvailableUpdates() {
@@ -728,5 +742,16 @@ public class Application {
 	public void refreshOrderTypes() {
 		OrderTypeDAO dao = OrderTypeDAO.getInstance();
 		orderTypes = dao.findEnabledOrderTypes();
+	}
+	
+	public void openWebpage(String url) {
+		Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+		if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+			try {
+				desktop.browse(new URL(url).toURI());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
