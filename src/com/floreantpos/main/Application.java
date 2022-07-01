@@ -209,7 +209,7 @@ public class Application {
 
 	private void licenseDialog() {
 		LicenseDialog dialog = new LicenseDialog();
-		dialog.setSize(PosUIManager.getSize(900, 700));
+		dialog.setSize(PosUIManager.getSize(700, 500));
 		dialog.open();
 	}
 
