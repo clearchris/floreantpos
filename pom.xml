@@ -6,6 +6,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<app.version>1.5.0</app.version>
+		<app.numeric_version>887</app.numeric_version>
 	</properties>
 
 	<scm>
