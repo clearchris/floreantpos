@@ -27,12 +27,13 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -60,7 +61,6 @@ public class PosWindow extends JFrame implements WindowListener {
 	private JLabel statusLabel;
 	private JLabel lblUser;
 	private JLabel lblTerminal;
-	private JLabel lblDB;
 	private JLabel lblTaxInculed;
 	private JLabel lblTime;
 	private JPanel welcomeHeaderPanel;
@@ -76,35 +76,53 @@ public class PosWindow extends JFrame implements WindowListener {
 		glassPane.setOpacity(0.6f);
 		setGlassPane(glassPane);
 
-		JPanel infoPanel = new JPanel(new MigLayout("fillx", "[][][][][]", ""));
+		JPanel infoPanel = new JPanel(new MigLayout("fillx", "[]", ""));
 		infoPanel.setBackground(Color.WHITE);
 		
 		statusLabel = new JLabel(""); //$NON-NLS-1$
 		lblUser = new JLabel();
 		lblTaxInculed = new JLabel();
 		lblTerminal = new JLabel();
-		lblDB = new JLabel();
 		lblTime = new JLabel("");
-		Font f = statusLabel.getFont().deriveFont(Font.BOLD, (float) PosUIManager.getFontSize(10));//$NON-NLS-1$
+		Font f = statusLabel.getFont().deriveFont(Font.BOLD, (float) PosUIManager.getFontSize(10));
+		statusLabel.setFont(f.deriveFont(Font.BOLD, (float) PosUIManager.getFontSize(12)));
 		lblTerminal.setFont(f);
 		lblUser.setFont(f);
-		lblDB.setFont(f);
 		lblTaxInculed.setFont(f);
 		lblTime.setFont(f);
 		
-		infoPanel.add(statusLabel, "grow");
-		infoPanel.add(lblTerminal, "grow");
-		infoPanel.add(lblUser, "grow");
-		infoPanel.add(lblDB, "grow");
-		infoPanel.add(lblTaxInculed, "grow");
+		infoPanel.add(statusLabel, "split 4");
+		infoPanel.add(lblTerminal, "gapleft 20");
+		infoPanel.add(lblUser, "gapleft 15");
+		infoPanel.add(lblTaxInculed, "gapleft 15");
 		infoPanel.add(lblTime, "right");
 
 		JPanel statusBarContainer = new JPanel(new BorderLayout());
 		statusBarContainer.setBackground(Color.WHITE);
 		statusBarContainer.add(new JSeparator(JSeparator.HORIZONTAL), BorderLayout.NORTH);
-		ImageIcon icon = IconFactory.getIcon("/ui_icons/", "footer-logo.png");
-		statusLabel.setIcon(icon);
-		//statusLabel.setText("Floreant POS by OROCUBE LLC.");
+//		ImageIcon icon = IconFactory.getIcon("/ui_icons/", "footer-logo.png");
+//		statusLabel.setIcon(icon);
+		
+		statusLabel.setText("A Product by OROCUBE LLC.");
+		statusLabel.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Application.getInstance().openWebpage("https://www.orocube.com/"); //$NON-NLS-1$
+			}
+		});
 		statusBarContainer.add(infoPanel, BorderLayout.CENTER);
 		getContentPane().add(statusBarContainer, BorderLayout.SOUTH);
 		clockTimer.start();
@@ -140,7 +158,6 @@ public class PosWindow extends JFrame implements WindowListener {
 			lblUser.setText("User: Not Logged In"); //$NON-NLS-1$
 		}
 
-		lblDB.setText("DB: " + AppConfig.getDatabaseHost() + "/" + AppConfig.getDatabaseName());
 		if(Application.getInstance().isPriceIncludesTax()) {
 			lblTaxInculed.setText("Tax included: YES");
 		}else {
