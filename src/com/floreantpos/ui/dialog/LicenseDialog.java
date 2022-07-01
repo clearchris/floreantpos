@@ -44,9 +44,15 @@ public class LicenseDialog extends POSDialog implements ActionListener, WindowLi
 
 		JPanel contentPanel = new JPanel(new MigLayout("fill,wrap")); //$NON-NLS-1$
 		JCheckBox cbNoPrompt = new JCheckBox(Messages.getString("LicenseDialog.6")); //$NON-NLS-1$
+		
+		JCheckBox cbAgreement = new JCheckBox(Messages.getString("LicenseDialog.7")); //$NON-NLS-1$
+		cbAgreement.setSelected(AppConfig.getBoolean(LicenseDialog.AGREE_LICENSE, Boolean.FALSE));
+		
 		cbNoPrompt.addItemListener(e -> {
-			AppConfig.put(DO_NOT_SHOW_LICENSE, ItemEvent.SELECTED == e.getStateChange());
+			AppConfig.put(LicenseDialog.DO_NOT_SHOW_LICENSE, ItemEvent.SELECTED == e.getStateChange()
+					&& cbAgreement.isSelected());
 		});
+		
 		contentPanel.add(cbNoPrompt, "right"); //$NON-NLS-1$
 		container.add(contentPanel, BorderLayout.NORTH);
 		
@@ -64,9 +70,6 @@ public class LicenseDialog extends POSDialog implements ActionListener, WindowLi
 				Messages.getString("LicenseDialog.4"), Messages.getString("LicenseDialog.5"));  //$NON-NLS-1$ //$NON-NLS-2$
 
 		JPanel buttonPanel = new JPanel(new MigLayout("fillx")); //$NON-NLS-1$
-		
-		JCheckBox cbAgreement = new JCheckBox(Messages.getString("LicenseDialog.7")); //$NON-NLS-1$
-		cbAgreement.setSelected(AppConfig.getBoolean(LicenseDialog.AGREE_LICENSE, Boolean.FALSE));
 		
 		JButton btnOropos = new JButton(btnName.get(0));
 		JButton btnBuyPlugin = new JButton(btnName.get(1));
@@ -91,10 +94,12 @@ public class LicenseDialog extends POSDialog implements ActionListener, WindowLi
 		buttonPanel.add(btnContinue, "cell 2 1, right"); //$NON-NLS-1$
 
 		container.add(buttonPanel, BorderLayout.SOUTH);
-
+		
 		cbAgreement.addItemListener(e -> {
-			AppConfig.put(AGREE_LICENSE, ItemEvent.SELECTED == e.getStateChange());
+			AppConfig.put(LicenseDialog.AGREE_LICENSE, ItemEvent.SELECTED == e.getStateChange());
 			btnContinue.setEnabled(ItemEvent.SELECTED == e.getStateChange());
+			AppConfig.put(LicenseDialog.DO_NOT_SHOW_LICENSE, ItemEvent.SELECTED == e.getStateChange()
+					&& cbNoPrompt.isSelected());
 		});
 		
 		add(container);
