@@ -175,7 +175,7 @@ public class Application {
 			initLengthUnit();
 			initPlugins();
 			
-			if (!AppConfig.getBoolean(LicenseDialog.PROP_DO_NOT_SHOW_LICENSE, Boolean.FALSE)) {				
+			if (!AppConfig.getBoolean(LicenseDialog.PROP_LICENSE_AGREED, Boolean.FALSE) || !AppConfig.getBoolean(LicenseDialog.PROP_DO_NOT_SHOW_LICENSE, Boolean.FALSE)) {				
 				licenseDialog();
 			}
 
