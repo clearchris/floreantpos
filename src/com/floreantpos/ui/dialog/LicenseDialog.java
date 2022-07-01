@@ -28,8 +28,8 @@ import com.floreantpos.util.POSUtil;
 import net.miginfocom.swing.MigLayout;
 
 public class LicenseDialog extends POSDialog implements ActionListener, WindowListener {
-	public static final String DO_NOT_SHOW_LICENSE = "license.do.not.show"; //$NON-NLS-1$
-	public static final String AGREE_LICENSE = "license.agree"; //$NON-NLS-1$
+	public static final String PROP_DO_NOT_SHOW_LICENSE = "license.do.not.show"; //$NON-NLS-1$
+	public static final String PROP_LICENSE_AGREED = "license.agreed"; //$NON-NLS-1$
 	private List<String> btnName;
 
 	public LicenseDialog() {
@@ -46,10 +46,10 @@ public class LicenseDialog extends POSDialog implements ActionListener, WindowLi
 		JCheckBox cbNoPrompt = new JCheckBox(Messages.getString("LicenseDialog.6")); //$NON-NLS-1$
 		
 		JCheckBox cbAgreement = new JCheckBox(Messages.getString("LicenseDialog.7")); //$NON-NLS-1$
-		cbAgreement.setSelected(AppConfig.getBoolean(LicenseDialog.AGREE_LICENSE, Boolean.FALSE));
+		cbAgreement.setSelected(AppConfig.getBoolean(LicenseDialog.PROP_LICENSE_AGREED, Boolean.FALSE));
 		
 		cbNoPrompt.addItemListener(e -> {
-			AppConfig.put(LicenseDialog.DO_NOT_SHOW_LICENSE, ItemEvent.SELECTED == e.getStateChange()
+			AppConfig.put(LicenseDialog.PROP_DO_NOT_SHOW_LICENSE, ItemEvent.SELECTED == e.getStateChange()
 					&& cbAgreement.isSelected());
 		});
 		
@@ -96,9 +96,9 @@ public class LicenseDialog extends POSDialog implements ActionListener, WindowLi
 		container.add(buttonPanel, BorderLayout.SOUTH);
 		
 		cbAgreement.addItemListener(e -> {
-			AppConfig.put(LicenseDialog.AGREE_LICENSE, ItemEvent.SELECTED == e.getStateChange());
+			AppConfig.put(LicenseDialog.PROP_LICENSE_AGREED, ItemEvent.SELECTED == e.getStateChange());
 			btnContinue.setEnabled(ItemEvent.SELECTED == e.getStateChange());
-			AppConfig.put(LicenseDialog.DO_NOT_SHOW_LICENSE, ItemEvent.SELECTED == e.getStateChange()
+			AppConfig.put(LicenseDialog.PROP_DO_NOT_SHOW_LICENSE, ItemEvent.SELECTED == e.getStateChange()
 					&& cbNoPrompt.isSelected());
 		});
 		
@@ -134,7 +134,7 @@ public class LicenseDialog extends POSDialog implements ActionListener, WindowLi
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		if (AppConfig.getBoolean(LicenseDialog.AGREE_LICENSE, Boolean.FALSE)) {
+		if (AppConfig.getBoolean(LicenseDialog.PROP_LICENSE_AGREED, Boolean.FALSE)) {
 			dispose();
 			return;
 		}
