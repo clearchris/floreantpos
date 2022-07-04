@@ -138,6 +138,8 @@ public class Application {
 		posWindow.getContentPane().add(rootView);
 		initializeSystem();
 		posWindow.setVisibleWelcomeHeader(false);
+		
+		PosWebService.get().doSendHeartBeat();
 	}
 
 	/*private void initializeTouchScroll() {
