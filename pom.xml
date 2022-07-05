@@ -464,7 +464,7 @@
 		<dependency>
 			<groupId>com.orocube</groupId>
 			<artifactId>orocube-common-classes</artifactId>
-			<version>1.5.5-fp</version>
+			<version>1.5.6-fp</version>
 		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
