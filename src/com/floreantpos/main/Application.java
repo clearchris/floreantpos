@@ -163,6 +163,10 @@ public class Application {
 		try {
 			posWindow.setGlassPaneVisible(true);
 			posWindow.updateView();
+			
+			if (!AppConfig.getBoolean(LicenseDialog.PROP_LICENSE_AGREED, Boolean.FALSE) || !AppConfig.getBoolean(LicenseDialog.PROP_DO_NOT_SHOW_LICENSE, Boolean.FALSE)) {				
+				licenseDialog();
+			}
 
 			DatabaseUtil.checkConnection(DatabaseUtil.initialize());
 			DatabaseUtil.updateLegacyDatabase();
@@ -177,10 +181,6 @@ public class Application {
 			initLengthUnit();
 			initPlugins();
 			
-			if (!AppConfig.getBoolean(LicenseDialog.PROP_LICENSE_AGREED, Boolean.FALSE) || !AppConfig.getBoolean(LicenseDialog.PROP_DO_NOT_SHOW_LICENSE, Boolean.FALSE)) {				
-				licenseDialog();
-			}
-
 			RootView.getInstance().initializeViews();
 			LoginView.getInstance().initializeOrderButtonPanel();
 			LoginView.getInstance().setTerminalId(terminal.getId());
