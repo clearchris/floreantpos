@@ -109,4 +109,10 @@ public class TitlePanel extends com.floreantpos.swing.TransparentPanel {
 	public void setTextAlignment(int alignment) {
 		lblTitle.setHorizontalAlignment(alignment);
 	}
+
+	public void setSeparatorVisible(boolean visible) {
+		jSeparator1.setVisible(visible);
+	}
+	
+	
 }
