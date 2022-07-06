@@ -1,3 +1,3 @@
 @echo off
 
-java -cp floreantpos.jar com.floreantpos.main.SetUpWindow
+.\jre\bin\java -cp floreantpos.jar com.floreantpos.main.SetUpWindow

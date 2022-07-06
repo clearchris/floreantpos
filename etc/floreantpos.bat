@@ -1,3 +1,3 @@
 @echo off
 
-java -jar floreantpos.jar
+.\jre\bin\java -jar floreantpos.jar

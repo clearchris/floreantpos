@@ -1,3 +1,3 @@
 @echo off
 
-java -jar -Duser.language=nl floreantpos.jar
+.\jre\bin\java -jar -Duser.language=nl floreantpos.jar
