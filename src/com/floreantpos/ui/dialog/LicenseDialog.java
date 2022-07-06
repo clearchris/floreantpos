@@ -50,7 +50,7 @@ public class LicenseDialog extends POSDialog implements ActionListener, WindowLi
 		JCheckBox cbAgreement = new JCheckBox(Messages.getString("LicenseDialog.7")); //$NON-NLS-1$
 		cbAgreement.setSelected(AppConfig.getBoolean(LicenseDialog.PROP_LICENSE_AGREED, Boolean.FALSE));
 
-		JPanel footerChkPanel = new JPanel(new MigLayout("fill")); //$NON-NLS-1$
+		JPanel footerChkPanel = new JPanel(new MigLayout("ins 0,fill")); //$NON-NLS-1$
 		footerChkPanel.add(cbAgreement, "wrap"); //$NON-NLS-1$
 		footerChkPanel.add(cbNoPrompt);
 
@@ -69,18 +69,21 @@ public class LicenseDialog extends POSDialog implements ActionListener, WindowLi
 
 		btnName = Arrays.asList(Messages.getString("LicenseDialog.2"), Messages.getString("LicenseDialog.3"), //$NON-NLS-1$ //$NON-NLS-2$
 				Messages.getString("LicenseDialog.4"), Messages.getString("LicenseDialog.5"), //$NON-NLS-1$ //$NON-NLS-2$
-				Messages.getString("LicenseDialog.8")); //$NON-NLS-1$
+				Messages.getString("LicenseDialog.8"), Messages.getString("LicenseDialog.9")); //$NON-NLS-1$ //$NON-NLS-2$
 
+		JPanel buttonPanel = new JPanel(new MigLayout("ins 0,fill")); //$NON-NLS-1$
 
-		JPanel buttonPanel = new JPanel(new MigLayout("fill")); //$NON-NLS-1$
+		JButton btnOroVsFp = new JButton(btnName.get(5));
 
 		JButton btnOropos = new JButton(btnName.get(0));
 		JButton btnBuyPlugin = new JButton(btnName.get(1));
 		JButton btnHelp = new JButton(btnName.get(2));
 		JButton btnCcpsupport = new JButton(btnName.get(4));
+
 		JButton btnContinue = new JButton(btnName.get(3));
 		btnContinue.setBackground(Color.green);
 
+		btnOroVsFp.addActionListener(this);
 		btnOropos.addActionListener(this);
 		btnBuyPlugin.addActionListener(this);
 		btnHelp.addActionListener(this);
@@ -92,10 +95,11 @@ public class LicenseDialog extends POSDialog implements ActionListener, WindowLi
 		buttonPanel.add(btnCcpsupport, "grow"); //$NON-NLS-1$
 		buttonPanel.add(btnHelp, "grow"); //$NON-NLS-1$
 
-		JPanel footerPanel = new JPanel(new MigLayout("fill")); //$NON-NLS-1$
+		JPanel footerPanel = new JPanel(new MigLayout("ins 10,fill")); //$NON-NLS-1$
 		footerPanel.add(footerChkPanel);
-		footerPanel.add(buttonPanel);
-		footerPanel.add(btnContinue,"right, gapright 10, gaptop 7, gapbottom 6, grow"); //$NON-NLS-1$
+		footerPanel.add(btnOroVsFp, " grow"); //$NON-NLS-1$
+		footerPanel.add(buttonPanel, "center, growy"); //$NON-NLS-1$
+		footerPanel.add(btnContinue,"right, grow"); //$NON-NLS-1$
 
 		container.add(footerPanel, BorderLayout.SOUTH);
 
@@ -139,6 +143,9 @@ public class LicenseDialog extends POSDialog implements ActionListener, WindowLi
 			break;
 		case 4:
 			Application.getInstance().openWebpage("https://pos.orocube.com/payments/?source=floreantpos"); //$NON-NLS-1$
+			break;
+		case 5:
+			Application.getInstance().openWebpage("https://pos.orocube.com/oro-pos-vs-floreant-pos/"); //$NON-NLS-1$
 			break;
 
 		default:
