@@ -29,10 +29,6 @@
 				<directory>resources</directory>
 			</resource>
 			<resource>
-				<directory>filters</directory>
-				<filtering>true</filtering>
-			</resource>
-			<resource>
 				<directory>profiles/${build.profile.id}</directory>
 				<filtering>true</filtering>
 				<includes>
