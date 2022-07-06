@@ -31,6 +31,7 @@ import com.floreantpos.demo.KitchenDisplayView;
 import com.floreantpos.extension.ExtensionManager;
 import com.floreantpos.extension.OrderServiceExtension;
 import com.floreantpos.extension.OrderServiceFactory;
+import com.floreantpos.main.Application;
 import com.floreantpos.model.OrderType;
 import com.floreantpos.model.dao.OrderTypeDAO;
 import com.floreantpos.ui.HeaderPanel;
@@ -247,6 +248,7 @@ public class RootView extends com.floreantpos.swing.TransparentPanel {
 		if (window == null) {
 			window = new BackOfficeWindow();
 		}
+		window.setBackOfficeUser(Application.getCurrentUser());
 		window.setVisible(true);
 		window.toFront();
 

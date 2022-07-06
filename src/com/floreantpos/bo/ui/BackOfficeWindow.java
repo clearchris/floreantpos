@@ -109,6 +109,7 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 	private JMenu floorPlanMenu;
 	private static BackOfficeWindow instance;
 	private JMenuBar menuBar;
+	private User user;
 
 	/** Creates new form BackOfficeWindow */
 	public BackOfficeWindow() {
@@ -116,7 +117,7 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 
 		initComponents();
 
-		createMenus();
+		menuBar = new JMenuBar();
 		positionWindow();
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -149,7 +150,6 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 	}
 
 	private void createMenus() {
-		User user = Application.getCurrentUser();
 		UserType newUserType = user.getType();
 
 		Set<UserPermission> permissions = null;
@@ -158,7 +158,7 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 			permissions = newUserType.getPermissions();
 		}
 
-		menuBar = new JMenuBar();
+		menuBar.removeAll();
 
 		if (newUserType == null) {
 			createAdminMenu(menuBar);
@@ -329,6 +329,7 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 	public void close() {
 		saveSizeAndLocation();
 		//		instance = null;
+		getTabbedPane().removeAll();
 		dispose();
 	}
 
@@ -355,6 +356,11 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 	 */
 	public void setFloorPlanMenu(JMenu floorPlanMenu) {
 		this.floorPlanMenu = floorPlanMenu;
+	}
+
+	public void setBackOfficeUser(User backOfficeUser) {
+		this.user = backOfficeUser;
+		createMenus();
 	}
 
 	//	public static BackOfficeWindow getInstance() {

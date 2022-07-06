@@ -35,6 +35,7 @@ import com.floreantpos.ui.dialog.PasswordEntryDialog;
 public abstract class PosAction extends AbstractAction {
 	private boolean visible = true;
 	protected UserPermission requiredPermission;
+	protected User authorizedUser;
 	
 	public PosAction() {
 		
@@ -92,6 +93,7 @@ public abstract class PosAction extends AbstractAction {
 				POSMessageDialog.showError(Application.getPosWindow(), Messages.getString("PosAction.1")); //$NON-NLS-1$
 			}
 			else {
+				setAuthorizedUser(user2);
 				if(!user2.hasPermission(requiredPermission)) {
 					POSMessageDialog.showError(Application.getPosWindow(), Messages.getString("PosAction.2")); //$NON-NLS-1$
 				}
@@ -103,7 +105,7 @@ public abstract class PosAction extends AbstractAction {
 			//POSMessageDialog.showError(Application.getPosWindow(), "You do not have permission to execute this action");
 			return;
 		}
-
+		setAuthorizedUser(user);
 		execute();
 	}
 
@@ -115,6 +117,17 @@ public abstract class PosAction extends AbstractAction {
 
 	public void setVisible(boolean visible) {
 		this.visible = visible;
+	}
+
+	public User getAuthorizedUser() {
+		if (this.authorizedUser == null) {
+			return Application.getCurrentUser();
+		}
+		return this.authorizedUser;
+	}
+
+	public void setAuthorizedUser(User authorizedUser) {
+		this.authorizedUser = authorizedUser;
 	}
 
 	//	public boolean isAllowAdministrator() {

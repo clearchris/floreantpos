@@ -27,7 +27,7 @@ import com.floreantpos.model.UserPermission;
 public class ShowBackofficeAction extends PosAction {
 
 	public ShowBackofficeAction() {
-		super(POSConstants.BACK_OFFICE_BUTTON_TEXT); //$NON-NLS-1$
+		super(POSConstants.BACK_OFFICE_BUTTON_TEXT);
 		setRequiredPermission(UserPermission.VIEW_BACK_OFFICE);
 	}
 
@@ -48,6 +48,7 @@ public class ShowBackofficeAction extends PosAction {
 		if (window == null) {
 			window = new BackOfficeWindow();
 		}
+		window.setBackOfficeUser(getAuthorizedUser());
 		window.setVisible(true);
 		window.toFront();
 	}
