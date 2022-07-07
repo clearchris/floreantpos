@@ -64,6 +64,7 @@ import com.floreantpos.model.MenuCategory;
 import com.floreantpos.model.MenuGroup;
 import com.floreantpos.model.MenuItem;
 import com.floreantpos.model.OrderType;
+import com.floreantpos.model.PosPrinters;
 import com.floreantpos.model.ShopTable;
 import com.floreantpos.model.Ticket;
 import com.floreantpos.model.TicketItem;
@@ -120,22 +121,22 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 
 	private OrderController orderController = new OrderController(this);
 
-	private JPanel actionButtonPanel = new JPanel(new MigLayout("fill, ins 2, hidemode 3", "sg, fill", ""));
+	private JPanel actionButtonPanel = new JPanel(new MigLayout("fill, ins 2, hidemode 3", "sg, fill", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	private com.floreantpos.swing.PosButton btnHold = new com.floreantpos.swing.PosButton(com.floreantpos.POSConstants.HOLD_BUTTON_TEXT);
 	private com.floreantpos.swing.PosButton btnDone = new com.floreantpos.swing.PosButton(com.floreantpos.POSConstants.SAVE_BUTTON_TEXT);
 	private com.floreantpos.swing.PosButton btnSend = new com.floreantpos.swing.PosButton(com.floreantpos.POSConstants.SEND_TO_KITCHEN);
 	private com.floreantpos.swing.PosButton btnCancel = new com.floreantpos.swing.PosButton(POSConstants.CANCEL_BUTTON_TEXT);
 	private com.floreantpos.swing.PosButton btnGuestNo = new com.floreantpos.swing.PosButton(POSConstants.GUEST_NO_BUTTON_TEXT);
-	private com.floreantpos.swing.PosButton btnSeatNo = new com.floreantpos.swing.PosButton("SEAT:");
+	private com.floreantpos.swing.PosButton btnSeatNo = new com.floreantpos.swing.PosButton(Messages.getString("OrderView.1")); //$NON-NLS-1$
 	private com.floreantpos.swing.PosButton btnMisc = new com.floreantpos.swing.PosButton(POSConstants.MISC_BUTTON_TEXT);
 	private com.floreantpos.swing.PosButton btnOrderType = new com.floreantpos.swing.PosButton(POSConstants.ORDER_TYPE_BUTTON_TEXT);
 	private com.floreantpos.swing.PosButton btnTableNumber = new com.floreantpos.swing.PosButton(POSConstants.TABLE_NO_BUTTON_TEXT);
 	private com.floreantpos.swing.PosButton btnCustomer = new PosButton(POSConstants.CUSTOMER_SELECTION_BUTTON_TEXT);
-	private PosButton btnCookingInstruction = new PosButton(IconFactory.getIcon("/ui_icons/", "cooking-instruction.png"));
+	private PosButton btnCookingInstruction = new PosButton(IconFactory.getIcon("/ui_icons/", "cooking-instruction.png")); //$NON-NLS-1$ //$NON-NLS-2$
 	//	private PosButton btnAddOn = new PosButton(POSConstants.ADD_ON);
 	private PosButton btnDiscount = new PosButton(Messages.getString("TicketView.43")); //$NON-NLS-1$
-	private PosButton btnDeliveryInfo = new PosButton("DELIVERY INFO");
+	private PosButton btnDeliveryInfo = new PosButton(Messages.getString("OrderView.2")); //$NON-NLS-1$
 
 	private JTextField tfSubtotal;
 	private JTextField tfDiscount;
@@ -296,7 +297,7 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 					return;
 				}
 
-				int result = POSMessageDialog.showYesNoQuestionDialog(null, "Items have been sent to kitchen, are you sure to cancel this ticket?", "Confirm");
+				int result = POSMessageDialog.showYesNoQuestionDialog(null, Messages.getString("OrderView.3"), Messages.getString("OrderView.4")); //$NON-NLS-1$ //$NON-NLS-2$
 				if (result != JOptionPane.YES_OPTION) {
 					return;
 				}
@@ -310,10 +311,15 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-
+					PosPrinters printers = PosPrinters.load();
+					if (printers.getKitchenPrinters().size() == 0) {
+						POSMessageDialog.showError(POSUtil.getFocusedWindow(), Messages.getString("OrderView.5")); //$NON-NLS-1$
+						return;
+					}
+					
 					ticketView.sendTicketToKitchen();
 					ticketView.updateView();
-					POSMessageDialog.showMessage("Items sent to kitchen");
+					POSMessageDialog.showMessage(Messages.getString("OrderView.6")); //$NON-NLS-1$
 				} catch (StaleStateException x) {
 					POSMessageDialog.showMessageDialogWithReloadButton(POSUtil.getFocusedWindow(), getInstance());
 				} catch (PosException x) {
@@ -379,19 +385,19 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 							&& !Application.getCurrentUser().hasPermission(UserPermission.HOLD_TICKET)) {
 						//
 
-						String password = PasswordEntryDialog.show(Application.getPosWindow(), "Please enter privileged password");
+						String password = PasswordEntryDialog.show(Application.getPosWindow(), Messages.getString("OrderView.7")); //$NON-NLS-1$
 						if (StringUtils.isEmpty(password)) {
 							return;
 						}
 
 						User user2 = UserDAO.getInstance().findUserBySecretKey(password);
 						if (user2 == null) {
-							POSMessageDialog.showError(Application.getPosWindow(), "No user found with that secret key");
+							POSMessageDialog.showError(Application.getPosWindow(), Messages.getString("OrderView.8")); //$NON-NLS-1$
 							return;
 						}
 						else {
 							if (!user2.hasPermission(UserPermission.HOLD_TICKET)) {
-								POSMessageDialog.showError(Application.getPosWindow(), "No permission");
+								POSMessageDialog.showError(Application.getPosWindow(), Messages.getString("OrderView.9")); //$NON-NLS-1$
 								return;
 							}
 						}
@@ -509,7 +515,7 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 
 		ticketAmountPanel.add(lblSubtotal, "growx,aligny center"); //$NON-NLS-1$
 		ticketAmountPanel.add(tfSubtotal, "growx,aligny center"); //$NON-NLS-1$
-		ticketAmountPanel.add(lblDiscount, "newline,growx,aligny center"); //$NON-NLS-1$ //$NON-NLS-2$
+		ticketAmountPanel.add(lblDiscount, "newline,growx,aligny center"); //$NON-NLS-1$
 		ticketAmountPanel.add(tfDiscount, "growx,aligny center"); //$NON-NLS-1$
 		ticketAmountPanel.add(lblTax, "newline,growx,aligny center"); //$NON-NLS-1$
 		ticketAmountPanel.add(tfTax, "growx,aligny center"); //$NON-NLS-1$
@@ -623,7 +629,7 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 
 	protected void doAddSeatNumber() {// GEN-FIRST:event_btnCustomerNumberActionPerformed
 		SeatSelectionDialog seatDialog = new SeatSelectionDialog(currentTicket.getTableNumbers(), getSeatNumbers());
-		seatDialog.setTitle("Select Seat");
+		seatDialog.setTitle(Messages.getString("OrderView.10")); //$NON-NLS-1$
 		seatDialog.pack();
 		seatDialog.open();
 
@@ -633,7 +639,7 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 		int seatNumber = seatDialog.getSeatNumber();
 		if (seatNumber == -1) {
 			NumberSelectionDialog2 dialog = new NumberSelectionDialog2();
-			dialog.setTitle("Enter seat number");
+			dialog.setTitle(Messages.getString("OrderView.11")); //$NON-NLS-1$
 			dialog.pack();
 			dialog.open();
 
@@ -643,17 +649,17 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 			seatNumber = (int) dialog.getValue();
 		}
 
-		btnSeatNo.setText("SEAT: " + seatNumber);
-		btnSeatNo.putClientProperty("SEAT_NO", seatNumber);
+		btnSeatNo.setText(Messages.getString("OrderView.12") + seatNumber); //$NON-NLS-1$
+		btnSeatNo.putClientProperty("SEAT_NO", seatNumber); //$NON-NLS-1$
 		doAddSeatTreatTicketItem(seatNumber);
 	}
 
 	private void doAddSeatTreatTicketItem(Integer seatNumber) {
 		TicketItem ticketItem = new TicketItem();
 		if (seatNumber == 0)
-			ticketItem.setName("Seat** Shared");
+			ticketItem.setName(Messages.getString("OrderView.13")); //$NON-NLS-1$
 		else
-			ticketItem.setName("Seat** " + seatNumber);
+			ticketItem.setName(Messages.getString("OrderView.14") + seatNumber); //$NON-NLS-1$
 
 		ticketItem.setShouldPrintToKitchen(true);
 		ticketItem.setTreatAsSeat(true);
@@ -673,7 +679,7 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 	}
 
 	protected Integer getSelectedSeatNumber() {
-		Object seatNumber = btnSeatNo.getClientProperty("SEAT_NO");
+		Object seatNumber = btnSeatNo.getClientProperty("SEAT_NO"); //$NON-NLS-1$
 		if (seatNumber == null)
 			return 0;
 
@@ -730,7 +736,7 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 
 		if (!dialog.isCanceled()) {
 			currentTicket.setCustomer(dialog.getSelectedCustomer());
-			btnCustomer.setText("<html><body><center>CUSTOMER<br>\"" + dialog.getSelectedCustomer().getName() + "\"</center></body></html>");
+			btnCustomer.setText(Messages.getString("OrderView.15") + dialog.getSelectedCustomer().getName() + Messages.getString("OrderView.16")); //$NON-NLS-1$ //$NON-NLS-2$
 
 		}
 	}
@@ -830,11 +836,11 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 			else {
 				btnSeatNo.setVisible(true);
 				int lastSeatNumber = getLastSeatNumber();
-				btnSeatNo.putClientProperty("SEAT_NO", lastSeatNumber);
+				btnSeatNo.putClientProperty("SEAT_NO", lastSeatNumber); //$NON-NLS-1$
 				if (lastSeatNumber > 0)
-					btnSeatNo.setText("SEAT:" + lastSeatNumber);
+					btnSeatNo.setText(Messages.getString("OrderView.17") + lastSeatNumber); //$NON-NLS-1$
 				else
-					btnSeatNo.setText("SEAT:");
+					btnSeatNo.setText(Messages.getString("OrderView.18")); //$NON-NLS-1$
 			}
 
 			if (!type.isShowTableSelection()) {
@@ -851,14 +857,14 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 
 					String tables = getTableNumbers(currentTicket.getTableNumbers());
 
-					btnTableNumber.setText("<html><center>" + "TABLE" + ": " + tables + "</center><html/>");
+					btnTableNumber.setText(Messages.getString("OrderView.19") + tables + Messages.getString("OrderView.20")); //$NON-NLS-1$ //$NON-NLS-2$
 
 				}
 				else {
-					btnTableNumber.setText("TABLE");
+					btnTableNumber.setText(Messages.getString("OrderView.21")); //$NON-NLS-1$
 				}
 
-				btnGuestNo.setText("GUEST" + ": " + String.valueOf(currentTicket.getNumberOfGuests()));
+				btnGuestNo.setText(Messages.getString("OrderView.22") + String.valueOf(currentTicket.getNumberOfGuests())); //$NON-NLS-1$
 			}
 			OrderServiceExtension orderService = (OrderServiceExtension) ExtensionManager.getPlugin(OrderServiceExtension.class);
 			btnDeliveryInfo.setVisible(orderService != null && type.isDelivery() && type.isRequiredCustomerData());
@@ -867,7 +873,7 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 
 	private String getTableNumbers(List<Integer> numbers) {
 
-		String tableNumbers = "";
+		String tableNumbers = ""; //$NON-NLS-1$
 
 		if (numbers != null && !numbers.isEmpty()) {
 			for (Iterator iterator = numbers.iterator(); iterator.hasNext();) {
@@ -875,7 +881,7 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 				tableNumbers += n;
 
 				if (iterator.hasNext()) {
-					tableNumbers += ", ";
+					tableNumbers += ", "; //$NON-NLS-1$
 				}
 			}
 			return tableNumbers;
@@ -1047,7 +1053,7 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 		else {
 			categoryView.cleanup();
 			if (TerminalConfig.isActiveCustomerDisplay()) {
-				DrawerUtil.setCustomerDisplayMessage(TerminalConfig.getCustomerDisplayPort(), "Thank You");
+				DrawerUtil.setCustomerDisplayMessage(TerminalConfig.getCustomerDisplayPort(), Messages.getString("OrderView.23")); //$NON-NLS-1$
 			}
 		}
 		super.setVisible(aFlag);
@@ -1074,7 +1080,7 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 			return;
 		}
 		if (currentTicket.getId() != null && currentTicket.getDueAmount() > 0.0) {
-			POSMessageDialog.showError(POSUtil.getFocusedWindow(), "Payment is not fully completed, ticket can not be cancelled!");
+			POSMessageDialog.showError(POSUtil.getFocusedWindow(), Messages.getString("OrderView.24")); //$NON-NLS-1$
 			return;
 		}
 
