@@ -81,6 +81,11 @@ public class InginicoPlugin extends PaymentGatewayPlugin {
 	}
 
 	@Override
+	public boolean requireLicense() {
+		return false;
+	}
+
+	@Override
 	public boolean hasValidLicense() {
 		return true;
 	}
