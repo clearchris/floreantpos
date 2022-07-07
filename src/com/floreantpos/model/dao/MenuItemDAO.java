@@ -56,15 +56,17 @@ public class MenuItemDAO extends BaseMenuItemDAO {
 		try {
 			session = createNewSession();
 			MenuItem menuItem = get(key, session);
-			Hibernate.initialize(menuItem.getMenuItemModiferGroups());
-
-			List<MenuItemModifierGroup> menuItemModiferGroups = menuItem.getMenuItemModiferGroups();
-			if (menuItemModiferGroups != null) {
-				for (MenuItemModifierGroup menuItemModifierGroup : menuItemModiferGroups) {
-					Hibernate.initialize(menuItemModifierGroup.getModifierGroup().getModifiers());
+			if (menuItem != null) {
+				Hibernate.initialize(menuItem.getMenuItemModiferGroups());
+				
+				List<MenuItemModifierGroup> menuItemModiferGroups = menuItem.getMenuItemModiferGroups();
+				if (menuItemModiferGroups != null) {
+					for (MenuItemModifierGroup menuItemModifierGroup : menuItemModiferGroups) {
+						Hibernate.initialize(menuItemModifierGroup.getModifierGroup().getModifiers());
+					}
 				}
+				Hibernate.initialize(menuItem.getShifts());
 			}
-			Hibernate.initialize(menuItem.getShifts());
 			return menuItem;
 		} finally {
 			closeSession(session);

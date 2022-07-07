@@ -46,6 +46,7 @@ import com.floreantpos.bo.ui.explorer.QuickMaintenanceExplorer;
 import com.floreantpos.model.MenuCategory;
 import com.floreantpos.model.MenuGroup;
 import com.floreantpos.model.OrderType;
+import com.floreantpos.model.Ticket;
 import com.floreantpos.model.dao.MenuCategoryDAO;
 import com.floreantpos.model.dao.MenuGroupDAO;
 import com.floreantpos.swing.POSToggleButton;
@@ -85,52 +86,55 @@ public class CategoryView extends SelectionView implements ActionListener {
 		if (categories.size() == 0 && !maintenanceMode)
 			return;
 
-		OrderType orderType = OrderView.getInstance().getCurrentTicket().getOrderType();
-		MenuGroupDAO menuGroupDAO = MenuGroupDAO.getInstance();
-		if (maintenanceMode) {
-			categories.add(new MenuCategory(null, ""));
-		}
-		else {
-			for (Iterator iterator = categories.iterator(); iterator.hasNext();) {
-				MenuCategory menuCategory = (MenuCategory) iterator.next();
-				if (menuCategory.getId() == null)
-					continue;
-				List<MenuGroup> menuGroups = menuCategory.getMenuGroups();
+		Ticket currentTicket = OrderView.getInstance().getCurrentTicket();
+		if (currentTicket != null) {
+			OrderType orderType = currentTicket.getOrderType();
+			MenuGroupDAO menuGroupDAO = MenuGroupDAO.getInstance();
+			if (maintenanceMode) {
+				categories.add(new MenuCategory(null, ""));
+			}
+			else {
+				for (Iterator iterator = categories.iterator(); iterator.hasNext();) {
+					MenuCategory menuCategory = (MenuCategory) iterator.next();
+					if (menuCategory.getId() == null)
+						continue;
+					List<MenuGroup> menuGroups = menuCategory.getMenuGroups();
 
-				for (Iterator iterator2 = menuGroups.iterator(); iterator2.hasNext();) {
-					MenuGroup menuGroup = (MenuGroup) iterator2.next();
-					if (!menuGroupDAO.hasChildren(null, menuGroup, orderType)) {
-						iterator2.remove();
+					for (Iterator iterator2 = menuGroups.iterator(); iterator2.hasNext();) {
+						MenuGroup menuGroup = (MenuGroup) iterator2.next();
+						if (!menuGroupDAO.hasChildren(null, menuGroup, orderType)) {
+							iterator2.remove();
+						}
+					}
+
+					if (menuGroups == null || menuGroups.size() == 0) {
+						iterator.remove();
 					}
 				}
-
-				if (menuGroups == null || menuGroups.size() == 0) {
-					iterator.remove();
-				}
 			}
-		}
-		setItems(categories);
+			setItems(categories);
 
-		CategoryButton categoryButton = null;
-		if (maintenanceMode && (!categories.isEmpty() && selectedCategory != null)) {
-			categoryButton = buttonMap.get(String.valueOf(selectedCategory.getId()));
-		}
-		else
-			categoryButton = (CategoryButton) getFirstItemButton();
+			CategoryButton categoryButton = null;
+			if (maintenanceMode && (!categories.isEmpty() && selectedCategory != null)) {
+				categoryButton = buttonMap.get(String.valueOf(selectedCategory.getId()));
+			}
+			else
+				categoryButton = (CategoryButton) getFirstItemButton();
 
-		if (categoryButton != null) {
-			categoryButton.setSelected(true);
-			fireCategorySelected(categoryButton.foodCategory);
-		}
-		else {
-			fireCategorySelected(null);
-		}
+			if (categoryButton != null) {
+				categoryButton.setSelected(true);
+				fireCategorySelected(categoryButton.foodCategory);
+			}
+			else {
+				fireCategorySelected(null);
+			}
 
-		if (!maintenanceMode && categories.size() <= 1) {
-			setVisible(false);
-		}
-		else {
-			setVisible(true);
+			if (!maintenanceMode && categories.size() <= 1) {
+				setVisible(false);
+			}
+			else {
+				setVisible(true);
+			}
 		}
 	}
 

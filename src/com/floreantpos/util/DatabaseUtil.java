@@ -36,6 +36,7 @@ import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 
 import com.floreantpos.PosLog;
 import com.floreantpos.bo.actions.DataImportAction;
+import com.floreantpos.config.AppProperties;
 import com.floreantpos.config.TerminalConfig;
 import com.floreantpos.model.CashDrawer;
 import com.floreantpos.model.Currency;
@@ -107,6 +108,7 @@ public class DatabaseUtil {
 	public static void updateLegacyDatabase() {
 		try {
 			dropModifiedTimeColumn();
+			doUpdateRestaurant(false);
 		} catch (SQLException e) {
 			logger.error(e);
 		}
@@ -163,6 +165,9 @@ public class DatabaseUtil {
 			restaurant.setName("Sample Restaurant");
 			restaurant.setAddressLine1("Somewhere");
 			restaurant.setTelephone("+0123456789");
+			restaurant.setAppVersion(AppProperties.getAppVersion());
+			restaurant.setAppNumericVersion(AppProperties.getAppNumericVersion());
+			restaurant.setAppDbVersion(DatabaseVersionHistory.DATABASE_VERSION);
 			RestaurantDAO.getInstance().saveOrUpdate(restaurant);
 
 			Tax tax = new Tax();
@@ -200,8 +205,8 @@ public class DatabaseUtil {
 
 			UserType server = new UserType();
 			server.setName("SR. CASHIER");
-			server.setPermissions(new HashSet<UserPermission>(Arrays.asList(UserPermission.CREATE_TICKET, UserPermission.SETTLE_TICKET,
-					UserPermission.SPLIT_TICKET)));
+			server.setPermissions(
+					new HashSet<UserPermission>(Arrays.asList(UserPermission.CREATE_TICKET, UserPermission.SETTLE_TICKET, UserPermission.SPLIT_TICKET)));
 			//server.setTest(Arrays.asList(OrderType.BAR_TAB));
 			UserTypeDAO.getInstance().saveOrUpdate(server);
 
@@ -483,7 +488,8 @@ public class DatabaseUtil {
 		}
 	}
 
-	public static boolean updateDatabase(String connectionString, String hibernateDialect, String hibernateConnectionDriverClass, String user, String password) {
+	public static boolean updateDatabase(String connectionString, String hibernateDialect, String hibernateConnectionDriverClass, String user,
+			String password) {
 		try {
 			Configuration configuration = _RootDAO.getNewConfiguration(null);
 
@@ -500,12 +506,36 @@ public class DatabaseUtil {
 
 			_RootDAO.initialize();
 
+			doUpdateRestaurant(true);
+
 			return true;
 		} catch (Exception e) {
 			PosLog.error(DatabaseUtil.class, e.getMessage());
 			logger.error(e);
 			return false;
 		}
+	}
+
+	private static void doUpdateRestaurant(boolean shouldUpdate) {
+		Restaurant restaurant = RestaurantDAO.getRestaurant();
+
+		if (shouldUpdate) {
+			restaurant.setAppNumericVersion(AppProperties.getAppNumericVersion());
+			restaurant.setAppVersion(AppProperties.getAppVersion());
+			restaurant.setAppDbVersion(DatabaseVersionHistory.DATABASE_VERSION);
+		}
+		else {
+			if (!(restaurant.hasProperty(Restaurant.APP_VERSION))) {
+				restaurant.setAppVersion(AppProperties.getAppVersion());
+			}
+			if (!(restaurant.hasProperty(Restaurant.APP_NUMERIC_VERSION))) {
+				restaurant.setAppNumericVersion(AppProperties.getAppNumericVersion());
+			}
+			if (!(restaurant.hasProperty(Restaurant.APP_DB_VERSION))) {
+				restaurant.setAppDbVersion(DatabaseVersionHistory.DATABASE_VERSION);
+			}
+		}
+		RestaurantDAO.getInstance().saveOrUpdate(restaurant);
 	}
 
 	public static Configuration initialize() throws DatabaseConnectionException {

@@ -17,46 +17,125 @@
  */
 package com.floreantpos.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.floreantpos.model.base.BaseRestaurant;
+import com.floreantpos.util.POSUtil;
 
-
-@XmlRootElement(name="restaurant")
+@XmlRootElement(name = "restaurant")
 public class Restaurant extends BaseRestaurant {
 	private static final long serialVersionUID = 1L;
 
-/*[CONSTRUCTOR MARKER BEGIN]*/
-	public Restaurant () {
+	public static final String APP_VERSION = "app.version"; //$NON-NLS-1$
+	public static final String APP_NUMERIC_VERSION = "app.numeric_version"; //$NON-NLS-1$
+	public static final String APP_DB_VERSION = "app.db_version"; //$NON-NLS-1$
+
+	/*[CONSTRUCTOR MARKER BEGIN]*/
+	public Restaurant() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public Restaurant (java.lang.Integer id) {
+	public Restaurant(java.lang.Integer id) {
 		super(id);
 	}
 
-/*[CONSTRUCTOR MARKER END]*/
+	/*[CONSTRUCTOR MARKER END]*/
 
 	@Override
 	public String getCurrencyName() {
 		String currencyName = super.getCurrencyName();
-		if(StringUtils.isEmpty(currencyName)) {
+		if (StringUtils.isEmpty(currencyName)) {
 			return "Sample Currency"; //$NON-NLS-1$
 		}
 		return currencyName;
 	}
-	
+
 	@Override
 	public String getCurrencySymbol() {
 		String currencySymbol = super.getCurrencySymbol();
-		if(StringUtils.isEmpty(currencySymbol)) {
+		if (StringUtils.isEmpty(currencySymbol)) {
 			currencySymbol = "$"; //$NON-NLS-1$
 		}
 		return currencySymbol;
+	}
+
+	public void addProperty(String name, String value) {
+		if (getProperties() == null) {
+			setProperties(new HashMap<String, String>());
+		}
+
+		getProperties().put(name, value);
+	}
+
+	public boolean hasProperty(String key) {
+		return getProperty(key) != null;
+	}
+
+	public String getProperty(String key) {
+		if (getProperties() == null) {
+			return null;
+		}
+
+		return getProperties().get(key);
+	}
+
+	public String getProperty(String key, String defaultValue) {
+		if (getProperties() == null) {
+			return null;
+		}
+
+		String string = getProperties().get(key);
+		if (StringUtils.isEmpty(string)) {
+			return defaultValue;
+		}
+
+		return string;
+	}
+
+	public void removeProperty(String propertyName) {
+		Map<String, String> properties = getProperties();
+		if (properties == null) {
+			return;
+		}
+
+		properties.remove(propertyName);
+	}
+
+	public boolean isPropertyValueTrue(String propertyName) {
+		String property = getProperty(propertyName);
+
+		return POSUtil.getBoolean(property);
+	}
+
+	public int getAppNumericVersion() {
+		return POSUtil.parseInteger(getProperty(APP_NUMERIC_VERSION));
+	}
+
+	public void setAppNumericVersion(int numericVersion) {
+		addProperty(APP_NUMERIC_VERSION, String.valueOf(numericVersion));
+	}
+
+	public String getAppVersion() {
+		return getProperty(APP_VERSION, ""); //$NON-NLS-1$
+	}
+
+	public void setAppVersion(String appVersion) {
+		addProperty(APP_VERSION, appVersion);
+	}
+
+	public int getAppDbVersion() {
+		return POSUtil.parseInteger(getProperty(APP_DB_VERSION));
+	}
+
+	public void setAppDbVersion(int numericVersion) {
+		addProperty(APP_DB_VERSION, String.valueOf(numericVersion));
 	}
 }
