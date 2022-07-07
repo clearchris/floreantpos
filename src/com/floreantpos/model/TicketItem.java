@@ -782,7 +782,9 @@ public class TicketItem extends BaseTicketItem implements ITicketItem {
 		List<Printer> printerAll = new ArrayList<Printer>();
 
 		if (printerGroup == null) {
-			printerAll.add(printers.getDefaultKitchenPrinter());
+			if (printers.getDefaultKitchenPrinter() != null) {
+				printerAll.add(printers.getDefaultKitchenPrinter());
+			}
 			return printerAll;
 		}
 
