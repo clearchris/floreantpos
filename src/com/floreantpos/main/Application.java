@@ -115,7 +115,7 @@ public class Application {
 	private boolean systemInitialized;
 	private boolean headLess = false;
 
-	public final static String VERSION = AppProperties.getVersion();
+	public final static String VERSION = AppProperties.getAppVersion();
 
 	private Application() {
 
@@ -573,7 +573,7 @@ public class Application {
 	}
 
 	public static String getTitle() {
-		return AppProperties.getAppName() + " - Version " + VERSION; //$NON-NLS-1$
+		return AppProperties.getAppName() + " " + VERSION; //$NON-NLS-1$
 	}
 
 	public static ImageIcon getApplicationIcon() {
