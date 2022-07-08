@@ -39,10 +39,6 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.TableColumnModel;
 
-import net.miginfocom.swing.MigLayout;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.jdesktop.swingx.JXTable;
 
 import com.floreantpos.Messages;
@@ -66,6 +62,8 @@ import com.floreantpos.ui.model.MenuItemForm;
 import com.floreantpos.ui.model.OrderTypeForm;
 import com.floreantpos.util.CurrencyUtil;
 import com.floreantpos.util.POSUtil;
+
+import net.miginfocom.swing.MigLayout;
 
 public class MenuItemExplorer extends TransparentPanel {
 
@@ -229,8 +227,8 @@ public class MenuItemExplorer extends TransparentPanel {
 
 					MenuItem menuItem = tableModel.getRow(index);
 
-					String amountString = JOptionPane.showInputDialog(MenuItemExplorer.this,
-							Messages.getString("MenuItemExplorer.8"), menuItem.getStockAmount()); //$NON-NLS-1$
+					String amountString = JOptionPane.showInputDialog(MenuItemExplorer.this, Messages.getString("MenuItemExplorer.8"), //$NON-NLS-1$
+							menuItem.getStockAmount());
 
 					if (amountString == null || amountString.equals("")) { //$NON-NLS-1$
 						return;
@@ -312,14 +310,7 @@ public class MenuItemExplorer extends TransparentPanel {
 					MenuItem existingItem = tableModel.getRow(index);
 					existingItem = MenuItemDAO.getInstance().initialize(existingItem);
 
-					MenuItem newMenuItem = new MenuItem();
-					PropertyUtils.copyProperties(newMenuItem, existingItem);
-					newMenuItem.setId(null);
-					String newName = doDuplicateName(existingItem);
-					newMenuItem.setName(newName);
-					newMenuItem.setFractionalUnit(existingItem.isFractionalUnit());
-					newMenuItem.setDisableWhenStockAmountIsZero(existingItem.isDisableWhenStockAmountIsZero());
-					newMenuItem.setShowImageOnly(existingItem.isShowImageOnly());
+					MenuItem newMenuItem = MenuItem.cloneExistingItem(existingItem);
 
 					MenuItemForm editor = new MenuItemForm(newMenuItem);
 					BeanEditorDialog dialog = new BeanEditorDialog(POSUtil.getBackOfficeWindow(), editor);
@@ -399,7 +390,8 @@ public class MenuItemExplorer extends TransparentPanel {
 
 					index = table.convertRowIndexToModel(index);
 
-					if (POSMessageDialog.showYesNoQuestionDialog(MenuItemExplorer.this, POSConstants.CONFIRM_DELETE, POSConstants.DELETE) != JOptionPane.YES_OPTION) {
+					if (POSMessageDialog.showYesNoQuestionDialog(MenuItemExplorer.this, POSConstants.CONFIRM_DELETE,
+							POSConstants.DELETE) != JOptionPane.YES_OPTION) {
 						return;
 					}
 					MenuItem item = tableModel.getRow(index);
@@ -532,26 +524,5 @@ public class MenuItemExplorer extends TransparentPanel {
 		columnWidth.add(200);
 
 		return columnWidth;
-	}
-
-	private String doDuplicateName(MenuItem existingItem) {
-		String existingName = existingItem.getName();
-		String newName = new String();
-		int lastIndexOf = existingName.lastIndexOf(" ");
-		if (lastIndexOf == -1) {
-			newName = existingName + " 1";
-		}
-		else {
-			String processName = existingName.substring(lastIndexOf + 1, existingName.length());
-			if (StringUtils.isNumeric(processName)) {
-				Integer count = Integer.valueOf(processName);
-				count += 1;
-				newName = existingName.replace(processName, String.valueOf(count));
-			}
-			else {
-				newName = existingName + " 1";
-			}
-		}
-		return newName;
 	}
 }

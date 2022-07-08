@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +34,7 @@ import javax.swing.ImageIcon;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.floreantpos.config.TerminalConfig;
@@ -519,6 +521,50 @@ public class MenuItem extends BaseMenuItem {
 		return prices;
 	}
 
+	public static MenuItem cloneExistingItem(MenuItem existingItem) throws Exception {
+		List<MenuItemModifierGroup> sourceModifierGroups = new ArrayList<MenuItemModifierGroup>(existingItem.getMenuItemModiferGroups());
+
+		MenuItem newMenuItem = new MenuItem();
+		PropertyUtils.copyProperties(newMenuItem, existingItem);
+		newMenuItem.setId(null);
+		String newName = doDuplicateName(existingItem);
+		newMenuItem.setName(newName);
+		newMenuItem.setFractionalUnit(existingItem.isFractionalUnit());
+		newMenuItem.setDisableWhenStockAmountIsZero(existingItem.isDisableWhenStockAmountIsZero());
+		newMenuItem.setShowImageOnly(existingItem.isShowImageOnly());
+
+		if (sourceModifierGroups != null) {
+			newMenuItem.setMenuItemModiferGroups(null);
+
+			for (MenuItemModifierGroup modifierGroup : sourceModifierGroups) {
+				modifierGroup.setId(null);
+				newMenuItem.addTomenuItemModiferGroups(modifierGroup);
+			}
+		}
+		return newMenuItem;
+	}
+
+	private static String doDuplicateName(MenuItem existingItem) {
+		String existingName = existingItem.getName();
+		String newName = new String();
+		int lastIndexOf = existingName.lastIndexOf(" "); //$NON-NLS-1$
+		if (lastIndexOf == -1) {
+			newName = existingName + " 1"; //$NON-NLS-1$
+		}
+		else {
+			String processName = existingName.substring(lastIndexOf + 1, existingName.length());
+			if (StringUtils.isNumeric(processName)) {
+				Integer count = Integer.valueOf(processName);
+				count += 1;
+				newName = existingName.replace(processName, String.valueOf(count));
+			}
+			else {
+				newName = existingName + " 1"; //$NON-NLS-1$
+			}
+		}
+		return newName;
+	}
+
 	public MenuItem clone(MenuItem source) throws Exception {
 		MenuItem menuItem = null;
 		try {
@@ -536,4 +582,5 @@ public class MenuItem extends BaseMenuItem {
 		}
 		return menuItem;
 	}
+
 }

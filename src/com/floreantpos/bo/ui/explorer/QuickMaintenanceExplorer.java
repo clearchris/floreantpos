@@ -17,6 +17,7 @@
  */
 package com.floreantpos.bo.ui.explorer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
@@ -33,6 +34,7 @@ import com.floreantpos.main.Application;
 import com.floreantpos.model.MenuCategory;
 import com.floreantpos.model.MenuGroup;
 import com.floreantpos.model.MenuItem;
+import com.floreantpos.model.MenuItemModifierGroup;
 import com.floreantpos.model.OrderType;
 import com.floreantpos.model.ShopTable;
 import com.floreantpos.model.dao.MenuCategoryDAO;
@@ -114,16 +116,11 @@ public class QuickMaintenanceExplorer extends TransparentPanel {
 		try {
 			if (menuItem.getId() != null) {
 				if (btnCopy.isSelected()) {
-					MenuItem newMenuItem = new MenuItem();
-					PropertyUtils.copyProperties(newMenuItem, menuItem);
-					newMenuItem.setId(null);
-					newMenuItem.setFractionalUnit(menuItem.isFractionalUnit());
-					newMenuItem.setDisableWhenStockAmountIsZero(menuItem.isDisableWhenStockAmountIsZero());
-					newMenuItem.setShowImageOnly(menuItem.isShowImageOnly());
-					menuItem = newMenuItem;
+					menuItem = MenuItem.cloneExistingItem(menuItem);
 				}
 				else if (btnDelete.isSelected()) {
-					if (POSMessageDialog.showYesNoQuestionDialog(POSUtil.getFocusedWindow(), POSConstants.CONFIRM_DELETE, POSConstants.DELETE) != JOptionPane.YES_OPTION) {
+					if (POSMessageDialog.showYesNoQuestionDialog(POSUtil.getFocusedWindow(), POSConstants.CONFIRM_DELETE,
+							POSConstants.DELETE) != JOptionPane.YES_OPTION) {
 						return;
 					}
 					MenuItemDAO foodItemDAO = new MenuItemDAO();
@@ -166,15 +163,16 @@ public class QuickMaintenanceExplorer extends TransparentPanel {
 					menuGroup = newMenuGroup;
 				}
 				else if (btnDelete.isSelected()) {
-					if (POSMessageDialog.showYesNoQuestionDialog(POSUtil.getFocusedWindow(), POSConstants.CONFIRM_DELETE, POSConstants.DELETE) != JOptionPane.YES_OPTION) {
+					if (POSMessageDialog.showYesNoQuestionDialog(POSUtil.getFocusedWindow(), POSConstants.CONFIRM_DELETE,
+							POSConstants.DELETE) != JOptionPane.YES_OPTION) {
 						return;
 					}
 					MenuItemDAO menuItemDao = new MenuItemDAO();
 					List<MenuItem> menuItems = menuItemDao.findByParent(null, menuGroup, true);
 
 					if (menuItems.size() > 0) {
-						if (POSMessageDialog
-								.showYesNoQuestionDialog(POSUtil.getFocusedWindow(), Messages.getString("MenuGroupExplorer.0"), POSConstants.DELETE) != JOptionPane.YES_OPTION) { //$NON-NLS-1$
+						if (POSMessageDialog.showYesNoQuestionDialog(POSUtil.getFocusedWindow(), Messages.getString("MenuGroupExplorer.0"), //$NON-NLS-1$
+								POSConstants.DELETE) != JOptionPane.YES_OPTION) {
 							return;
 						}
 						menuItemDao.releaseParent(menuItems);
@@ -207,7 +205,8 @@ public class QuickMaintenanceExplorer extends TransparentPanel {
 					menuCategory = newMenuCategory;
 				}
 				else if (btnDelete.isSelected()) {
-					if (POSMessageDialog.showYesNoQuestionDialog(POSUtil.getFocusedWindow(), POSConstants.CONFIRM_DELETE, POSConstants.DELETE) != JOptionPane.YES_OPTION) {
+					if (POSMessageDialog.showYesNoQuestionDialog(POSUtil.getFocusedWindow(), POSConstants.CONFIRM_DELETE,
+							POSConstants.DELETE) != JOptionPane.YES_OPTION) {
 						return;
 					}
 
@@ -215,8 +214,8 @@ public class QuickMaintenanceExplorer extends TransparentPanel {
 					List<MenuGroup> menuGroups = menuGroupDao.findByParent(menuCategory);
 
 					if (menuGroups.size() > 0) {
-						if (POSMessageDialog.showYesNoQuestionDialog(POSUtil.getFocusedWindow(),
-								Messages.getString("MenuCategoryExplorer.0"), POSConstants.DELETE) != JOptionPane.YES_OPTION) { //$NON-NLS-1$
+						if (POSMessageDialog.showYesNoQuestionDialog(POSUtil.getFocusedWindow(), Messages.getString("MenuCategoryExplorer.0"), //$NON-NLS-1$
+								POSConstants.DELETE) != JOptionPane.YES_OPTION) {
 							return;
 						}
 						menuGroupDao.releaseParent(menuGroups);
@@ -249,7 +248,8 @@ public class QuickMaintenanceExplorer extends TransparentPanel {
 					orderType = newOrderType;
 				}
 				else if (btnDelete.isSelected()) {
-					if (POSMessageDialog.showYesNoQuestionDialog(POSUtil.getFocusedWindow(), POSConstants.CONFIRM_DELETE, POSConstants.DELETE) != JOptionPane.YES_OPTION) {
+					if (POSMessageDialog.showYesNoQuestionDialog(POSUtil.getFocusedWindow(), POSConstants.CONFIRM_DELETE,
+							POSConstants.DELETE) != JOptionPane.YES_OPTION) {
 						return;
 					}
 
@@ -283,7 +283,8 @@ public class QuickMaintenanceExplorer extends TransparentPanel {
 					shopTable = newShopTable;
 				}
 				else if (btnDelete.isSelected()) {
-					if (POSMessageDialog.showYesNoQuestionDialog(POSUtil.getFocusedWindow(), POSConstants.CONFIRM_DELETE, POSConstants.DELETE) != JOptionPane.YES_OPTION) {
+					if (POSMessageDialog.showYesNoQuestionDialog(POSUtil.getFocusedWindow(), POSConstants.CONFIRM_DELETE,
+							POSConstants.DELETE) != JOptionPane.YES_OPTION) {
 						return;
 					}
 
