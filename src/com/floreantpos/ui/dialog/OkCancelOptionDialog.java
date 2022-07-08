@@ -94,7 +94,7 @@ public abstract class OkCancelOptionDialog extends POSDialog {
 
 		buttonPanel.setLayout(new FlowLayout());
 
-		Dimension btnSize = PosUIManager.getSize(100, 70);
+		Dimension btnSize = PosUIManager.getSize(80, 50);
 
 		btnOk.setPreferredSize(btnSize);
 		btnOk.setText(com.floreantpos.POSConstants.OK.toUpperCase());
