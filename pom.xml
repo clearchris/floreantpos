@@ -515,7 +515,7 @@
 		<dependency>
 			<groupId>com.orocube</groupId>
 			<artifactId>orocube-common-classes</artifactId>
-			<version>1.5.10-fp</version>
+			<version>1.5.11-fp</version>
 		</dependency>
 	</dependencies>
 
@@ -551,7 +551,7 @@
 		<profile>
 			<id>win32</id>
 			<properties>
-				<build.profile.id>dist</build.profile.id>
+				<build.profile.id>win32</build.profile.id>
 			</properties>
 			<build>
 				<plugins>
