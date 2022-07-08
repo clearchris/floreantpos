@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.floreantpos</groupId>
 	<artifactId>floreantpos</artifactId>
-	<version>1.4-SNAPSHOT</version>
+	<version>1.5-SNAPSHOT</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -402,12 +402,12 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.0.1</version>
+			<version>4.5.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
-			<version>4.0.1</version>
+			<version>4.4.9</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-validator</groupId>
@@ -503,7 +503,12 @@
 		<dependency>
 			<groupId>com.floreantpos</groupId>
 			<artifactId>ploader</artifactId>
-			<version>1.1.6</version>
+			<version>1.1.7</version>
+		</dependency>
+		<dependency>
+			<groupId>com.orocube</groupId>
+			<artifactId>orocube-common-classes</artifactId>
+			<version>1.5.10-fp</version>
 		</dependency>
 	</dependencies>
 
@@ -537,10 +542,47 @@
 			</properties>
 		</profile>
 		<profile>
-			<id>dist</id>
+			<id>win32</id>
 			<properties>
 				<build.profile.id>dist</build.profile.id>
 			</properties>
+			<build>
+				<plugins>
+					<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>prepare</id>
+						<phase>validate</phase>
+						<configuration>
+							<target>
+								<echo message="prepare phase" />
+								<unzip src="database/derby-server/posdb.zip" dest="${project.build.directory}" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<zip
+									destfile="${project.build.directory}/${project.build.finalName}-${app.version}-win32.zip"
+									basedir="${project.build.directory}/${project.build.finalName}-bin/${project.build.finalName}"></zip>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 </project>

@@ -48,7 +48,7 @@
 			<outputDirectory>plugins</outputDirectory>
 			<filtered>false</filtered>
 			<includes>
-				<include>README</include>
+				<include>**/*</include>
 			</includes>
 		</fileSet>
 		<fileSet>
