@@ -515,7 +515,7 @@
 		<dependency>
 			<groupId>com.orocube</groupId>
 			<artifactId>orocube-common-classes</artifactId>
-			<version>1.5.11-fp</version>
+			<version>1.5.12-fp</version>
 		</dependency>
 	</dependencies>
 
