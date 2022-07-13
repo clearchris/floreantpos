@@ -44,7 +44,6 @@ import com.floreantpos.PosException;
 import com.floreantpos.PosLog;
 import com.floreantpos.config.CardConfig;
 import com.floreantpos.config.TerminalConfig;
-import com.floreantpos.extension.InginicoPlugin;
 import com.floreantpos.extension.PaymentGatewayPlugin;
 import com.floreantpos.main.Application;
 import com.floreantpos.model.CardReader;
@@ -569,13 +568,6 @@ public class GroupSettleTicketDialog extends POSDialog implements CardInputListe
 		try {
 			PaymentGatewayPlugin paymentGateway = CardConfig.getPaymentGateway();
 
-			if (paymentGateway instanceof InginicoPlugin) {
-				waitDialog.setVisible(true);
-				if (!waitDialog.isCanceled()) {
-					dispose();
-				}
-				return;
-			}
 			if (!paymentGateway.shouldShowCardInputProcessor()) {
 
 				PosTransaction transaction = paymentType.createTransaction();

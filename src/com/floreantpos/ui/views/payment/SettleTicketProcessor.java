@@ -29,10 +29,8 @@ import org.hibernate.StaleStateException;
 import com.floreantpos.Messages;
 import com.floreantpos.POSConstants;
 import com.floreantpos.PosException;
-import com.floreantpos.PosLog;
 import com.floreantpos.config.CardConfig;
 import com.floreantpos.config.TerminalConfig;
-import com.floreantpos.extension.InginicoPlugin;
 import com.floreantpos.extension.PaymentGatewayPlugin;
 import com.floreantpos.main.Application;
 import com.floreantpos.model.CardReader;
@@ -300,13 +298,6 @@ public class SettleTicketProcessor implements CardInputListener {
 		try {
 			PaymentGatewayPlugin paymentGateway = CardConfig.getPaymentGateway();
 
-			if (paymentGateway instanceof InginicoPlugin) {
-				waitDialog.setVisible(true);
-				if (!waitDialog.isCanceled()) {
-					doInformListenerPaymentDone();
-				}
-				return;
-			}
 			if (!paymentGateway.shouldShowCardInputProcessor()) {
 
 				PosTransaction transaction = paymentType.createTransaction();

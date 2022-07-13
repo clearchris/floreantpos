@@ -30,7 +30,10 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+
+import org.apache.commons.lang.StringUtils;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -38,6 +41,7 @@ import com.floreantpos.Messages;
 import com.floreantpos.config.CardConfig;
 import com.floreantpos.model.CardReader;
 import com.floreantpos.swing.POSTextField;
+import com.floreantpos.util.POSUtil;
 
 public class DefaultMerchantGatewayConfigurationView extends ConfigurationView {
 	private POSTextField tfMerchantAccount;
@@ -241,6 +245,14 @@ public class DefaultMerchantGatewayConfigurationView extends ConfigurationView {
 
 	@Override
 	public boolean save() throws Exception {
+		String marchentAccount = tfMerchantAccount.getText();
+		char[] marchentPassword = tfMerchantPass.getPassword();
+		
+		if (StringUtils.isBlank(marchentAccount) || StringUtils.isBlank(new String(tfMerchantPass.getPassword()))) {
+			JOptionPane.showMessageDialog(POSUtil.getFocusedWindow(), "Please fill all the fields properly");
+			return false;
+		}
+		
 		CardConfig.setSwipeCardSupported(chckbxAllowMagneticSwipe.isSelected());
 		CardConfig.setManualEntrySupported(chckbxAllowCardManual.isSelected());
 		CardConfig.setExtTerminalSupported(chckbxAllowExternalTerminal.isSelected());
@@ -248,8 +260,8 @@ public class DefaultMerchantGatewayConfigurationView extends ConfigurationView {
 		CardReader cardReader = (CardReader) cbCardReader.getSelectedItem();
 		CardConfig.setCardReader(cardReader);
 
-		CardConfig.setMerchantAccount(tfMerchantAccount.getText());
-		CardConfig.setMerchantPass(new String(tfMerchantPass.getPassword()));
+		CardConfig.setMerchantAccount(marchentAccount);
+		CardConfig.setMerchantPass(new String(marchentPassword));
 
 		CardConfig.setSandboxMode(cbSandboxMode.isSelected());
 

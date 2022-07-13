@@ -49,13 +49,10 @@ import com.floreantpos.PosLog;
 import com.floreantpos.bo.ui.BackOfficeWindow;
 import com.floreantpos.config.AppConfig;
 import com.floreantpos.config.AppProperties;
-import com.floreantpos.config.CardConfig;
 import com.floreantpos.config.TerminalConfig;
 import com.floreantpos.config.ui.DatabaseConfigurationDialog;
 import com.floreantpos.extension.ExtensionManager;
 import com.floreantpos.extension.FloreantPlugin;
-import com.floreantpos.extension.InginicoPlugin;
-import com.floreantpos.extension.PaymentGatewayPlugin;
 import com.floreantpos.model.DeliveryConfiguration;
 import com.floreantpos.model.OrderType;
 import com.floreantpos.model.PosPrinters;
@@ -70,7 +67,6 @@ import com.floreantpos.model.dao.PrinterConfigurationDAO;
 import com.floreantpos.model.dao.RestaurantDAO;
 import com.floreantpos.model.dao.TerminalDAO;
 import com.floreantpos.model.util.DateUtil;
-import com.floreantpos.posserver.PosServer;
 import com.floreantpos.services.PosWebService;
 import com.floreantpos.swing.PosUIManager;
 import com.floreantpos.ui.dialog.LicenseDialog;
@@ -187,11 +183,6 @@ public class Application {
 			//if (hasUpdateScheduleToday())
 			//	checkAvailableUpdates();
 			setSystemInitialized(true);
-			PaymentGatewayPlugin paymentGateway = CardConfig.getPaymentGateway();
-
-			if (paymentGateway instanceof InginicoPlugin) {
-				new PosServer();
-			}
 		} catch (DatabaseConnectionException e) {
 			e.printStackTrace();
 			PosLog.error(getClass(), e);
