@@ -147,7 +147,7 @@
 						<configuration>
 							<target>
 								<zip
-									destfile="${project.build.directory}/${project.build.finalName}-${app.version}.zip"
+									destfile="${project.build.directory}/${project.build.finalName}-${app.version}-build${buildNumber}.zip"
 									basedir="${project.build.directory}/${project.build.finalName}-bin/${project.build.finalName}"></zip>
 							</target>
 						</configuration>
