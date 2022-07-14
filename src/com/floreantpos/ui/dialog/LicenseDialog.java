@@ -20,6 +20,7 @@ import javax.swing.border.EmptyBorder;
 import com.floreantpos.Messages;
 import com.floreantpos.PosLog;
 import com.floreantpos.config.AppConfig;
+import com.floreantpos.config.AppProperties;
 import com.floreantpos.main.Application;
 import com.floreantpos.swing.TransparentPanel;
 import com.floreantpos.ui.TitlePanel;
@@ -130,7 +131,8 @@ public class LicenseDialog extends POSDialog implements ActionListener, WindowLi
 		switch (btnName.indexOf(btn)) {
 		case 0:
 			Application.getInstance().openWebpage(
-					"https://shop.orocube.com/?invoice=eyJyZXNlbGxlcklkIjoib3JvY3ViZSIsInN1YnNjcmlwdGlvblR5cGUiOiJ5ZWFyIiwicHJvZHVjdHMiOlt7InRlcm1rZXkiOiIiLCJuYW1lIjoiT1JPUE9TIFBybyIsImlkIjoib3JvcG9zLXBybyJ9XX0="); //$NON-NLS-1$
+					"https://shop.orocube.com/priceestimate?invoice=eyJyZXNlbGxlcklkIjoib3JvY3ViZSIsInN1YnNjcmlwdGlvblR5cGUiOiJ5ZWFyIiwicHJvZHVjdHMiOlt7InRlcm1rZXkiOiIiLCJuYW1lIjoiT1JPUE9TIFBybyIsImlkIjoib3JvcG9zLXBybyJ9XX0=&source=fp&v=" //$NON-NLS-1$
+							+ AppProperties.getVersion());
 			break;
 		case 1:
 			Application.getInstance().openWebpage("https://shop.orocube.com/floreant/"); //$NON-NLS-1$
