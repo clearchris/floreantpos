@@ -67,6 +67,7 @@ public class PosWindow extends JFrame implements WindowListener {
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss aaa");
 	private Timer clockTimer = new Timer(1000, new ClockTimerHandler());
 	private Timer autoLogoffTimer;
+	private JPanel statusBar;
 
 	public PosWindow() {
 		setIconImage(Application.getApplicationIcon().getImage());
@@ -78,7 +79,7 @@ public class PosWindow extends JFrame implements WindowListener {
 
 		JPanel infoPanel = new JPanel(new MigLayout("fillx", "[]", ""));
 		infoPanel.setBackground(Color.WHITE);
-		
+
 		statusLabel = new JLabel(""); //$NON-NLS-1$
 		lblUser = new JLabel();
 		lblTaxInculed = new JLabel();
@@ -90,7 +91,7 @@ public class PosWindow extends JFrame implements WindowListener {
 		lblUser.setFont(f);
 		lblTaxInculed.setFont(f);
 		lblTime.setFont(f);
-		
+
 		infoPanel.add(statusLabel, "split 4");
 		infoPanel.add(lblTerminal, "gapleft 20");
 		infoPanel.add(lblUser, "gapleft 15");
@@ -100,12 +101,12 @@ public class PosWindow extends JFrame implements WindowListener {
 		JPanel statusBarContainer = new JPanel(new BorderLayout());
 		statusBarContainer.setBackground(Color.WHITE);
 		statusBarContainer.add(new JSeparator(JSeparator.HORIZONTAL), BorderLayout.NORTH);
-//		ImageIcon icon = IconFactory.getIcon("/ui_icons/", "footer-logo.png");
-//		statusLabel.setIcon(icon);
-		
+		//		ImageIcon icon = IconFactory.getIcon("/ui_icons/", "footer-logo.png");
+		//		statusLabel.setIcon(icon);
+
 		statusLabel.setText("A Product by OROCUBE LLC.");
 		statusLabel.addMouseListener(new MouseListener() {
-			
+
 			@Override
 			public void mouseReleased(MouseEvent e) {}
 			
@@ -118,14 +119,23 @@ public class PosWindow extends JFrame implements WindowListener {
 			@Override
 			public void mouseEntered(MouseEvent e) {}
 			
+
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				Application.getInstance().openWebpage("https://www.orocube.com/"); //$NON-NLS-1$
 			}
 		});
+		statusBar = new JPanel();
+		statusBar.setVisible(false);
+		statusBar.setOpaque(false);
 		statusBarContainer.add(infoPanel, BorderLayout.CENTER);
+		statusBarContainer.add(statusBar, BorderLayout.EAST);
 		getContentPane().add(statusBarContainer, BorderLayout.SOUTH);
 		clockTimer.start();
+	}
+
+	public JPanel getStatusBar() {
+		return statusBar;
 	}
 
 	public void setVisibleWelcomeHeader(boolean visible) {

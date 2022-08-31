@@ -60,6 +60,7 @@ import com.floreantpos.actions.VoidTicketAction;
 import com.floreantpos.config.TerminalConfig;
 import com.floreantpos.extension.ExtensionManager;
 import com.floreantpos.extension.FloorLayoutPlugin;
+import com.floreantpos.extension.OnlineOrderPlugin;
 import com.floreantpos.extension.OrderServiceExtension;
 import com.floreantpos.main.Application;
 import com.floreantpos.model.OrderType;
@@ -73,6 +74,7 @@ import com.floreantpos.services.TicketService;
 import com.floreantpos.swing.OrderTypeButton;
 import com.floreantpos.swing.PosButton;
 import com.floreantpos.swing.PosUIManager;
+import com.floreantpos.ui.RefreshableView;
 import com.floreantpos.ui.TicketListUpdateListener;
 import com.floreantpos.ui.dialog.NumberSelectionDialog2;
 import com.floreantpos.ui.dialog.POSMessageDialog;
@@ -267,37 +269,14 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 		JPanel activityPanel = new JPanel(new BorderLayout(5, 5));
 		JPanel innerActivityPanel = new JPanel(new MigLayout("hidemode 3, fill, ins 0", "fill, grow", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-		JPanel firstRowButtonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
-		final JXCollapsiblePane secondRowButtonPanel = new JXCollapsiblePane();
+		firstRowButtonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
+		secondRowButtonPanel = new JXCollapsiblePane();
 		secondRowButtonPanel.setAnimated(false);
 		secondRowButtonPanel.setCollapsed(true);
 		secondRowButtonPanel.setVisible(false);
 		secondRowButtonPanel.getContentPane().setLayout(new GridLayout(1, 0, 5, 5));
 
-		if (Application.getInstance().getTerminal().isHasCashDrawer()) {
-			firstRowButtonPanel.add(btnOrderInfo);
-			firstRowButtonPanel.add(btnEditTicket);
-			firstRowButtonPanel.add(btnSettleTicket);
-			firstRowButtonPanel.add(btnGroupSettle);
-			firstRowButtonPanel.add(btnCloseOrder);
-
-			secondRowButtonPanel.getContentPane().add(btnSplitTicket);
-			secondRowButtonPanel.getContentPane().add(btnReopenTicket);
-			secondRowButtonPanel.getContentPane().add(btnVoidTicket);
-			secondRowButtonPanel.getContentPane().add(btnRefundTicket);
-			secondRowButtonPanel.getContentPane().add(btnAssignDriver);
-		}
-		else {
-			firstRowButtonPanel.add(btnOrderInfo);
-			firstRowButtonPanel.add(btnEditTicket);
-			firstRowButtonPanel.add(btnCloseOrder);
-			firstRowButtonPanel.add(btnSplitTicket);
-
-			secondRowButtonPanel.getContentPane().add(btnReopenTicket);
-			secondRowButtonPanel.getContentPane().add(btnVoidTicket);
-			secondRowButtonPanel.getContentPane().add(btnRefundTicket);
-			secondRowButtonPanel.getContentPane().add(btnAssignDriver);
-		}
+		updateButtonsView();
 
 		innerActivityPanel.add(firstRowButtonPanel);
 		innerActivityPanel.add(secondRowButtonPanel, "newline"); //$NON-NLS-1$
@@ -326,6 +305,51 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 		return activityPanel;
 	}
 
+	public void updateButtonsView() {
+		firstRowButtonPanel.removeAll();
+		secondRowButtonPanel.removeAll();
+
+		if (ticketList.getOrderFiltersPanel().isOnlineOrderFilterSelected()) {
+			OnlineOrderPlugin orderPlugin = (OnlineOrderPlugin) ExtensionManager.getPlugin(OnlineOrderPlugin.class);
+			if (orderPlugin != null) {
+				firstRowButtonPanel.add(btnOrderInfo);
+				orderPlugin.initSwitchboardActionButtons(firstRowButtonPanel, secondRowButtonPanel, ticketList, new RefreshableView() {
+
+					@Override
+					public void refresh() {
+					}
+				});
+			}
+
+		}
+		else {
+			if (Application.getInstance().getTerminal().isHasCashDrawer()) {
+				firstRowButtonPanel.add(btnOrderInfo);
+				firstRowButtonPanel.add(btnEditTicket);
+				firstRowButtonPanel.add(btnSettleTicket);
+				firstRowButtonPanel.add(btnGroupSettle);
+				firstRowButtonPanel.add(btnCloseOrder);
+
+				secondRowButtonPanel.getContentPane().add(btnSplitTicket);
+				secondRowButtonPanel.getContentPane().add(btnReopenTicket);
+				secondRowButtonPanel.getContentPane().add(btnVoidTicket);
+				secondRowButtonPanel.getContentPane().add(btnRefundTicket);
+				secondRowButtonPanel.getContentPane().add(btnAssignDriver);
+			}
+			else {
+				firstRowButtonPanel.add(btnOrderInfo);
+				firstRowButtonPanel.add(btnEditTicket);
+				firstRowButtonPanel.add(btnCloseOrder);
+				firstRowButtonPanel.add(btnSplitTicket);
+
+				secondRowButtonPanel.getContentPane().add(btnReopenTicket);
+				secondRowButtonPanel.getContentPane().add(btnVoidTicket);
+				secondRowButtonPanel.getContentPane().add(btnRefundTicket);
+				secondRowButtonPanel.getContentPane().add(btnAssignDriver);
+			}
+		}
+	}
+
 	protected void doCloseOrder() {
 		Ticket ticket = getFirstSelectedTicket();
 
@@ -335,11 +359,11 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 
 		ticket = TicketDAO.getInstance().loadFullTicket(ticket.getId());
 
-//		int due = (int) POSUtil.getDouble(ticket.getDueAmount());
-//		if (due != 0) {
-//			POSMessageDialog.showError(this, Messages.getString("SwitchboardView.5")); //$NON-NLS-1$
-//			return;
-//		}
+		//		int due = (int) POSUtil.getDouble(ticket.getDueAmount());
+		//		if (due != 0) {
+		//			POSMessageDialog.showError(this, Messages.getString("SwitchboardView.5")); //$NON-NLS-1$
+		//			return;
+		//		}
 
 		int option = JOptionPane.showOptionDialog(Application.getPosWindow(),
 				Messages.getString("SwitchboardView.6") + ticket.getId() + Messages.getString("SwitchboardView.7"), POSConstants.CONFIRM, //$NON-NLS-1$ //$NON-NLS-2$
@@ -474,7 +498,9 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 		try {
 
 			if (tickets.size() == 0) {
-
+				if (ticketList.getOrderFiltersPanel().isOnlineOrderFilterSelected()) {
+					throw new PosException(POSConstants.SELECT_TICKET);
+				}
 				int ticketId = NumberSelectionDialog2.takeIntInput(Messages.getString("SwitchboardView.0")); //$NON-NLS-1$
 				if (ticketId == -1) {
 					return;
@@ -488,16 +514,21 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 
 			for (int i = 0; i < tickets.size(); i++) {
 				Ticket ticket = tickets.get(i);
+				if (ticket.isSourceOnline()) {
+					ticketsToShow.add(ticket);
+					continue;
+				}
 				ticketsToShow.add(TicketDAO.getInstance().loadFullTicket(ticket.getId()));
 			}
 
 			OrderInfoView view = new OrderInfoView(ticketsToShow);
-			OrderInfoDialog dialog = new OrderInfoDialog(view);
+			OrderInfoDialog dialog = new OrderInfoDialog(view, ticketList);
 			dialog.setSize(PosUIManager.getSize(400), PosUIManager.getSize(600));
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setLocationRelativeTo(Application.getPosWindow());
 			dialog.setVisible(true);
-
+		} catch (PosException e) {
+			POSMessageDialog.showError(this, e.getMessage());
 		} catch (Exception e) {
 			POSMessageDialog.showError(this, POSConstants.ERROR_MESSAGE, e);
 		}
@@ -678,6 +709,9 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 	private com.floreantpos.ui.TicketListView ticketList = new com.floreantpos.ui.TicketListView();
 
 	private TitledBorder ticketsListPanelBorder;
+
+	private JPanel firstRowButtonPanel;
+	private JXCollapsiblePane secondRowButtonPanel;
 
 	@Override
 	public void setVisible(boolean visible) {

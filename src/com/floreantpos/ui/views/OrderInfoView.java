@@ -66,7 +66,7 @@ public class OrderInfoView extends JPanel {
 		for (int i = 0; i < tickets.size(); i++) {
 			Ticket ticket = (Ticket) tickets.get(i);
 
-			TicketPrintProperties printProperties = new TicketPrintProperties("*** ORDER " + ticket.getId() + " ***", false, true, true); //$NON-NLS-1$ //$NON-NLS-2$
+			TicketPrintProperties printProperties = new TicketPrintProperties("*** ORDER " + ticket.getUniqueId() + " ***", false, true, true); //$NON-NLS-1$ //$NON-NLS-2$
 			HashMap map = ReceiptPrintService.populateTicketProperties(ticket, printProperties, null);
 			map.put(JRParameter.IS_IGNORE_PAGINATION, true);
 			JasperPrint jasperPrint = ReceiptPrintService.createPrint(ticket, map, null);

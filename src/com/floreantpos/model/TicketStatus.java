@@ -20,8 +20,58 @@ package com.floreantpos.model;
 import com.floreantpos.Messages;
 
 public enum TicketStatus {
-	PAID, HOLD, PAID_AND_HOLD, UNKNOWN;
-	
+	//@formatter:off
+	PAID, 
+	HOLD, 
+	PAID_AND_HOLD, 
+	UNKNOWN,
+	Pending("Pending"),
+	Confirmed("Confirmed"),
+	Preparing("Preparing"),
+	Ready("Ready"),
+	DriverAssigned("Driver assigned"),
+	OnTheWay("On the way"),
+	DeliveryFailed("Delivery failed"),
+	Canceled("Canceled"),
+	Completed("Completed"),
+	Unknown("Unknown");
+		//@formatter:on
+
+	private String displayString;
+
+	private TicketStatus() {
+	}
+
+	private TicketStatus(String display) {
+		this.displayString = display;
+	}
+
+	public String getDisplayString() {
+		return displayString;
+	}
+
+	public static TicketStatus fromName(String name) {
+		TicketStatus[] values = values();
+		for (TicketStatus ticketStatus : values) {
+			if (ticketStatus.name().equals(name)) {
+				return ticketStatus;
+			}
+		}
+
+		return Unknown;
+	}
+
+	public static TicketStatus fromDisplayString(String displayString) {
+		TicketStatus[] values = values();
+		for (TicketStatus ticketStatus : values) {
+			if (ticketStatus.displayString.equals(displayString)) {
+				return ticketStatus;
+			}
+		}
+
+		return Unknown;
+	}
+
 	public String toString() {
 		switch (this) {
 			case PAID_AND_HOLD:

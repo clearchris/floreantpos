@@ -25,15 +25,16 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
-import net.miginfocom.swing.MigLayout;
-
 import org.apache.commons.lang.StringUtils;
 import org.jdesktop.swingx.JXCollapsiblePane;
 
 import com.floreantpos.ITicketList;
 import com.floreantpos.Messages;
 import com.floreantpos.POSConstants;
+import com.floreantpos.PosLog;
 import com.floreantpos.config.TerminalConfig;
+import com.floreantpos.extension.ExtensionManager;
+import com.floreantpos.extension.OnlineOrderPlugin;
 import com.floreantpos.main.Application;
 import com.floreantpos.model.OrderType;
 import com.floreantpos.model.PaymentStatusFilter;
@@ -44,13 +45,15 @@ import com.floreantpos.swing.POSToggleButton;
 import com.floreantpos.ui.dialog.POSMessageDialog;
 import com.floreantpos.ui.dialog.PasswordEntryDialog;
 
+import net.miginfocom.swing.MigLayout;
+
 public class OrderFilterPanel extends JXCollapsiblePane {
 	private ITicketList ticketList;
 	private TicketListView ticketLists;
 	private POSToggleButton btnFilterByOpenStatus;
 	private POSToggleButton btnFilterByPaidStatus;
 	private POSToggleButton btnFilterByUnPaidStatus;
-
+	private POSToggleButton btnOnlineOrder;
 
 	/*private POSToggleButton btnCustomerFilterByOpenStatus;
 	private POSToggleButton btnCustomerAllStatus;*/
@@ -64,53 +67,69 @@ public class OrderFilterPanel extends JXCollapsiblePane {
 
 		createPaymentStatusFilterPanel();
 		createOrderTypeFilterPanel();
+		createOnlineOrderFilter();
+	}
+
+	private void createOnlineOrderFilter() {
+		try {
+			OnlineOrderPlugin orderPlugin = (OnlineOrderPlugin) ExtensionManager.getPlugin(OnlineOrderPlugin.class);
+			if (orderPlugin != null) {
+				btnOnlineOrder = orderPlugin.initFilterButton(getContentPane(), ticketLists);
+			}
+		} catch (Exception e) {
+			PosLog.error(getClass(), e);
+		}
+	}
+
+	public boolean isOnlineOrderFilterSelected() {
+		return btnOnlineOrder != null && btnOnlineOrder.isSelected();
 	}
 
 	/*public OrderFilterPanel(final ITicketList ticketList, final Integer memberId) {
 		this.ticketList = ticketList;
 		setCollapsed(true);
 		getContentPane().setLayout(new MigLayout("fill", "fill, grow", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
+	
 		btnCustomerFilterByOpenStatus = new POSToggleButton(PaymentStatusFilter.OPEN.toString());
 		btnCustomerAllStatus = new POSToggleButton(POSConstants.ALL);
-
+	
 		final ButtonGroup paymentGroup = new ButtonGroup();
 		paymentGroup.add(btnCustomerFilterByOpenStatus);
 		paymentGroup.add(btnCustomerAllStatus);
-
+	
 		String paymentStatusFilter = TerminalConfig.getCustomerPaymentStatusFilter();
-
+	
 		switch (paymentStatusFilter) {
 			case "OPEN":
 				btnCustomerFilterByOpenStatus.setSelected(true);
 				break;
-
+	
 			default:
 				btnCustomerAllStatus.setSelected(true);
 				break;
 		}
-
+	
 		ActionListener psFilterHandler = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+	
 				String actionCommand = e.getActionCommand();
-
+	
 				String filter = actionCommand.replaceAll("\\s", "_"); //$NON-NLS-1$ //$NON-NLS-2$
 				TerminalConfig.setCustomerPaymentStatusFilter(filter);
-
+	
 				ticketList.updateCustomerTicketList(memberId, filter);
 			}
 		};
-
+	
 		btnCustomerFilterByOpenStatus.addActionListener(psFilterHandler);
 		btnCustomerAllStatus.addActionListener(psFilterHandler);
-
+	
 		JPanel filterByPaymentStatusPanel = new JPanel(new MigLayout("", "", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		filterByPaymentStatusPanel.setBorder(new TitledBorder(Messages.getString("SwitchboardView.3"))); //$NON-NLS-1$
 		filterByPaymentStatusPanel.add(btnCustomerFilterByOpenStatus, "w 100!");
 		filterByPaymentStatusPanel.add(btnCustomerAllStatus, "w 100!");
-
+	
 		getContentPane().add(filterByPaymentStatusPanel);
 	}*/
 

@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.floreantpos.Messages;
 import com.floreantpos.actions.NewBarTabAction;
 import com.floreantpos.main.Application;
@@ -48,7 +49,10 @@ import com.floreantpos.util.NumberUtil;
 import com.floreantpos.util.POSUtil;
 
 @XmlRootElement(name = "ticket")
+@JsonIgnoreProperties(ignoreUnknown = true, value = { "orderType" })
 public class Ticket extends BaseTicket {
+
+	private static final String SOURCE_ONLINE = "Online";
 
 	private static final long serialVersionUID = 1L;
 	// public final static int TAKE_OUT = -1;
@@ -72,16 +76,17 @@ public class Ticket extends BaseTicket {
 	public static final String PROPERTY_CARD_AUTH_CODE = "card_auth_code"; //$NON-NLS-1$
 
 	private OrderType orderType;
+	private String source;
 
 	/* [CONSTRUCTOR MARKER BEGIN] */
-	public Ticket () {
+	public Ticket() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public Ticket (java.lang.Integer id) {
+	public Ticket(java.lang.Integer id) {
 		super(id);
 	}
 
@@ -113,6 +118,7 @@ public class Ticket extends BaseTicket {
 
 	private String sortOrder;
 	private Customer customer;
+	private boolean showNewOrderNotification;
 
 	//	public String getTableNumbers() {
 	//		Set<ShopTable> tables = getTables();
@@ -303,7 +309,7 @@ public class Ticket extends BaseTicket {
 		if (getGratuity() != null) {
 			totalAmount += getGratuity().getAmount();
 		}
-		
+
 		totalAmount += getAdjustmentAmount();
 		totalAmount = fixInvalidAmount(totalAmount);
 
@@ -657,6 +663,9 @@ public class Ticket extends BaseTicket {
 
 	public void setOrderType(OrderType type) {
 		orderType = type;
+		if (orderType == null) {
+			return;
+		}
 		setTicketType(type.getName());
 	}
 
@@ -908,4 +917,46 @@ public class Ticket extends BaseTicket {
 		}
 		return null;
 	}
+
+	public TicketStatus getTicketStatus() {
+		try {
+			String status = super.getStatus();
+			if (StringUtils.isBlank(status)) {
+				return TicketStatus.Unknown;
+			}
+
+			return TicketStatus.valueOf(status);
+		} catch (Exception e) {
+			return TicketStatus.Unknown;
+		}
+	}
+
+	public void setTicketStatus(TicketStatus ticketStatus) {
+		super.setStatus(ticketStatus.name());
+	}
+
+	public boolean isShowNewOrderNotification() {
+		return showNewOrderNotification;
+	}
+
+	public void setShowNewOrderNotification(boolean showNewOrderNotification) {
+		this.showNewOrderNotification = showNewOrderNotification;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public boolean isSourceOnline() {
+		return getSource() != null && getSource().equalsIgnoreCase(SOURCE_ONLINE);
+	}
+
+	public String getUniqueId() {
+		return isSourceOnline() ? getGlobalId() : String.valueOf(getId());
+	}
+
 }

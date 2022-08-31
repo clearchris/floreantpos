@@ -65,6 +65,7 @@ import com.floreantpos.model.MenuModifier;
 import com.floreantpos.model.ModifierGroup;
 import com.floreantpos.model.ModifierMultiplierPrice;
 import com.floreantpos.model.Multiplier;
+import com.floreantpos.model.OnlineOrder;
 import com.floreantpos.model.PackagingUnit;
 import com.floreantpos.model.PayoutReason;
 import com.floreantpos.model.PayoutRecepient;
@@ -193,6 +194,7 @@ public abstract class _RootDAO extends com.floreantpos.model.dao._BaseRootDAO {
 		configuration.addClass(ModifierMultiplierPrice.class);
 		configuration.addClass(TaxGroup.class);
 		configuration.addClass(GuestCheckPrint.class);
+		configuration.addClass(OnlineOrder.class);
 
 		configureInventoryClasses(configuration);
 

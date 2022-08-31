@@ -49,6 +49,8 @@ public class Restaurant extends BaseRestaurant {
 
 	/*[CONSTRUCTOR MARKER END]*/
 
+	private String defaultOutletId;
+
 	@Override
 	public String getCurrencyName() {
 		String currencyName = super.getCurrencyName();
@@ -137,5 +139,13 @@ public class Restaurant extends BaseRestaurant {
 
 	public void setAppDbVersion(int numericVersion) {
 		addProperty(APP_DB_VERSION, String.valueOf(numericVersion));
+	}
+
+	public String getDefaultOutletId() {
+		return defaultOutletId;
+	}
+
+	public void setDefaultOutletId(String defaultOutletId) {
+		this.defaultOutletId = defaultOutletId;
 	}
 }

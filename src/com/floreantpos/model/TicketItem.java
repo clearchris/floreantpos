@@ -29,6 +29,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.floreantpos.main.Application;
 import com.floreantpos.model.base.BaseTicketItem;
 import com.floreantpos.model.dao.MenuItemDAO;
@@ -36,6 +41,9 @@ import com.floreantpos.model.dao.PrinterGroupDAO;
 import com.floreantpos.util.DiscountUtil;
 import com.floreantpos.util.NumberUtil;
 
+@JsonIgnoreProperties(ignoreUnknown = true, value = { "menuItem", "ticket" })
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class TicketItem extends BaseTicketItem implements ITicketItem {
 	private static final long serialVersionUID = 1L;
 
@@ -51,7 +59,7 @@ public class TicketItem extends BaseTicketItem implements ITicketItem {
 		public int getValue() {
 			return value;
 		}
-		
+
 		public static PIZZA_SECTION_MODE from(int value) {
 			if (value == 2) {
 				return HALF;
@@ -77,32 +85,30 @@ public class TicketItem extends BaseTicketItem implements ITicketItem {
 	}
 
 	/*[CONSTRUCTOR MARKER BEGIN]*/
-	public TicketItem () {
+	public TicketItem() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public TicketItem (java.lang.Integer id) {
+	public TicketItem(java.lang.Integer id) {
 		super(id);
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public TicketItem (
-		java.lang.Integer id,
-		com.floreantpos.model.Ticket ticket) {
+	public TicketItem(java.lang.Integer id, com.floreantpos.model.Ticket ticket) {
 
-		super (
-			id,
-			ticket);
+		super(id, ticket);
 	}
 
 	/*[CONSTRUCTOR MARKER END]*/
 
 	private MenuItem menuItem;
+	private String menuItemId;
+	private Double quantity;
 
 	public TicketItem clone(TicketItem source) {
 		try {
@@ -571,7 +577,7 @@ public class TicketItem extends BaseTicketItem implements ITicketItem {
 						subTotalAmount += ticketItemModifier.getSubTotalAmount();
 					}
 					else {
-						
+
 						/*	if modifier is not selected as section wise modifier
 						 *  then average price for modifier will be applied
 						 * 
@@ -886,8 +892,8 @@ public class TicketItem extends BaseTicketItem implements ITicketItem {
 			Integer itemId = ticketItemModifier.getModifierId();
 			if (multiplier != null) {
 				if ((itemId != null && itemId.intValue() == menuModifier.getId().intValue())
-						&& (sectionName != null && sectionName.equals(ticketItemModifier.getSectionName()) && (multiplier != null && multiplier.getName()
-								.equals(ticketItemModifier.getMultiplierName())))) {
+						&& (sectionName != null && sectionName.equals(ticketItemModifier.getSectionName())
+								&& (multiplier != null && multiplier.getName().equals(ticketItemModifier.getMultiplierName())))) {
 					return ticketItemModifier;
 				}
 			}
@@ -954,12 +960,34 @@ public class TicketItem extends BaseTicketItem implements ITicketItem {
 
 		return false;
 	}
-	
-	public java.util.List<com.floreantpos.model.TicketItemDiscount> getDiscounts () {
-		if(super.getDiscounts()==null) {
+
+	public java.util.List<com.floreantpos.model.TicketItemDiscount> getDiscounts() {
+		if (super.getDiscounts() == null) {
 			super.setDiscounts(new ArrayList<TicketItemDiscount>());
 		}
 		return super.getDiscounts();
-}
+	}
 
+	public String getMenuItemId() {
+		if (menuItemId == null) {
+			return getItemCode();
+		}
+		return menuItemId;
+	}
+
+	public void setMenuItemId(String menuItemId) {
+		this.menuItemId = menuItemId;
+	}
+
+	public Double getQuantity() {
+		if (quantity != null) {
+			return quantity;
+		}
+		return super.getItemQuantity();
+	}
+
+	public void setQuantity(Double quantity) {
+		super.setItemQuantity(this.quantity = quantity);
+		setItemCount(super.getItemQuantity().intValue());
+	}
 }

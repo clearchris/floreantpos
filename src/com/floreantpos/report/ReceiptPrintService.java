@@ -194,7 +194,7 @@ public class ReceiptPrintService {
 				return;
 			}
 
-			TicketPrintProperties printProperties = new TicketPrintProperties("*** ORDER " + ticket.getId() + " ***", false, true, true); //$NON-NLS-1$ //$NON-NLS-2$
+			TicketPrintProperties printProperties = new TicketPrintProperties("*** ORDER " + ticket.getUniqueId() + " ***", false, true, true); //$NON-NLS-1$ //$NON-NLS-2$
 			printProperties.setPrintCookingInstructions(false);
 			HashMap map = populateTicketProperties(ticket, printProperties, null);
 
@@ -216,7 +216,7 @@ public class ReceiptPrintService {
 			if (activeReceiptPrinters == null || activeReceiptPrinters.isEmpty()) {
 
 				JasperPrint jasperPrint = createPrint(ticket, map, null);
-				jasperPrint.setName(ORDER_ + ticket.getId());
+				jasperPrint.setName(ORDER_ + ticket.getUniqueId());
 				jasperPrint.setProperty(PROP_PRINTER_NAME, receiptPrinter);
 				printQuitely(jasperPrint);
 
@@ -226,7 +226,7 @@ public class ReceiptPrintService {
 				for (Printer activeReceiptPrinter : activeReceiptPrinters) {
 
 					JasperPrint jasperPrint = createPrint(ticket, map, null);
-					jasperPrint.setName(ORDER_ + ticket.getId() + activeReceiptPrinter.getDeviceName());
+					jasperPrint.setName(ORDER_ + ticket.getUniqueId() + activeReceiptPrinter.getDeviceName());
 					jasperPrint.setProperty(PROP_PRINTER_NAME, activeReceiptPrinter.getDeviceName());
 					printQuitely(jasperPrint);
 				}
@@ -251,7 +251,7 @@ public class ReceiptPrintService {
 			if (StringUtils.isEmpty(receiptPrinter)) {
 				return;
 			}
-			TicketPrintProperties printProperties = new TicketPrintProperties("*** ORDER " + ticket.getId() + " ***", false, true, true); //$NON-NLS-1$ //$NON-NLS-2$
+			TicketPrintProperties printProperties = new TicketPrintProperties("*** ORDER " + ticket.getUniqueId() + " ***", false, true, true); //$NON-NLS-1$ //$NON-NLS-2$
 			printProperties.setPrintCookingInstructions(false);
 			HashMap map = populateTicketProperties(ticket, printProperties, null);
 			map.put("copyType", copyType); //$NON-NLS-1$
@@ -274,7 +274,7 @@ public class ReceiptPrintService {
 
 			if (activeReceiptPrinters == null || activeReceiptPrinters.isEmpty()) {
 				JasperPrint jasperPrint = createPrint(ticket, map, null);
-				jasperPrint.setName(ORDER_ + ticket.getId());
+				jasperPrint.setName(ORDER_ + ticket.getUniqueId());
 				jasperPrint.setProperty(PROP_PRINTER_NAME, receiptPrinter);
 				printQuitely(jasperPrint);
 
@@ -286,7 +286,7 @@ public class ReceiptPrintService {
 						continue;
 					}
 					JasperPrint jasperPrint = createPrint(ticket, map, null);
-					jasperPrint.setName(ORDER_ + ticket.getId() + deviceName);
+					jasperPrint.setName(ORDER_ + ticket.getUniqueId() + deviceName);
 					jasperPrint.setProperty(PROP_PRINTER_NAME, deviceName);
 					printQuitely(jasperPrint);
 				}
@@ -474,10 +474,12 @@ public class ReceiptPrintService {
 		map.put(SHOW_FOOTER, Boolean.valueOf(printProperties.isShowFooter()));
 
 		map.put(TERMINAL, POSConstants.RECEIPT_REPORT_TERMINAL_LABEL + Application.getInstance().getTerminal().getId());
-		map.put(CHECK_NO, POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL + ticket.getId());
+		map.put(CHECK_NO, POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL + ticket.getUniqueId());
 		map.put(TABLE_NO, POSConstants.RECEIPT_REPORT_TABLE_NO_LABEL + ticket.getTableNumbers());
 		map.put(GUEST_COUNT, POSConstants.RECEIPT_REPORT_GUEST_NO_LABEL + ticket.getNumberOfGuests());
-		map.put(SERVER_NAME, POSConstants.RECEIPT_REPORT_SERVER_LABEL + ticket.getOwner());
+		if (ticket.getOwner() != null) {
+			map.put(SERVER_NAME, POSConstants.RECEIPT_REPORT_SERVER_LABEL + ticket.getOwner());
+		}
 		map.put(REPORT_DATE, POSConstants.RECEIPT_REPORT_DATE_LABEL + Application.formatDate(new Date()));
 
 		StringBuilder ticketHeaderBuilder = buildTicketHeader(ticket, printProperties);
@@ -485,7 +487,7 @@ public class ReceiptPrintService {
 		map.put("ticketHeader", ticketHeaderBuilder.toString()); //$NON-NLS-1$
 
 		if (TerminalConfig.isShowBarcodeOnReceipt()) {
-			map.put("barcode", String.valueOf(ticket.getId())); //$NON-NLS-1$
+			map.put("barcode", String.valueOf(ticket.getUniqueId())); //$NON-NLS-1$
 		}
 
 		if (printProperties.isShowHeader()) {
@@ -617,20 +619,22 @@ public class ReceiptPrintService {
 		StringBuilder ticketHeaderBuilder = new StringBuilder();
 		ticketHeaderBuilder.append("<html>"); //$NON-NLS-1$
 
-		beginRow(ticketHeaderBuilder);
-		addColumn(ticketHeaderBuilder, "*" + ticket.getOrderType() + "*"); //$NON-NLS-1$ //$NON-NLS-2$
-		endRow(ticketHeaderBuilder);
+		if (ticket.getOrderType() != null) {
+			beginRow(ticketHeaderBuilder);
+			addColumn(ticketHeaderBuilder, "*" + ticket.getOrderType() + "*"); //$NON-NLS-1$ //$NON-NLS-2$
+			endRow(ticketHeaderBuilder);
+		}
 
 		beginRow(ticketHeaderBuilder);
 		addColumn(ticketHeaderBuilder, POSConstants.RECEIPT_REPORT_TERMINAL_LABEL + Application.getInstance().getTerminal().getId());
 		endRow(ticketHeaderBuilder);
 
 		beginRow(ticketHeaderBuilder);
-		addColumn(ticketHeaderBuilder, POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL + ticket.getId());
+		addColumn(ticketHeaderBuilder, POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL + ticket.getUniqueId());
 		endRow(ticketHeaderBuilder);
 
 		OrderType orderType = ticket.getOrderType();
-		if (orderType.isShowTableSelection() || orderType.isShowGuestSelection()) {//fix
+		if (orderType != null && (orderType.isShowTableSelection() || orderType.isShowGuestSelection())) {//fix
 			beginRow(ticketHeaderBuilder);
 			addColumn(ticketHeaderBuilder, POSConstants.RECEIPT_REPORT_TABLE_NO_LABEL + ticket.getTableNumbers());
 			endRow(ticketHeaderBuilder);
@@ -640,9 +644,11 @@ public class ReceiptPrintService {
 			endRow(ticketHeaderBuilder);
 		}
 
-		beginRow(ticketHeaderBuilder);
-		addColumn(ticketHeaderBuilder, POSConstants.RECEIPT_REPORT_SERVER_LABEL + ticket.getOwner());
-		endRow(ticketHeaderBuilder);
+		if (ticket.getOwner() != null) {
+			beginRow(ticketHeaderBuilder);
+			addColumn(ticketHeaderBuilder, POSConstants.RECEIPT_REPORT_SERVER_LABEL + ticket.getOwner());
+			endRow(ticketHeaderBuilder);
+		}
 
 		beginRow(ticketHeaderBuilder);
 		addColumn(ticketHeaderBuilder, POSConstants.RECEIPT_REPORT_DATE_LABEL + reportDateFormat.format(new Date()));
@@ -670,7 +676,7 @@ public class ReceiptPrintService {
 		}
 
 		//customer info section
-		if (orderType.isRequiredCustomerData()) {
+		if ((orderType != null && orderType.isRequiredCustomerData()) || ticket.isSourceOnline()) {
 
 			String customerName = ticket.getProperty(Ticket.CUSTOMER_NAME);
 			String customerMobile = ticket.getProperty(Ticket.CUSTOMER_MOBILE);

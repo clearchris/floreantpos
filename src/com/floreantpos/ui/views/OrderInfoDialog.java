@@ -28,7 +28,11 @@ import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
+import com.floreantpos.ITicketList;
 import com.floreantpos.Messages;
+import com.floreantpos.PosLog;
+import com.floreantpos.extension.ExtensionManager;
+import com.floreantpos.extension.OnlineOrderPlugin;
 import com.floreantpos.main.Application;
 import com.floreantpos.model.Ticket;
 import com.floreantpos.model.TicketItem;
@@ -39,12 +43,13 @@ import com.floreantpos.model.UserPermission;
 import com.floreantpos.report.ReceiptPrintService;
 import com.floreantpos.swing.PosButton;
 import com.floreantpos.swing.PosUIManager;
+import com.floreantpos.ui.RefreshableView;
 import com.floreantpos.ui.dialog.POSDialog;
 import com.floreantpos.ui.dialog.POSMessageDialog;
 import com.floreantpos.ui.views.order.OrderView;
 import com.floreantpos.ui.views.order.RootView;
 
-public class OrderInfoDialog extends POSDialog {
+public class OrderInfoDialog extends POSDialog implements RefreshableView {
 	OrderInfoView view;
 	private boolean reorder = false;
 	private PosButton btnReOrder;
@@ -53,17 +58,31 @@ public class OrderInfoDialog extends POSDialog {
 	private PosButton btnPrintDriverCopy;
 
 	public OrderInfoDialog(OrderInfoView view) {
+		this(view, null);
+	}
+
+	public OrderInfoDialog(OrderInfoView view, ITicketList iTicketList) {
 		this.view = view;
 		setTitle(Messages.getString("OrderInfoDialog.0")); //$NON-NLS-1$
 
-		createUI();
+		createUI(iTicketList);
 	}
 
-	public void createUI() {
+	public void createUI(ITicketList iTicketList) {
 		add(view);
 
 		JPanel panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.SOUTH);
+
+		List<Ticket> tickets = view.getTickets();
+		if (iTicketList != null && tickets != null && tickets.size() > 0 && tickets.get(0).isSourceOnline()) {
+			OnlineOrderPlugin plugin = (OnlineOrderPlugin) ExtensionManager.getPlugin(OnlineOrderPlugin.class);
+			if (plugin != null) {
+				JPanel orderMgmtPanel = new JPanel();
+				panel.add(orderMgmtPanel);
+				plugin.initOrderInfoActionButtons(orderMgmtPanel, iTicketList, this);
+			}
+		}
 
 		btnReOrder = new PosButton("Reorder");
 
@@ -82,8 +101,10 @@ public class OrderInfoDialog extends POSDialog {
 				}
 			}
 		});
-
-		panel.add(btnReOrder);
+		boolean onlineOrder = view.getTickets() != null && view.getTickets().size() > 0 && view.getTickets().get(0).isSourceOnline();
+		if (!onlineOrder) {
+			panel.add(btnReOrder);
+		}
 
 		btnTransferUser = new PosButton();
 		btnTransferUser.setText(Messages.getString("OrderInfoDialog.3")); //$NON-NLS-1$
@@ -114,7 +135,9 @@ public class OrderInfoDialog extends POSDialog {
 			}
 		});
 
-		panel.add(btnTransferUser);
+		if (!onlineOrder) {
+			panel.add(btnTransferUser);
+		}
 
 		btnPrint = new PosButton();
 		btnPrint.addActionListener(new ActionListener() {
@@ -143,6 +166,7 @@ public class OrderInfoDialog extends POSDialog {
 		});
 		btnClose.setText(Messages.getString("OrderInfoDialog.2")); //$NON-NLS-1$
 		panel.add(btnClose);
+
 	}
 
 	private void doPrintDriverCopy() {
@@ -265,5 +289,15 @@ public class OrderInfoDialog extends POSDialog {
 	public void showOnlyPrintButton() {
 		btnReOrder.setVisible(false);
 		btnTransferUser.setVisible(false);
+	}
+
+	@Override
+	public void refresh() {
+		try {
+			view.getReportPanel().removeAll();
+			view.createReport();
+		} catch (Exception e) {
+			PosLog.error(getClass(), e);
+		}
 	}
 }
