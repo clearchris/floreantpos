@@ -22,7 +22,7 @@
 		<property column="PAID" name="paid" type="java.lang.Boolean" />
 		<property column="SETTLED" name="closed" type="java.lang.Boolean" />
 		<property column="EXPIRY_DATE" name="expiryDate" type="java.util.Date" />
-		<property column="TICKET_JSON" name="ticketJson" type="text" length="100000"/>
+		<property column="TICKET_JSON" name="ticketJson" type="text" length="1000000"/>
 		<property column="PROPERTIES" name="properties" type="text" length="1000"/>
 
 	</class>

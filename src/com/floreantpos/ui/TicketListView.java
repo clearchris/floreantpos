@@ -54,7 +54,6 @@ import com.floreantpos.model.DataUpdateInfo;
 import com.floreantpos.model.Ticket;
 import com.floreantpos.model.User;
 import com.floreantpos.model.dao.DataUpdateInfoDAO;
-import com.floreantpos.model.dao.OnlineOrderDAO;
 import com.floreantpos.model.dao.TicketDAO;
 import com.floreantpos.swing.POSToggleButton;
 import com.floreantpos.swing.PaginatedTableModel;
@@ -318,7 +317,7 @@ public class TicketListView extends JPanel implements ITicketList {
 			TicketListTableModel ticketListTableModel = getTableModel();
 			ticketListTableModel.setCurrentRowIndex(0);
 			if (!orderFiltersPanel.isOnlineOrderFilterSelected()) {
-				ticketListTableModel.setNumRows(OnlineOrderDAO.getInstance().getNumTickets());
+				ticketListTableModel.setNumRows(TicketDAO.getInstance().getNumTickets());
 				TicketDAO.getInstance().loadTickets(ticketListTableModel);
 			}
 			else {

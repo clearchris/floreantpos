@@ -236,7 +236,9 @@ public class MenuItemView extends SelectionView {
 
 		public void actionPerformed(ActionEvent e) {
 			if (OrderView.getInstance().isVisible() && RootView.getInstance().isMaintenanceMode()) {
-				foodItem = MenuItemDAO.getInstance().loadInitialized(foodItem.getId());
+				if (foodItem.getId() != null) {
+					foodItem = MenuItemDAO.getInstance().loadInitialized(foodItem.getId());
+				}
 				QuickMaintenanceExplorer.quickMaintain(foodItem);
 			}
 			fireItemSelected(foodItem);
