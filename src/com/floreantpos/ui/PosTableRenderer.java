@@ -89,7 +89,7 @@ public class PosTableRenderer extends DefaultTableCellRenderer {
 			TableModel tableModel = table.getModel();
 			if (tableModel instanceof ListTableModel) {
 				ListTableModel listTableModel = (ListTableModel) tableModel;
-				Object rowData = listTableModel.getRowData(row);
+				Object rowData = listTableModel.getRowData(table.convertRowIndexToModel(row));
 				if (rowData instanceof Ticket) {
 					ticket = (Ticket) rowData;
 				}
