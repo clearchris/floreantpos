@@ -35,6 +35,8 @@ public class TerminalConfig {
 	private static final String SHOW_GUEST_SELECTION = "show_guest_selection"; //$NON-NLS-1$
 
 	private static final String ORDER_TYPE_FILTER = "order_type_filter"; //$NON-NLS-1$
+	
+	private static final String ONLINE_ORDER_FILTER = "online_order_filter"; //$NON-NLS-1$
 
 	private static final String PS_FILTER = "ps_filter"; //$NON-NLS-1$
 
@@ -543,4 +545,12 @@ public class TerminalConfig {
 	public static int getKDSTicketsPerPage() {
 		return config.getInt(KDS_TICKETS_PER_PAGE, 4);
 	}
+
+	public static void setSelectedOnlineOrderFilter(boolean selected) {
+		config.setProperty(ONLINE_ORDER_FILTER, selected);
+	}
+	public static boolean isSelectedOnlineOrderFilter() {
+		return config.getBoolean(ONLINE_ORDER_FILTER, false);
+	}
+
 }

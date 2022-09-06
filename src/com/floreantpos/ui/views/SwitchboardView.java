@@ -103,6 +103,8 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 
 	private JPanel orderPanel;
 
+	private JPanel onlineOrderActionsButtonPanel;
+
 	//TicketListView tickteListViewObj;
 	/** Creates new form SwitchboardView */
 	private SwitchboardView() {
@@ -267,17 +269,39 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 
 	private JPanel createActivityPanel() {
 		JPanel activityPanel = new JPanel(new BorderLayout(5, 5));
-		JPanel innerActivityPanel = new JPanel(new MigLayout("hidemode 3, fill, ins 0", "fill, grow", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		innerActivityPanel = new JPanel(new MigLayout("hidemode 3, fill, ins 0", "fill, grow", ""));
 
-		firstRowButtonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
-		secondRowButtonPanel = new JXCollapsiblePane();
+		JPanel firstRowButtonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
+		JXCollapsiblePane secondRowButtonPanel = new JXCollapsiblePane();
 		secondRowButtonPanel.setAnimated(false);
 		secondRowButtonPanel.setCollapsed(true);
 		secondRowButtonPanel.setVisible(false);
 		secondRowButtonPanel.getContentPane().setLayout(new GridLayout(1, 0, 5, 5));
 
-		updateButtonsView();
+		if (Application.getInstance().getTerminal().isHasCashDrawer()) {
+			firstRowButtonPanel.add(btnOrderInfo);
+			firstRowButtonPanel.add(btnEditTicket);
+			firstRowButtonPanel.add(btnSettleTicket);
+			firstRowButtonPanel.add(btnGroupSettle);
+			firstRowButtonPanel.add(btnCloseOrder);
 
+			secondRowButtonPanel.getContentPane().add(btnSplitTicket);
+			secondRowButtonPanel.getContentPane().add(btnReopenTicket);
+			secondRowButtonPanel.getContentPane().add(btnVoidTicket);
+			secondRowButtonPanel.getContentPane().add(btnRefundTicket);
+			secondRowButtonPanel.getContentPane().add(btnAssignDriver);
+		}
+		else {
+			firstRowButtonPanel.add(btnOrderInfo);
+			firstRowButtonPanel.add(btnEditTicket);
+			firstRowButtonPanel.add(btnCloseOrder);
+			firstRowButtonPanel.add(btnSplitTicket);
+
+			secondRowButtonPanel.getContentPane().add(btnReopenTicket);
+			secondRowButtonPanel.getContentPane().add(btnVoidTicket);
+			secondRowButtonPanel.getContentPane().add(btnRefundTicket);
+			secondRowButtonPanel.getContentPane().add(btnAssignDriver);
+		}
 		innerActivityPanel.add(firstRowButtonPanel);
 		innerActivityPanel.add(secondRowButtonPanel, "newline"); //$NON-NLS-1$
 
@@ -301,53 +325,41 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 
 		activityPanel.add(innerActivityPanel);
 		activityPanel.add(btnMore, BorderLayout.EAST);
+		OnlineOrderPlugin orderPlugin = (OnlineOrderPlugin) ExtensionManager.getPlugin(OnlineOrderPlugin.class);
+		if (orderPlugin != null) {
+			onlineOrderActionsButtonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
+			PosButton btnShowOnlineOrderInfo = new PosButton(POSConstants.ORDER_INFO_BUTTON_TEXT);
+			btnShowOnlineOrderInfo.addActionListener(new ActionListener() {
 
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					doShowOrderInfo();
+				}
+			});
+			onlineOrderActionsButtonPanel.add(btnShowOnlineOrderInfo);
+			activityPanel.add(onlineOrderActionsButtonPanel, BorderLayout.SOUTH);
+			orderPlugin.initSwitchboardActionButtons(onlineOrderActionsButtonPanel, ticketList, new RefreshableView() {
+
+				@Override
+				public void refresh() {
+				}
+			});
+		}
+		updateButtonsView();
 		return activityPanel;
 	}
 
 	public void updateButtonsView() {
-		firstRowButtonPanel.removeAll();
-		secondRowButtonPanel.removeAll();
-
-		if (ticketList.getOrderFiltersPanel().isOnlineOrderFilterSelected()) {
-			OnlineOrderPlugin orderPlugin = (OnlineOrderPlugin) ExtensionManager.getPlugin(OnlineOrderPlugin.class);
-			if (orderPlugin != null) {
-				firstRowButtonPanel.add(btnOrderInfo);
-				orderPlugin.initSwitchboardActionButtons(firstRowButtonPanel, secondRowButtonPanel, ticketList, new RefreshableView() {
-
-					@Override
-					public void refresh() {
-					}
-				});
-			}
-
+		OnlineOrderPlugin orderPlugin = (OnlineOrderPlugin) ExtensionManager.getPlugin(OnlineOrderPlugin.class);
+		if (orderPlugin == null) {
+			return;
 		}
-		else {
-			if (Application.getInstance().getTerminal().isHasCashDrawer()) {
-				firstRowButtonPanel.add(btnOrderInfo);
-				firstRowButtonPanel.add(btnEditTicket);
-				firstRowButtonPanel.add(btnSettleTicket);
-				firstRowButtonPanel.add(btnGroupSettle);
-				firstRowButtonPanel.add(btnCloseOrder);
-
-				secondRowButtonPanel.getContentPane().add(btnSplitTicket);
-				secondRowButtonPanel.getContentPane().add(btnReopenTicket);
-				secondRowButtonPanel.getContentPane().add(btnVoidTicket);
-				secondRowButtonPanel.getContentPane().add(btnRefundTicket);
-				secondRowButtonPanel.getContentPane().add(btnAssignDriver);
-			}
-			else {
-				firstRowButtonPanel.add(btnOrderInfo);
-				firstRowButtonPanel.add(btnEditTicket);
-				firstRowButtonPanel.add(btnCloseOrder);
-				firstRowButtonPanel.add(btnSplitTicket);
-
-				secondRowButtonPanel.getContentPane().add(btnReopenTicket);
-				secondRowButtonPanel.getContentPane().add(btnVoidTicket);
-				secondRowButtonPanel.getContentPane().add(btnRefundTicket);
-				secondRowButtonPanel.getContentPane().add(btnAssignDriver);
-			}
+		Ticket selectedTicket = getSelectedTicket();
+		boolean sourceOnline = selectedTicket == null ? false : selectedTicket.isSourceOnline();
+		if (onlineOrderActionsButtonPanel != null) {
+			onlineOrderActionsButtonPanel.setVisible(sourceOnline);
 		}
+		innerActivityPanel.setVisible(!sourceOnline);
 	}
 
 	protected void doCloseOrder() {
@@ -707,11 +719,8 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 	//private PosBlinkButton btnRefreshTicketList = new PosBlinkButton(Messages.getString(Messages.getString("SwitchboardView.21"))); //NON-NLS-1$ //$NON-NLS-1$
 
 	private com.floreantpos.ui.TicketListView ticketList = new com.floreantpos.ui.TicketListView();
-
 	private TitledBorder ticketsListPanelBorder;
-
-	private JPanel firstRowButtonPanel;
-	private JXCollapsiblePane secondRowButtonPanel;
+	private JPanel innerActivityPanel;
 
 	@Override
 	public void setVisible(boolean visible) {
@@ -792,5 +801,4 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 	@Override
 	public void updateCustomerTicketList(Integer customerId) {
 	}
-
 }

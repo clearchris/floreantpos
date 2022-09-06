@@ -1,6 +1,5 @@
 package com.floreantpos.model.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -21,7 +20,7 @@ public class OnlineOrderDAO extends BaseOnlineOrderDAO {
 	public OnlineOrderDAO() {
 	}
 
-	public List<OnlineOrder> loadData(PaginatedTableModel tableModel) {
+	public int getNumOfOnlineOrders() {
 		Session session = null;
 		try {
 			session = createNewSession();
@@ -31,11 +30,19 @@ public class OnlineOrderDAO extends BaseOnlineOrderDAO {
 			updateCriteriaFilters(criteria);
 			Number result = (Number) criteria.uniqueResult();
 			int rowCount = result == null ? 0 : result.intValue();
-			tableModel.setNumRows(rowCount);
-			if (rowCount == 0) {
-				return new ArrayList<>();
-			}
-			criteria.setProjection(null);
+			return rowCount;
+		} finally {
+			closeSession(session);
+		}
+	}
+
+	public List<OnlineOrder> loadData(PaginatedTableModel tableModel) {
+		Session session = null;
+		try {
+			session = createNewSession();
+			Criteria criteria = session.createCriteria(OnlineOrder.class);
+			criteria.add(Restrictions.isNotNull(OnlineOrder.PROP_TICKET_JSON));
+			updateCriteriaFilters(criteria);
 			criteria.addOrder(Order.desc(OnlineOrder.PROP_ORDER_DATE));
 			criteria.setFirstResult(tableModel.getCurrentRowIndex());
 			criteria.setMaxResults(tableModel.getPageSize());

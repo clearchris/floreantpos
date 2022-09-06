@@ -51,6 +51,7 @@ import com.floreantpos.extension.ExtensionManager;
 import com.floreantpos.extension.OnlineOrderPlugin;
 import com.floreantpos.main.Application;
 import com.floreantpos.model.DataUpdateInfo;
+import com.floreantpos.model.OrderType;
 import com.floreantpos.model.Ticket;
 import com.floreantpos.model.User;
 import com.floreantpos.model.dao.DataUpdateInfoDAO;
@@ -118,7 +119,7 @@ public class TicketListView extends JPanel implements ITicketList {
 		tableModel.setPageSize(25);
 		table.setRowHeight(PosUIManager.getSize(60));
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-		table.setDefaultRenderer(Object.class, new PosTableRenderer());
+		table.setDefaultRenderer(Object.class, new PosTableRenderer(ExtensionManager.getPlugin(OnlineOrderPlugin.class) != null));
 		table.setGridColor(Color.LIGHT_GRAY);
 		table.getTableHeader().setPreferredSize(new Dimension(100, PosUIManager.getSize(40)));
 
@@ -249,10 +250,8 @@ public class TicketListView extends JPanel implements ITicketList {
 			public void actionPerformed(ActionEvent e) {
 				if (tableModel.hasPrevious()) {
 					tableModel.setCurrentRowIndex(tableModel.getPreviousRowIndex());
-					if (!orderFiltersPanel.isOnlineOrderFilterSelected()) {
-						TicketDAO.getInstance().loadTickets(tableModel);
-					}
-					else {
+					TicketDAO.getInstance().loadTickets(tableModel);
+					if (orderFiltersPanel.isOnlineOrderFilterSelected()) {
 						loadOnlineTickets();
 					}
 				}
@@ -266,10 +265,8 @@ public class TicketListView extends JPanel implements ITicketList {
 			public void actionPerformed(ActionEvent e) {
 				if (tableModel.hasNext()) {
 					tableModel.setCurrentRowIndex(tableModel.getNextRowIndex());
-					if (!orderFiltersPanel.isOnlineOrderFilterSelected()) {
-						TicketDAO.getInstance().loadTickets(tableModel);
-					}
-					else {
+					TicketDAO.getInstance().loadTickets(tableModel);
+					if (orderFiltersPanel.isOnlineOrderFilterSelected()) {
 						loadOnlineTickets();
 					}
 				}
@@ -316,11 +313,9 @@ public class TicketListView extends JPanel implements ITicketList {
 
 			TicketListTableModel ticketListTableModel = getTableModel();
 			ticketListTableModel.setCurrentRowIndex(0);
-			if (!orderFiltersPanel.isOnlineOrderFilterSelected()) {
-				ticketListTableModel.setNumRows(TicketDAO.getInstance().getNumTickets());
-				TicketDAO.getInstance().loadTickets(ticketListTableModel);
-			}
-			else {
+			ticketListTableModel.setNumRows(TicketDAO.getInstance().getNumTickets());
+			TicketDAO.getInstance().loadTickets(ticketListTableModel);
+			if (orderFiltersPanel.isOnlineOrderFilterSelected()) {
 				loadOnlineTickets();
 			}
 			btnRefresh.setBlinking(false);
@@ -507,8 +502,16 @@ public class TicketListView extends JPanel implements ITicketList {
 					return ticket.getDeliveryDate();
 
 				case 7:
-					return ticket.getOrderType();
-
+					OrderType orderType = ticket.getOrderType();
+					if (orderType != null) {
+						return orderType;
+					}
+					if (ticket.isSourceOnline()) {
+						if (ticket.isCustomerWillPickup()) {
+							return Messages.getString("TicketListView.18"); //$NON-NLS-1$
+						}
+						return Messages.getString("TicketListView.19"); //$NON-NLS-1$
+					}
 				case 8:
 					String status = ""; //$NON-NLS-1$
 					if (ticket.isPaid()) {

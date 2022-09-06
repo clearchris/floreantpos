@@ -21,8 +21,6 @@ import java.awt.Container;
 
 import javax.swing.JPanel;
 
-import org.jdesktop.swingx.JXCollapsiblePane;
-
 import com.floreantpos.ITicketList;
 import com.floreantpos.swing.POSToggleButton;
 import com.floreantpos.swing.PaginatedTableModel;
@@ -36,6 +34,5 @@ public abstract class OnlineOrderPlugin extends AbstractFloreantPlugin {
 
 	public abstract void initOrderInfoActionButtons(JPanel panel, ITicketList iTicketList, RefreshableView refreshableView);
 
-	public abstract void initSwitchboardActionButtons(JPanel firstRowButtonPanel, JXCollapsiblePane secondRowButtonPanel, ITicketList iTicketList,
-			RefreshableView refreshableView);
+	public abstract void initSwitchboardActionButtons(JPanel onlineOrdersActionButtonPanel, ITicketList iTicketList, RefreshableView refreshableView);
 }

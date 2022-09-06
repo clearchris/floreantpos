@@ -30,7 +30,11 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 
+import com.floreantpos.IconFactory;
+import com.floreantpos.model.Ticket;
+import com.floreantpos.swing.ListTableModel;
 import com.floreantpos.util.NumberUtil;
 
 public class PosTableRenderer extends DefaultTableCellRenderer {
@@ -40,17 +44,28 @@ public class PosTableRenderer extends DefaultTableCellRenderer {
 	 */
 	private JCheckBox checkBox = new JCheckBox();
 	private JLabel lblColor = new JLabel();
-	
-	public PosTableRenderer(){
+	private boolean showOnlineIcon;
+
+	public PosTableRenderer() {
+		this(false);
+	}
+
+	public PosTableRenderer(boolean showOnlineIcon) {
+		this.showOnlineIcon = showOnlineIcon;
 		checkBox.setHorizontalAlignment(SwingConstants.CENTER);
 		lblColor.setOpaque(true);
 	}
-	
+
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-		if(value instanceof Boolean) {
-			checkBox.setSelected(((Boolean)value).booleanValue());
-			if(isSelected) {
+		JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, false, row, column);
+		if (showOnlineIcon) {
+			label.setIcon(null);
+		}
+		label.setIcon(null);
+		if (value instanceof Boolean) {
+			checkBox.setSelected(((Boolean) value).booleanValue());
+			if (isSelected) {
 				checkBox.setBackground(table.getSelectionBackground());
 			}
 			else {
@@ -58,46 +73,61 @@ public class PosTableRenderer extends DefaultTableCellRenderer {
 			}
 			return checkBox;
 		}
-		if(value instanceof Color) {
+		if (value instanceof Color) {
 			Color color = (Color) value;
 			String rgb = Integer.toHexString(color.getRGB()).toUpperCase();
 			rgb = rgb.substring(2, rgb.length());
-			
+
 			lblColor.setText(rgb);
 			lblColor.setBackground(color);
-			
+
 			return lblColor;
 		}
-		
-		JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, false, row, column);
-		
+
+		if (showOnlineIcon && column == 0) {
+			Ticket ticket = null;
+			TableModel tableModel = table.getModel();
+			if (tableModel instanceof ListTableModel) {
+				ListTableModel listTableModel = (ListTableModel) tableModel;
+				Object rowData = listTableModel.getRowData(row);
+				if (rowData instanceof Ticket) {
+					ticket = (Ticket) rowData;
+				}
+			}
+			if (ticket == null) {
+				return label;
+			}
+			if (ticket.isSourceOnline()) {
+				label.setIcon(IconFactory.getIcon("/ui_icons/", "cloud.png")); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+		}
 		return label;
 	}
-	
+
 	@Override
 	protected void setValue(Object value) {
-		if(value == null) {
+		if (value == null) {
 			setText(""); //$NON-NLS-1$
 			return;
 		}
-		
+
 		String text = value.toString();
-		
-		if(value instanceof Double || value instanceof Float) {
+
+		if (value instanceof Double || value instanceof Float) {
 			text = NumberUtil.formatNumber(((java.lang.Number) value).doubleValue());
 			setHorizontalAlignment(SwingConstants.RIGHT);
 		}
-		else if(value instanceof Integer) {
+		else if (value instanceof Integer) {
 			setHorizontalAlignment(SwingConstants.RIGHT);
 		}
-		else if(value instanceof Date) {
+		else if (value instanceof Date) {
 			text = dateFormat.format(value);
 			setHorizontalAlignment(SwingConstants.LEFT);
 		}
 		else {
 			setHorizontalAlignment(SwingConstants.LEFT);
 		}
-		
+
 		setText(" " + text + " "); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }
