@@ -15,6 +15,7 @@ public abstract class BaseRestaurant implements Comparable, Serializable {
 
 	public static String REF = "Restaurant"; //$NON-NLS-1$
 	public static String PROP_UNIQUE_ID = "uniqueId"; //$NON-NLS-1$
+	public static String PROP_UUID = "uuid"; //$NON-NLS-1$
 	public static String PROP_TELEPHONE = "telephone"; //$NON-NLS-1$
 	public static String PROP_ZIP_CODE = "zipCode"; //$NON-NLS-1$
 	public static String PROP_SERVICE_CHARGE_PERCENTAGE = "serviceChargePercentage"; //$NON-NLS-1$
@@ -54,6 +55,7 @@ public abstract class BaseRestaurant implements Comparable, Serializable {
 
 	// fields
 	protected java.lang.Integer uniqueId;
+	private java.lang.String uuid;
 	protected java.lang.String name;
 	protected java.lang.String addressLine1;
 	protected java.lang.String addressLine2;
@@ -105,6 +107,24 @@ public abstract class BaseRestaurant implements Comparable, Serializable {
 	 */
 	public void setUniqueId(java.lang.Integer uniqueId) {
 		this.uniqueId = uniqueId;
+	}
+	
+	/**
+	 * Return the value associated with the column: UUID
+	 */
+
+	public java.lang.String getUuid () {
+			return uuid;
+	}
+
+
+
+	/**
+	 * Set the value related to the column: UUID
+	 * @param uuid the UUID value
+	 */
+			public void setUuid (java.lang.String uuid) {
+			this.uuid = uuid;
 	}
 
 	/**

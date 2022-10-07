@@ -35,8 +35,10 @@ public class TerminalConfig {
 	private static final String SHOW_GUEST_SELECTION = "show_guest_selection"; //$NON-NLS-1$
 
 	private static final String ORDER_TYPE_FILTER = "order_type_filter"; //$NON-NLS-1$
-	
-	private static final String ONLINE_ORDER_FILTER = "online_order_filter"; //$NON-NLS-1$
+
+	private static final String MENUGREAT_ORDER_FILTER = "menugreat_order_filter"; //$NON-NLS-1$
+
+	private static final String WOOCOMMERCE_ORDER_FILTER = "woocommerce_order_filter"; //$NON-NLS-1$
 
 	private static final String PS_FILTER = "ps_filter"; //$NON-NLS-1$
 
@@ -546,11 +548,20 @@ public class TerminalConfig {
 		return config.getInt(KDS_TICKETS_PER_PAGE, 4);
 	}
 
-	public static void setSelectedOnlineOrderFilter(boolean selected) {
-		config.setProperty(ONLINE_ORDER_FILTER, selected);
+	public static void setSelectedMenugreatOrderFilter(boolean selected) {
+		config.setProperty(MENUGREAT_ORDER_FILTER, selected);
 	}
-	public static boolean isSelectedOnlineOrderFilter() {
-		return config.getBoolean(ONLINE_ORDER_FILTER, false);
+
+	public static boolean isSelectedMenugreatOrderFilter() {
+		return config.getBoolean(MENUGREAT_ORDER_FILTER, false);
+	}
+
+	public static void setSelectedWoocommerceOrderFilter(boolean selected) {
+		config.setProperty(WOOCOMMERCE_ORDER_FILTER, selected);
+	}
+
+	public static boolean isSelectedWoocommerceOrderFilter() {
+		return config.getBoolean(WOOCOMMERCE_ORDER_FILTER, false);
 	}
 
 }

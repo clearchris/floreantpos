@@ -48,6 +48,7 @@ import com.floreantpos.Messages;
 import com.floreantpos.POSConstants;
 import com.floreantpos.config.TerminalConfig;
 import com.floreantpos.extension.ExtensionManager;
+import com.floreantpos.extension.FloreantPlugin;
 import com.floreantpos.extension.OnlineOrderPlugin;
 import com.floreantpos.main.Application;
 import com.floreantpos.model.DataUpdateInfo;
@@ -252,7 +253,7 @@ public class TicketListView extends JPanel implements ITicketList {
 				if (tableModel.hasPrevious()) {
 					tableModel.setCurrentRowIndex(tableModel.getPreviousRowIndex());
 					TicketDAO.getInstance().loadTickets(tableModel);
-					if (orderFiltersPanel.isOnlineOrderFilterSelected()) {
+					if (orderFiltersPanel.isMenugreatOrderFilterSelected() || orderFiltersPanel.isWoocommerceOrderFilterSelected()) {
 						loadOnlineTickets();
 					}
 				}
@@ -267,7 +268,7 @@ public class TicketListView extends JPanel implements ITicketList {
 				if (tableModel.hasNext()) {
 					tableModel.setCurrentRowIndex(tableModel.getNextRowIndex());
 					TicketDAO.getInstance().loadTickets(tableModel);
-					if (orderFiltersPanel.isOnlineOrderFilterSelected()) {
+					if (orderFiltersPanel.isMenugreatOrderFilterSelected() || orderFiltersPanel.isWoocommerceOrderFilterSelected()) {
 						loadOnlineTickets();
 					}
 				}
@@ -316,7 +317,7 @@ public class TicketListView extends JPanel implements ITicketList {
 			ticketListTableModel.setCurrentRowIndex(0);
 			ticketListTableModel.setNumRows(TicketDAO.getInstance().getNumTickets());
 			TicketDAO.getInstance().loadTickets(ticketListTableModel);
-			if (orderFiltersPanel.isOnlineOrderFilterSelected()) {
+			if (orderFiltersPanel.isMenugreatOrderFilterSelected() || orderFiltersPanel.isWoocommerceOrderFilterSelected()) {
 				loadOnlineTickets();
 			}
 			btnRefresh.setBlinking(false);
@@ -461,7 +462,7 @@ public class TicketListView extends JPanel implements ITicketList {
 
 			switch (columnIndex) {
 				case 0:
-					if (ticket.isSourceOnline()) {
+					if (ticket.isSourceOnline() || ticket.isSourceWoocomerce()) {
 						return ticket.getGlobalId();
 					}
 					return Integer.valueOf(ticket.getId());
@@ -611,9 +612,13 @@ public class TicketListView extends JPanel implements ITicketList {
 	}
 
 	private void loadOnlineTickets() {
-		OnlineOrderPlugin orderPlugin = (OnlineOrderPlugin) ExtensionManager.getPlugin(OnlineOrderPlugin.class);
-		if (orderPlugin != null) {
-			orderPlugin.loadTickets(tableModel);
+		List<FloreantPlugin> orderPlugins = ExtensionManager.getPlugins(OnlineOrderPlugin.class);
+		if (orderPlugins != null) {
+			for (FloreantPlugin floreantPlugin : orderPlugins) {
+				if (floreantPlugin instanceof OnlineOrderPlugin) {
+					((OnlineOrderPlugin) floreantPlugin).loadTickets(tableModel);
+				}
+			}
 		}
 	}
 

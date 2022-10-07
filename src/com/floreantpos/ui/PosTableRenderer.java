@@ -97,8 +97,13 @@ public class PosTableRenderer extends DefaultTableCellRenderer {
 			if (ticket == null) {
 				return label;
 			}
-			if (ticket.isSourceOnline()) {
-				label.setIcon(IconFactory.getIcon("/ui_icons/", "cloud.png")); //$NON-NLS-1$ //$NON-NLS-2$
+
+			if (ticket.isSourceWoocomerce()) {
+				label.setIcon(IconFactory.getIcon("/ui_icons/", "woocom-logo.png")); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			else if (ticket.isSourceOnline()) {
+				//label.setIcon(IconFactory.getIcon("/ui_icons/", "cloud.png")); //$NON-NLS-1$ //$NON-NLS-2$
+				label.setIcon(IconFactory.getIcon("/ui_icons/", "menugreat.png")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		return label;

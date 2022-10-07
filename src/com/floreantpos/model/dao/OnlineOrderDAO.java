@@ -2,6 +2,7 @@ package com.floreantpos.model.dao;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -20,11 +21,14 @@ public class OnlineOrderDAO extends BaseOnlineOrderDAO {
 	public OnlineOrderDAO() {
 	}
 
-	public int getNumOfOnlineOrders() {
+	public int getNumOfOnlineOrders(String source) {
 		Session session = null;
 		try {
 			session = createNewSession();
 			Criteria criteria = session.createCriteria(OnlineOrder.class);
+			if (StringUtils.isNotBlank(source)) {
+				criteria.add(Restrictions.eq(OnlineOrder.PROP_SOURCE, source));
+			}
 			criteria.setProjection(Projections.rowCount());
 			criteria.add(Restrictions.isNotNull(OnlineOrder.PROP_TICKET_JSON));
 			updateCriteriaFilters(criteria);
@@ -36,13 +40,16 @@ public class OnlineOrderDAO extends BaseOnlineOrderDAO {
 		}
 	}
 
-	public List<OnlineOrder> loadData(PaginatedTableModel tableModel) {
+	public List<OnlineOrder> loadData(PaginatedTableModel tableModel, String source) {
 		Session session = null;
 		try {
 			session = createNewSession();
 			Criteria criteria = session.createCriteria(OnlineOrder.class);
 			criteria.add(Restrictions.isNotNull(OnlineOrder.PROP_TICKET_JSON));
 			updateCriteriaFilters(criteria);
+			if (StringUtils.isNotBlank(source)) {
+				criteria.add(Restrictions.eq(OnlineOrder.PROP_SOURCE, source));
+			}
 			criteria.addOrder(Order.desc(OnlineOrder.PROP_ORDER_DATE));
 			criteria.setFirstResult(tableModel.getCurrentRowIndex());
 			criteria.setMaxResults(tableModel.getPageSize());

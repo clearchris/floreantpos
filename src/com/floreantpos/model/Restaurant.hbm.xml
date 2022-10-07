@@ -6,6 +6,7 @@
       <generator class="assigned"/>
     </id>
     <property column="UNIQUE_ID" name="uniqueId" type="java.lang.Integer"/>
+    <property column="UUID" length="128" name="uuid" type="string" />
     <property column="NAME" length="120" name="name" type="string"/>
     <property column="ADDRESS_LINE1" length="60" name="addressLine1" type="string"/>
     <property column="ADDRESS_LINE2" length="60" name="addressLine2" type="string"/>

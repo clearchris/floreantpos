@@ -47,6 +47,7 @@ import com.floreantpos.model.util.DateUtil;
 import com.floreantpos.util.DiscountUtil;
 import com.floreantpos.util.NumberUtil;
 import com.floreantpos.util.POSUtil;
+import com.orocube.floreantpos.mqtt.MqttSender;
 
 @XmlRootElement(name = "ticket")
 @JsonIgnoreProperties(ignoreUnknown = true, value = { "orderType" })
@@ -954,9 +955,13 @@ public class Ticket extends BaseTicket {
 	public boolean isSourceOnline() {
 		return getSource() != null && getSource().equalsIgnoreCase(SOURCE_ONLINE);
 	}
+	
+	public boolean isSourceWoocomerce() {
+		return getSource() != null && getSource().equalsIgnoreCase(MqttSender.WOOCOMMERCE.name());
+	}
 
 	public String getUniqueId() {
-		return isSourceOnline() ? getGlobalId() : String.valueOf(getId());
+		return (isSourceOnline() || isSourceWoocomerce()) ? getGlobalId() : String.valueOf(getId());
 	}
 
 }

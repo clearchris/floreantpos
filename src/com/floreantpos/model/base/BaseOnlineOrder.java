@@ -21,6 +21,7 @@ public abstract class BaseOnlineOrder  implements Comparable, Serializable {
 	public static String PROP_STORE_NAME = "storeName"; //$NON-NLS-1$
 	public static String PROP_CUSTOMER_ID = "customerId"; //$NON-NLS-1$
 	public static String PROP_PROPERTIES = "properties"; //$NON-NLS-1$
+	public static String PROP_SOURCE = "source"; //$NON-NLS-1$
 	public static String PROP_TICKET_JSON = "ticketJson"; //$NON-NLS-1$
 	public static String PROP_ORDER_DATE = "orderDate"; //$NON-NLS-1$
 	public static String PROP_ORDER_STATUS = "orderStatus"; //$NON-NLS-1$
@@ -74,6 +75,7 @@ public abstract class BaseOnlineOrder  implements Comparable, Serializable {
 				protected java.lang.Boolean paid;
 				protected java.lang.Boolean closed;
 				private java.util.Date expiryDate;
+				protected java.lang.String source;
 				private java.lang.String ticketJson;
 				private java.lang.String properties;
 	
@@ -388,6 +390,21 @@ public abstract class BaseOnlineOrder  implements Comparable, Serializable {
 			this.expiryDate = expiryDate;
 	}
 
+
+			/**
+			 * Return the value associated with the column: SOURCE
+			 */
+			public java.lang.String getSource () {
+							return source;
+					}
+
+			/**
+			 * Set the value related to the column: SOURCE
+			 * @param source the SOURCE value
+			 */
+			public void setSource (java.lang.String source) {
+				this.source = source;
+			}
 
 
 	/**

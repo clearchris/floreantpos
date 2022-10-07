@@ -60,6 +60,7 @@ import com.floreantpos.actions.VoidTicketAction;
 import com.floreantpos.config.TerminalConfig;
 import com.floreantpos.extension.ExtensionManager;
 import com.floreantpos.extension.FloorLayoutPlugin;
+import com.floreantpos.extension.FloreantPlugin;
 import com.floreantpos.extension.OnlineOrderPlugin;
 import com.floreantpos.extension.OrderServiceExtension;
 import com.floreantpos.main.Application;
@@ -104,6 +105,7 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 	private JPanel orderPanel;
 
 	private JPanel onlineOrderActionsButtonPanel;
+	private JPanel woocomOrderActionsButtonPanel;
 
 	//TicketListView tickteListViewObj;
 	/** Creates new form SwitchboardView */
@@ -269,6 +271,7 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 
 	private JPanel createActivityPanel() {
 		JPanel activityPanel = new JPanel(new BorderLayout(5, 5));
+		JPanel activityPanel2 = new JPanel(new MigLayout("hidemode 3, fill, ins 0", "fill, grow", ""));
 		innerActivityPanel = new JPanel(new MigLayout("hidemode 3, fill, ins 0", "fill, grow", ""));
 
 		JPanel firstRowButtonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
@@ -325,41 +328,87 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 
 		activityPanel.add(innerActivityPanel);
 		activityPanel.add(btnMore, BorderLayout.EAST);
-		OnlineOrderPlugin orderPlugin = (OnlineOrderPlugin) ExtensionManager.getPlugin(OnlineOrderPlugin.class);
-		if (orderPlugin != null) {
-			onlineOrderActionsButtonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
-			PosButton btnShowOnlineOrderInfo = new PosButton(POSConstants.ORDER_INFO_BUTTON_TEXT);
-			btnShowOnlineOrderInfo.addActionListener(new ActionListener() {
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					doShowOrderInfo();
-				}
-			});
-			onlineOrderActionsButtonPanel.add(btnShowOnlineOrderInfo);
-			activityPanel.add(onlineOrderActionsButtonPanel, BorderLayout.SOUTH);
-			orderPlugin.initSwitchboardActionButtons(onlineOrderActionsButtonPanel, ticketList, new RefreshableView() {
+		List<FloreantPlugin> orderPlugins = ExtensionManager.getPlugins(OnlineOrderPlugin.class);
+		if (orderPlugins != null) {
+			for (FloreantPlugin floreantPlugin : orderPlugins) {
+				if (floreantPlugin instanceof OnlineOrderPlugin) {
 
-				@Override
-				public void refresh() {
+					OnlineOrderPlugin orderPlugin = (OnlineOrderPlugin) floreantPlugin;
+					if (orderPlugin.getId().equals("fp-menugreat-plugin")) {
+						loadMenugreatButtons(activityPanel2, orderPlugin);
+					}
+					else if (orderPlugin.getId().equals("fp-woocommerce-plugin")) {
+						loadWooCommurceButtons(activityPanel2, orderPlugin);
+					}
 				}
-			});
+			}
 		}
+		activityPanel.add(activityPanel2, BorderLayout.SOUTH);
 		updateButtonsView();
 		return activityPanel;
 	}
 
+	private void loadMenugreatButtons(JPanel panel, OnlineOrderPlugin orderPlugin) {
+		onlineOrderActionsButtonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
+		PosButton btnShowOnlineOrderInfo = new PosButton(POSConstants.ORDER_INFO_BUTTON_TEXT);
+		btnShowOnlineOrderInfo.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				doShowOrderInfo();
+			}
+		});
+		onlineOrderActionsButtonPanel.add(btnShowOnlineOrderInfo);
+		panel.add(onlineOrderActionsButtonPanel, "wrap");
+		orderPlugin.initSwitchboardActionButtons(onlineOrderActionsButtonPanel, ticketList, new RefreshableView() {
+
+			@Override
+			public void refresh() {
+			}
+		});
+	}
+
+	private void loadWooCommurceButtons(JPanel panel, OnlineOrderPlugin orderPlugin) {
+		woocomOrderActionsButtonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
+		PosButton btnShowOnlineOrderInfo = new PosButton(POSConstants.ORDER_INFO_BUTTON_TEXT);
+		btnShowOnlineOrderInfo.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				doShowOrderInfo();
+			}
+		});
+		woocomOrderActionsButtonPanel.add(btnShowOnlineOrderInfo);
+		panel.add(woocomOrderActionsButtonPanel);
+		orderPlugin.initSwitchboardActionButtons(woocomOrderActionsButtonPanel, ticketList, new RefreshableView() {
+
+			@Override
+			public void refresh() {
+			}
+		});
+	}
+
 	public void updateButtonsView() {
-		OnlineOrderPlugin orderPlugin = (OnlineOrderPlugin) ExtensionManager.getPlugin(OnlineOrderPlugin.class);
-		if (orderPlugin == null) {
-			return;
-		}
 		Ticket selectedTicket = getSelectedTicket();
-		boolean sourceOnline = selectedTicket == null ? false : selectedTicket.isSourceOnline();
-		if (onlineOrderActionsButtonPanel != null) {
-			onlineOrderActionsButtonPanel.setVisible(sourceOnline);
+		if (selectedTicket != null) {
+			if (onlineOrderActionsButtonPanel != null && selectedTicket.isSourceOnline()) {
+				onlineOrderActionsButtonPanel.setVisible(selectedTicket.isSourceOnline());
+				woocomOrderActionsButtonPanel.setVisible(!selectedTicket.isSourceOnline());
+				innerActivityPanel.setVisible(!selectedTicket.isSourceOnline());
+			}
+			if (woocomOrderActionsButtonPanel != null && selectedTicket.isSourceWoocomerce()) {
+				woocomOrderActionsButtonPanel.setVisible(selectedTicket.isSourceWoocomerce());
+				onlineOrderActionsButtonPanel.setVisible(!selectedTicket.isSourceWoocomerce());
+				innerActivityPanel.setVisible(!selectedTicket.isSourceWoocomerce());
+			}
+			
 		}
-		innerActivityPanel.setVisible(!sourceOnline);
+		else {
+			onlineOrderActionsButtonPanel.setVisible(false);
+			woocomOrderActionsButtonPanel.setVisible(false);
+			innerActivityPanel.setVisible(true);
+		}
 	}
 
 	protected void doCloseOrder() {
@@ -510,7 +559,8 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 		try {
 
 			if (tickets.size() == 0) {
-				if (ticketList.getOrderFiltersPanel().isOnlineOrderFilterSelected()) {
+				if (ticketList.getOrderFiltersPanel().isMenugreatOrderFilterSelected()
+						|| ticketList.getOrderFiltersPanel().isWoocommerceOrderFilterSelected()) {
 					throw new PosException(POSConstants.SELECT_TICKET);
 				}
 				int ticketId = NumberSelectionDialog2.takeIntInput(Messages.getString("SwitchboardView.0")); //$NON-NLS-1$
@@ -526,7 +576,7 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 
 			for (int i = 0; i < tickets.size(); i++) {
 				Ticket ticket = tickets.get(i);
-				if (ticket.isSourceOnline()) {
+				if (ticket.isSourceOnline() || ticket.isSourceWoocomerce()) {
 					ticketsToShow.add(ticket);
 					continue;
 				}

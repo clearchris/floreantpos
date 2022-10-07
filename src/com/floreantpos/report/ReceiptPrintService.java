@@ -676,7 +676,7 @@ public class ReceiptPrintService {
 		}
 
 		//customer info section
-		if ((orderType != null && orderType.isRequiredCustomerData()) || ticket.isSourceOnline()) {
+		if ((orderType != null && orderType.isRequiredCustomerData()) || (ticket.isSourceOnline() || ticket.isSourceWoocomerce())) {
 
 			String customerName = ticket.getProperty(Ticket.CUSTOMER_NAME);
 			String customerMobile = ticket.getProperty(Ticket.CUSTOMER_MOBILE);

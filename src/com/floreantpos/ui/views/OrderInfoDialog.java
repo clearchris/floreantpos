@@ -75,7 +75,7 @@ public class OrderInfoDialog extends POSDialog implements RefreshableView {
 		getContentPane().add(panel, BorderLayout.SOUTH);
 
 		List<Ticket> tickets = view.getTickets();
-		if (iTicketList != null && tickets != null && tickets.size() > 0 && tickets.get(0).isSourceOnline()) {
+		if (iTicketList != null && tickets != null && tickets.size() > 0 && (tickets.get(0).isSourceOnline() || tickets.get(0).isSourceWoocomerce())) {
 			OnlineOrderPlugin plugin = (OnlineOrderPlugin) ExtensionManager.getPlugin(OnlineOrderPlugin.class);
 			if (plugin != null) {
 				JPanel orderMgmtPanel = new JPanel();

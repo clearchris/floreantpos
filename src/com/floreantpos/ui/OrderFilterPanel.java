@@ -34,6 +34,7 @@ import com.floreantpos.POSConstants;
 import com.floreantpos.PosLog;
 import com.floreantpos.config.TerminalConfig;
 import com.floreantpos.extension.ExtensionManager;
+import com.floreantpos.extension.FloreantPlugin;
 import com.floreantpos.extension.OnlineOrderPlugin;
 import com.floreantpos.main.Application;
 import com.floreantpos.model.OrderType;
@@ -53,7 +54,8 @@ public class OrderFilterPanel extends JXCollapsiblePane {
 	private POSToggleButton btnFilterByOpenStatus;
 	private POSToggleButton btnFilterByPaidStatus;
 	private POSToggleButton btnFilterByUnPaidStatus;
-	private POSToggleButton btnOnlineOrder;
+	private POSToggleButton btnMenugreatOrder;
+	private POSToggleButton btnWoocommerceOrder;
 
 	/*private POSToggleButton btnCustomerFilterByOpenStatus;
 	private POSToggleButton btnCustomerAllStatus;*/
@@ -72,17 +74,35 @@ public class OrderFilterPanel extends JXCollapsiblePane {
 
 	private void createOnlineOrderFilter() {
 		try {
-			OnlineOrderPlugin orderPlugin = (OnlineOrderPlugin) ExtensionManager.getPlugin(OnlineOrderPlugin.class);
-			if (orderPlugin != null) {
-				btnOnlineOrder = orderPlugin.initFilterButton(getContentPane(), ticketLists);
+			JPanel filterByOrderPanel = new JPanel(new MigLayout("hidemode 3", "[grow,fill][grow,fill]", "[]5[]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			filterByOrderPanel.setBorder(new TitledBorder("Filter by online order"));
+
+			List<FloreantPlugin> orderPlugins = ExtensionManager.getPlugins();
+			if (orderPlugins != null) {
+				for (FloreantPlugin floreantPlugin : orderPlugins) {
+					if (floreantPlugin instanceof OnlineOrderPlugin) {
+						OnlineOrderPlugin orderPlugin = (OnlineOrderPlugin) floreantPlugin;
+						if (orderPlugin.getId().equals("fp-menugreat-plugin")) {
+							btnMenugreatOrder = orderPlugin.initFilterButton(filterByOrderPanel, ticketLists);
+						}
+						else if (orderPlugin.getId().equals("fp-woocommerce-plugin")) {
+							btnWoocommerceOrder = orderPlugin.initFilterButton(filterByOrderPanel, ticketLists);
+						}
+					}
+				}
+				getContentPane().add(filterByOrderPanel);
 			}
 		} catch (Exception e) {
 			PosLog.error(getClass(), e);
 		}
 	}
 
-	public boolean isOnlineOrderFilterSelected() {
-		return btnOnlineOrder != null && btnOnlineOrder.isSelected();
+	public boolean isMenugreatOrderFilterSelected() {
+		return btnMenugreatOrder != null && btnMenugreatOrder.isSelected();
+	}
+
+	public boolean isWoocommerceOrderFilterSelected() {
+		return btnWoocommerceOrder != null && btnWoocommerceOrder.isSelected();
 	}
 
 	/*public OrderFilterPanel(final ITicketList ticketList, final Integer memberId) {

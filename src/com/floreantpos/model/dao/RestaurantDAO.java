@@ -17,22 +17,25 @@
  */
 package com.floreantpos.model.dao;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
+import org.hibernate.Session;
 
 import com.floreantpos.model.Restaurant;
-
-
 
 public class RestaurantDAO extends BaseRestaurantDAO {
 
 	/**
 	 * Default constructor.  Can be used in place of getInstance()
 	 */
-	public RestaurantDAO () {}
-	
+	public RestaurantDAO() {
+	}
+
 	public Timestamp geTimestamp() {
 		Query query = getSession().createQuery("select current_timestamp() from Restaurant");
 		query.setFirstResult(0);
@@ -47,11 +50,39 @@ public class RestaurantDAO extends BaseRestaurantDAO {
 			if (list != null && list.size() > 0) {
 				return list.get(0);
 			}
-			
+
 			restaurant = new Restaurant(1);
 			getInstance().save(restaurant);
 			return restaurant;
 		}
 		return restaurant;
+	}
+
+	@Override
+	protected Serializable save(Object obj, Session s) {
+		createUuid(obj);
+		return super.save(obj, s);
+	}
+
+	@Override
+	protected void update(Object obj, Session s) {
+		createUuid(obj);
+		super.update(obj, s);
+	}
+
+	@Override
+	protected void saveOrUpdate(Object obj, Session s) {
+		createUuid(obj);
+		super.saveOrUpdate(obj, s);
+	}
+
+	private void createUuid(Object obj) {
+		if (obj instanceof Restaurant) {
+			Restaurant restaurant = (Restaurant) obj;
+			String uuid = restaurant.getUuid();
+			if (StringUtils.isBlank(uuid)) {
+				restaurant.setUuid(UUID.randomUUID().toString());
+			}
+		}
 	}
 }
