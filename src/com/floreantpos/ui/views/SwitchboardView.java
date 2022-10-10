@@ -394,19 +394,27 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 		if (selectedTicket != null) {
 			if (onlineOrderActionsButtonPanel != null && selectedTicket.isSourceOnline()) {
 				onlineOrderActionsButtonPanel.setVisible(selectedTicket.isSourceOnline());
-				woocomOrderActionsButtonPanel.setVisible(!selectedTicket.isSourceOnline());
+				if (woocomOrderActionsButtonPanel != null) {
+					woocomOrderActionsButtonPanel.setVisible(!selectedTicket.isSourceOnline());
+				}
 				innerActivityPanel.setVisible(!selectedTicket.isSourceOnline());
 			}
 			if (woocomOrderActionsButtonPanel != null && selectedTicket.isSourceWoocomerce()) {
 				woocomOrderActionsButtonPanel.setVisible(selectedTicket.isSourceWoocomerce());
-				onlineOrderActionsButtonPanel.setVisible(!selectedTicket.isSourceWoocomerce());
+				if (onlineOrderActionsButtonPanel != null) {
+					onlineOrderActionsButtonPanel.setVisible(!selectedTicket.isSourceWoocomerce());
+				}
 				innerActivityPanel.setVisible(!selectedTicket.isSourceWoocomerce());
 			}
-			
+
 		}
 		else {
-			onlineOrderActionsButtonPanel.setVisible(false);
-			woocomOrderActionsButtonPanel.setVisible(false);
+			if (onlineOrderActionsButtonPanel != null) {
+				onlineOrderActionsButtonPanel.setVisible(false);
+			}
+			if (woocomOrderActionsButtonPanel != null) {
+				woocomOrderActionsButtonPanel.setVisible(false);
+			}
 			innerActivityPanel.setVisible(true);
 		}
 	}

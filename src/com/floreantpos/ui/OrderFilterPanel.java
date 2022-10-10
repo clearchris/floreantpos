@@ -74,7 +74,7 @@ public class OrderFilterPanel extends JXCollapsiblePane {
 
 	private void createOnlineOrderFilter() {
 		try {
-			JPanel filterByOrderPanel = new JPanel(new MigLayout("hidemode 3", "[grow,fill][grow,fill]", "[]5[]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			JPanel filterByOrderPanel = new JPanel(new MigLayout("hidemode 3", "grow,fill", "[][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			filterByOrderPanel.setBorder(new TitledBorder("Filter by online order"));
 
 			List<FloreantPlugin> orderPlugins = ExtensionManager.getPlugins();
