@@ -392,21 +392,33 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 	public void updateButtonsView() {
 		Ticket selectedTicket = getSelectedTicket();
 		if (selectedTicket != null) {
-			if (onlineOrderActionsButtonPanel != null && selectedTicket.isSourceOnline()) {
-				onlineOrderActionsButtonPanel.setVisible(selectedTicket.isSourceOnline());
+			boolean isSourceOnline = selectedTicket.isSourceOnline();
+			if (onlineOrderActionsButtonPanel != null && isSourceOnline) {
+				onlineOrderActionsButtonPanel.setVisible(isSourceOnline);
 				if (woocomOrderActionsButtonPanel != null) {
-					woocomOrderActionsButtonPanel.setVisible(!selectedTicket.isSourceOnline());
+					woocomOrderActionsButtonPanel.setVisible(!isSourceOnline);
 				}
-				innerActivityPanel.setVisible(!selectedTicket.isSourceOnline());
+				innerActivityPanel.setVisible(!isSourceOnline);
 			}
-			if (woocomOrderActionsButtonPanel != null && selectedTicket.isSourceWoocomerce()) {
-				woocomOrderActionsButtonPanel.setVisible(selectedTicket.isSourceWoocomerce());
-				if (onlineOrderActionsButtonPanel != null) {
-					onlineOrderActionsButtonPanel.setVisible(!selectedTicket.isSourceWoocomerce());
+			else {
+				boolean isSourceWoocomerce = selectedTicket.isSourceWoocomerce();
+				if (woocomOrderActionsButtonPanel != null && isSourceWoocomerce) {
+					woocomOrderActionsButtonPanel.setVisible(isSourceWoocomerce);
+					if (onlineOrderActionsButtonPanel != null) {
+						onlineOrderActionsButtonPanel.setVisible(!isSourceWoocomerce);
+					}
+					innerActivityPanel.setVisible(!isSourceWoocomerce);
 				}
-				innerActivityPanel.setVisible(!selectedTicket.isSourceWoocomerce());
+				else {
+					if (onlineOrderActionsButtonPanel != null) {
+						onlineOrderActionsButtonPanel.setVisible(false);
+					}
+					if (woocomOrderActionsButtonPanel != null) {
+						woocomOrderActionsButtonPanel.setVisible(false);
+					}
+					innerActivityPanel.setVisible(true);
+				}
 			}
-
 		}
 		else {
 			if (onlineOrderActionsButtonPanel != null) {
