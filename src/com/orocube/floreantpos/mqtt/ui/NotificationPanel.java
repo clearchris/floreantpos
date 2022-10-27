@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -20,7 +21,7 @@ import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 import com.floreantpos.ITicketList;
 import com.floreantpos.IconFactory;
-import com.floreantpos.POSConstants;
+import com.floreantpos.PosLog;
 import com.floreantpos.main.Application;
 import com.floreantpos.model.Ticket;
 import com.floreantpos.model.TicketStatus;
@@ -35,6 +36,7 @@ import com.floreantpos.ui.views.OrderInfoDialog;
 import com.floreantpos.ui.views.OrderInfoView;
 import com.floreantpos.ui.views.SwitchboardView;
 import com.floreantpos.ui.views.order.RootView;
+import com.floreantpos.util.POSUtil;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -56,7 +58,7 @@ public class NotificationPanel extends JPanel {
 		infoPanel.setOpaque(true);
 		infoPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
-		rightPanel = new JPanel(new MigLayout("ins 0")); //$NON-NLS-1$
+		rightPanel = new JPanel(new MigLayout("ins 0, hidemode 3")); //$NON-NLS-1$
 
 		updateMsgPanel = new JPanel(new MigLayout("right, filly,hidemode 3, ins 0 0 0 0")); //$NON-NLS-1$
 		lblMqttIcon = new JLabel();
@@ -68,7 +70,7 @@ public class NotificationPanel extends JPanel {
 		btnNewOrderArrived.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//new GotoSwitchboardView().actionPerformed(null);
+				//doDownloadMenugreatTickets();
 				doShowNewOrders();
 			}
 
@@ -95,25 +97,38 @@ public class NotificationPanel extends JPanel {
 		add(rightPanel, BorderLayout.EAST);
 	}
 
+	private boolean doCheckAppLogin() {
+		RootView rootView = RootView.getInstance();
+		IView currentView2 = rootView.getCurrentView();
+		User currentUser = Application.getCurrentUser();
+		if (currentUser == null || (currentView2 == null || currentView2 instanceof LoginView)) {
+			LoginView.getInstance().doLogin();
+			if (rootView.getCurrentView() != null && !SwitchboardView.VIEW_NAME.equals(rootView.getCurrentView().getViewName())) {
+				rootView.showView(SwitchboardView.getInstance());
+			}
+		}
+		currentView2 = rootView.getCurrentView();
+		currentUser = Application.getCurrentUser();
+		if (currentUser == null || (currentView2 == null || currentView2 instanceof LoginView)) {
+			return false;
+		}
+		return true;
+	}
+
 	private void doShowNewOrders() {
 		try {
-			RootView rootView = RootView.getInstance();
-			IView currentView2 = rootView.getCurrentView();
-			User currentUser = Application.getCurrentUser();
-			if (currentUser == null || (currentView2 == null || currentView2 instanceof LoginView)) {
-				LoginView.getInstance().doLogin();
-				if (rootView.getCurrentView() != null && !SwitchboardView.VIEW_NAME.equals(rootView.getCurrentView().getViewName())) {
-					rootView.showView(SwitchboardView.getInstance());
-				}
-			}
-			currentView2 = rootView.getCurrentView();
-			currentUser = Application.getCurrentUser();
-			if (currentUser == null || (currentView2 == null || currentView2 instanceof LoginView)) {
+			if (!doCheckAppLogin()) {
 				return;
 			}
 
 			int count = 1;
-			for (Ticket ticket : mqttReceivedTickets) {
+			for (Object object : mqttReceivedTickets) {
+				if (!(object instanceof Ticket)) {
+					return;
+				}
+
+				Ticket ticket = (Ticket) object;
+
 				List<Ticket> ticketsToShow = new ArrayList<Ticket>();
 				ticketsToShow.add(ticket);
 				OrderInfoView view = new OrderInfoView(ticketsToShow);
@@ -132,7 +147,7 @@ public class NotificationPanel extends JPanel {
 						return ticket;
 					}
 				});
-				dialog.setTitle("New online order " + count++); //$NON-NLS-2$
+				dialog.setTitle("New menugreat order " + count++);
 				dialog.updateView();
 				dialog.pack();
 				dialog.setSize(dialog.getSize().width + 50, PosUIManager.getSize(650));
@@ -143,10 +158,15 @@ public class NotificationPanel extends JPanel {
 			if (currentView instanceof RefreshableView) {
 				((RefreshableView) currentView).refresh();
 			}
+			if (currentView instanceof SwitchboardView) {
+				((SwitchboardView) currentView).updateView();
+			}
+
 			mqttReceivedTickets.clear();
 			btnNewOrderArrived.setVisible(false);
 		} catch (Exception e) {
-			POSMessageDialog.showError(this, POSConstants.ERROR_MESSAGE, e);
+			PosLog.error(NotificationPanel.class, e);
+			POSMessageDialog.showError(POSUtil.getFocusedWindow(), "Could not load orders. Please check your network connection and try again.");
 		}
 	}
 
@@ -170,16 +190,17 @@ public class NotificationPanel extends JPanel {
 	}
 
 	public void ticketReceived(List<Object> tickets) {
+		List<String> ticketIds = mqttReceivedTickets.stream().map(Ticket::getGlobalId).collect(Collectors.toList());
+
 		boolean newTicket = false;
 		for (Object object : tickets) {
 			if (object instanceof Ticket) {
 				Ticket ticket = (Ticket) object;
-				if (ticket.getTicketStatus() == TicketStatus.Pending || ticket.isShowNewOrderNotification()) {
-					if (!mqttReceivedTickets.contains(ticket)) {
+				if (ticket.getTicketStatus() == TicketStatus.Pending) {
+					if (!ticketIds.contains(ticket.getGlobalId())) {
 						mqttReceivedTickets.add(ticket);
 						newTicket = true;
 					}
-					ticket.setShowNewOrderNotification(false);
 				}
 			}
 		}

@@ -1,6 +1,8 @@
 package com.orocube.floreantpos.mqtt.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -34,10 +36,19 @@ public class DataServiceDao implements DataService {
 	}
 
 	public List<Object> saveOrUpdateTickets(String request, boolean shouldPublishMqtt, MqttSender mqttSender) throws Exception {
-		JSONObject rootElement = new JSONObject(request);
-		JSONArray ticketsArray = rootElement.getJSONArray(DATA);
-		PosLog.debug(getClass(), "Request received: " + request); //$NON-NLS-1$
-		return populateAndSaveOrUpdateTickets(ticketsArray.toString(), mqttSender);
+		if (mqttSender == MqttSender.WOOCOMMERCE) {
+			JSONObject rootElement = new JSONObject(request);
+			String ticketJson = (String) rootElement.get(DATA);
+			PosLog.debug(getClass(), "Request received: " + request); //$NON-NLS-1$
+			Ticket ticket = OrgJsonUtil.fromWooCommerceJsonToTicket(ticketJson);
+			return Arrays.asList(saveOrUpdateTicket(new JSONObject(ticketJson), ticket, mqttSender));
+		}
+		else {
+			JSONObject rootElement = new JSONObject(request);
+			JSONArray ticketsArray = rootElement.getJSONArray(DATA);
+			PosLog.debug(getClass(), "Request received: " + request); //$NON-NLS-1$
+			return populateAndSaveOrUpdateTickets(ticketsArray.toString(), mqttSender);
+		}
 	}
 
 	public List<Object> populateAndSaveOrUpdateTickets(String request, MqttSender mqttSender) throws Exception {
@@ -63,7 +74,7 @@ public class DataServiceDao implements DataService {
 	}
 
 	public Ticket saveOrUpdateTicket(JSONObject ticketJson, MqttSender mqttSender) throws Exception {
-		if (mqttSender == MqttSender.ONLINE_ORDER) {
+		if (mqttSender == MqttSender.MENUGERAT) {
 			Ticket ticket = (Ticket) OrgJsonUtil.fromJson(ticketJson, Ticket.class);
 			OrgJsonUtil.loadUnresolvedProperties(ticket, ticketJson);
 			return saveOrUpdateTicket(ticketJson, ticket, mqttSender);
@@ -81,7 +92,7 @@ public class DataServiceDao implements DataService {
 
 		String id = "";
 		String outletId = null;
-		if (mqttSender == MqttSender.ONLINE_ORDER) {
+		if (mqttSender == MqttSender.MENUGERAT) {
 			id = ticketJson.getString("id"); //$NON-NLS-1$
 			outletId = ticketJson.getString("outletId"); //$NON-NLS-1$
 		}
@@ -99,17 +110,17 @@ public class DataServiceDao implements DataService {
 		}
 		else {
 			try {
-				if (mqttSender == MqttSender.ONLINE_ORDER) {
+				if (mqttSender == MqttSender.MENUGERAT) {
 					existingTicket = OrgJsonUtil.fromJsonToTicket(orderHistory.getTicketJson());
+					if (existingTicket != null && ticket.getVersion() == existingTicket.getVersion()) {
+						PosLog.info(getClass(), "Ticket #" + orderHistory.getTicketId() + " already updated.");
+						return null;
+					}
 				}
 				else if (mqttSender == MqttSender.WOOCOMMERCE) {
 					existingTicket = OrgJsonUtil.fromWooCommerceJsonToTicket(orderHistory.getTicketJson());
 				}
 
-				if (existingTicket != null && ticket.getVersion() == existingTicket.getVersion()) {
-					PosLog.info(getClass(), "Ticket #" + orderHistory.getTicketId() + " already updated.");
-					return null;
-				}
 			} catch (Exception e) {
 				PosLog.error(getClass(), e);
 			}
@@ -140,6 +151,7 @@ public class DataServiceDao implements DataService {
 		orderHistory.setCustomerId(customerId);
 		orderHistory.setClosed(ticket.isClosed());
 		orderHistory.setPaid(ticket.isPaid());
+		orderHistory.setLastUpdateTime(new Date());
 		if (newOrderHistory) {
 			OnlineOrderDAO.getInstance().save(orderHistory);
 		}
@@ -147,6 +159,33 @@ public class DataServiceDao implements DataService {
 			OnlineOrderDAO.getInstance().update(orderHistory);
 		}
 		return ticket;
+	}
+
+	public List<String> getTicketIds(String request, MqttSender mqttSender) throws Exception {
+		if (request == null) {
+			return null;
+		}
+
+		List<String> ticketIds = new ArrayList<String>();
+
+		JSONObject rootElement = new JSONObject(request);
+		JSONArray ticketsArray = rootElement.getJSONArray(DATA);
+		PosLog.debug(getClass(), "Request received: " + request); //$NON-NLS-1$
+
+		if (mqttSender == MqttSender.MENUGERAT) {
+			JsonParser jsonParser = new JsonParser();
+			JsonArray ja = (JsonArray) jsonParser.parse(ticketsArray.toString());
+			ja.remove(new JsonPrimitive("classType"));
+			JSONArray jsonArray = new JSONArray(ja.toString());
+
+			for (int i = 0; i < jsonArray.length(); i++) {
+				JSONObject ticketJson = jsonArray.getJSONObject(i);
+				String id = ticketJson.getString("id"); //$NON-NLS-1$
+				ticketIds.add(id);
+			}
+		}
+
+		return ticketIds;
 	}
 
 	public Object findByUUID(Class<?> referenceClass, String uuId) {

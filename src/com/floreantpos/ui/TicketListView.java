@@ -516,6 +516,11 @@ public class TicketListView extends JPanel implements ITicketList {
 					}
 				case 8:
 					String status = ""; //$NON-NLS-1$
+
+					if (ticket.isSourceOnline()) {
+						return ticket.getTicketStatus().getDisplayString();
+					}
+
 					if (ticket.isPaid()) {
 						status = Messages.getString("TicketListView.8"); //$NON-NLS-1$
 					}
@@ -640,6 +645,7 @@ public class TicketListView extends JPanel implements ITicketList {
 		}
 		if (rowIndex >= 0) {
 			rows.set(rowIndex, updatedTicket);
+			tableModel.fireTableRowsUpdated(rowIndex, rowIndex);
 		}
 		table.revalidate();
 		table.repaint();
