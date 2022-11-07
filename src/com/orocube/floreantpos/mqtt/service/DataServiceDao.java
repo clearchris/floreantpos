@@ -74,7 +74,7 @@ public class DataServiceDao implements DataService {
 	}
 
 	public Ticket saveOrUpdateTicket(JSONObject ticketJson, MqttSender mqttSender) throws Exception {
-		if (mqttSender == MqttSender.MENUGERAT) {
+		if (mqttSender == MqttSender.ONLINE_ORDER) {
 			Ticket ticket = (Ticket) OrgJsonUtil.fromJson(ticketJson, Ticket.class);
 			OrgJsonUtil.loadUnresolvedProperties(ticket, ticketJson);
 			return saveOrUpdateTicket(ticketJson, ticket, mqttSender);
@@ -92,7 +92,7 @@ public class DataServiceDao implements DataService {
 
 		String id = "";
 		String outletId = null;
-		if (mqttSender == MqttSender.MENUGERAT) {
+		if (mqttSender == MqttSender.ONLINE_ORDER) {
 			id = ticketJson.getString("id"); //$NON-NLS-1$
 			outletId = ticketJson.getString("outletId"); //$NON-NLS-1$
 		}
@@ -110,7 +110,7 @@ public class DataServiceDao implements DataService {
 		}
 		else {
 			try {
-				if (mqttSender == MqttSender.MENUGERAT) {
+				if (mqttSender == MqttSender.ONLINE_ORDER) {
 					existingTicket = OrgJsonUtil.fromJsonToTicket(orderHistory.getTicketJson());
 					if (existingTicket != null && ticket.getVersion() == existingTicket.getVersion()) {
 						PosLog.info(getClass(), "Ticket #" + orderHistory.getTicketId() + " already updated.");
@@ -168,11 +168,10 @@ public class DataServiceDao implements DataService {
 
 		List<String> ticketIds = new ArrayList<String>();
 
-		JSONObject rootElement = new JSONObject(request);
-		JSONArray ticketsArray = rootElement.getJSONArray(DATA);
-		PosLog.debug(getClass(), "Request received: " + request); //$NON-NLS-1$
-
-		if (mqttSender == MqttSender.MENUGERAT) {
+		if (mqttSender == MqttSender.ONLINE_ORDER) {
+			JSONObject rootElement = new JSONObject(request);
+			JSONArray ticketsArray = rootElement.getJSONArray(DATA);
+			PosLog.debug(getClass(), "Request received: " + request); //$NON-NLS-1$
 			JsonParser jsonParser = new JsonParser();
 			JsonArray ja = (JsonArray) jsonParser.parse(ticketsArray.toString());
 			ja.remove(new JsonPrimitive("classType"));
@@ -184,6 +183,15 @@ public class DataServiceDao implements DataService {
 				ticketIds.add(id);
 			}
 		}
+//		else if (mqttSender == MqttSender.WOOCOMMERCE) {
+//
+//			JSONObject rootElement = new JSONObject(request);
+//			String ticketJson = (String) rootElement.get(DATA);
+//			PosLog.debug(getClass(), "Request received: " + request); //$NON-NLS-1$
+//			JSONObject convertWooCommerceJsonToJsonObject = OrgJsonUtil.convertWooCommerceJsonToJsonObject(ticketJson);
+//			String id = String.valueOf(convertWooCommerceJsonToJsonObject.getInt("id"));
+//			ticketIds.add(id);
+//		}
 
 		return ticketIds;
 	}
