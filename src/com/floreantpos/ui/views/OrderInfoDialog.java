@@ -32,6 +32,7 @@ import com.floreantpos.ITicketList;
 import com.floreantpos.Messages;
 import com.floreantpos.PosLog;
 import com.floreantpos.extension.ExtensionManager;
+import com.floreantpos.extension.FloreantPlugin;
 import com.floreantpos.extension.OnlineOrderPlugin;
 import com.floreantpos.main.Application;
 import com.floreantpos.model.Ticket;
@@ -75,12 +76,23 @@ public class OrderInfoDialog extends POSDialog implements RefreshableView {
 		getContentPane().add(panel, BorderLayout.SOUTH);
 
 		List<Ticket> tickets = view.getTickets();
-		if (iTicketList != null && tickets != null && tickets.size() > 0 && (tickets.get(0).isSourceOnline() || tickets.get(0).isSourceWoocomerce())) {
-			OnlineOrderPlugin plugin = (OnlineOrderPlugin) ExtensionManager.getPlugin(OnlineOrderPlugin.class);
-			if (plugin != null) {
-				JPanel orderMgmtPanel = new JPanel();
-				panel.add(orderMgmtPanel);
-				plugin.initOrderInfoActionButtons(orderMgmtPanel, iTicketList, this);
+		boolean onlineOrder = tickets != null && tickets.size() > 0 && (tickets.get(0).isSourceOnline() || tickets.get(0).isSourceWoocomerce());
+
+		if (iTicketList != null && tickets != null && tickets.size() > 0) {
+			Ticket ticket = tickets.get(0);
+
+			List<FloreantPlugin> orderPlugins = ExtensionManager.getPlugins(OnlineOrderPlugin.class);
+			if (orderPlugins != null) {
+				for (FloreantPlugin floreantPlugin : orderPlugins) {
+					if (floreantPlugin instanceof OnlineOrderPlugin) {
+						JPanel orderMgmtPanel = new JPanel();
+						panel.add(orderMgmtPanel);
+						OnlineOrderPlugin orderPlugin = (OnlineOrderPlugin) floreantPlugin;
+						if (orderPlugin.isSourceMatched(ticket)) {
+							orderPlugin.initOrderInfoActionButtons(orderMgmtPanel, iTicketList, this);
+						}
+					}
+				}
 			}
 		}
 
@@ -101,7 +113,7 @@ public class OrderInfoDialog extends POSDialog implements RefreshableView {
 				}
 			}
 		});
-		boolean onlineOrder = view.getTickets() != null && view.getTickets().size() > 0 && view.getTickets().get(0).isSourceOnline();
+
 		if (!onlineOrder) {
 			panel.add(btnReOrder);
 		}

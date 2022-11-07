@@ -22,11 +22,14 @@ import java.awt.Container;
 import javax.swing.JPanel;
 
 import com.floreantpos.ITicketList;
+import com.floreantpos.model.Ticket;
 import com.floreantpos.swing.POSToggleButton;
 import com.floreantpos.swing.PaginatedTableModel;
 import com.floreantpos.ui.RefreshableView;
 
 public abstract class OnlineOrderPlugin extends AbstractFloreantPlugin {
+	
+	public abstract boolean isSourceMatched(Ticket ticket);
 
 	public abstract POSToggleButton initFilterButton(Container contentPane, ITicketList ticketLists);
 

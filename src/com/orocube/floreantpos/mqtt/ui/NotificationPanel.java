@@ -147,7 +147,15 @@ public class NotificationPanel extends JPanel {
 						return ticket;
 					}
 				});
-				dialog.setTitle("New menugreat order " + count++);
+
+				String title = "New order ";
+				if (ticket.isSourceWoocomerce()) {
+					title = "New woocomerce order ";
+				}
+				else if (ticket.isSourceOnline()) {
+					title = "New menugreat order ";
+				}
+				dialog.setTitle(title + count++);
 				dialog.updateView();
 				dialog.pack();
 				dialog.setSize(dialog.getSize().width + 50, PosUIManager.getSize(650));

@@ -65,6 +65,7 @@ import com.floreantpos.swing.PosScrollPane;
 import com.floreantpos.swing.PosUIManager;
 import com.floreantpos.ui.dialog.POSMessageDialog;
 import com.floreantpos.util.PosGuiUtil;
+import com.orocube.floreantpos.mqtt.service.OrgJsonUtil;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -519,6 +520,10 @@ public class TicketListView extends JPanel implements ITicketList {
 
 					if (ticket.isSourceOnline()) {
 						return ticket.getTicketStatus().getDisplayString();
+					}
+
+					if (ticket.isSourceWoocomerce()) {
+						return OrgJsonUtil.fromTicketStatus(ticket.getTicketStatus().name());
 					}
 
 					if (ticket.isPaid()) {

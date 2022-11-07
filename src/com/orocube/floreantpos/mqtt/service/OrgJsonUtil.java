@@ -189,21 +189,39 @@ public class OrgJsonUtil {
 	private static TicketStatus getStatus(String status) {
 		switch (status) {
 			case "processing":
-			case "pending":
-			case "checkout-draft":
 				return TicketStatus.Pending;
-			case "completed":
-				return TicketStatus.Completed;
 			case "on-hold":
 				return TicketStatus.HOLD;
+			case "completed":
+				return TicketStatus.Completed;
 			case "cancelled":
 				return TicketStatus.Canceled;
 			case "failed":
 				return TicketStatus.DeliveryFailed;
 
+			case "pending-payment":
 			case "refunded":
+			case "checkout-draft":
 			default:
 				return TicketStatus.Unknown;
 		}
+	}
+
+	public static String fromTicketStatus(String status) {
+		switch (status) {
+			case "Pending":
+				return "processing";
+			case "Confirmed":
+			case "HOLD":
+				return "on-hold";
+			case "Completed":
+				return "completed";
+			case "Canceled":
+				return "cancelled";
+			case "DeliveryFailed":
+				return "failed";
+
+		}
+		return "";
 	}
 }
