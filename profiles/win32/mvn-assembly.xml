@@ -111,7 +111,7 @@
 			</includes>
 		</fileSet>
 		<fileSet>
-			<directory>${user.home}/Downloads/java/jre1.8.0_321-Win32/jre</directory>
+			<directory>${user.home}/java/win32/jre</directory>
 			<outputDirectory>jre</outputDirectory>
 			<includes>
 				<include>**/*</include>
