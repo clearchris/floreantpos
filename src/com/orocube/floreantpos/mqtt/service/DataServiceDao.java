@@ -183,15 +183,15 @@ public class DataServiceDao implements DataService {
 				ticketIds.add(id);
 			}
 		}
-//		else if (mqttSender == MqttSender.WOOCOMMERCE) {
-//
-//			JSONObject rootElement = new JSONObject(request);
-//			String ticketJson = (String) rootElement.get(DATA);
-//			PosLog.debug(getClass(), "Request received: " + request); //$NON-NLS-1$
-//			JSONObject convertWooCommerceJsonToJsonObject = OrgJsonUtil.convertWooCommerceJsonToJsonObject(ticketJson);
-//			String id = String.valueOf(convertWooCommerceJsonToJsonObject.getInt("id"));
-//			ticketIds.add(id);
-//		}
+		else if (mqttSender == MqttSender.WOOCOMMERCE) {
+
+			JSONObject rootElement = new JSONObject(request);
+			String ticketJson = (String) rootElement.get(DATA);
+			PosLog.debug(getClass(), "Request received: " + request); //$NON-NLS-1$
+			JSONObject convertWooCommerceJsonToJsonObject = OrgJsonUtil.convertWooCommerceJsonToJsonObject(ticketJson);
+			String id = String.valueOf(convertWooCommerceJsonToJsonObject.getInt("id"));
+			ticketIds.add(id);
+		}
 
 		return ticketIds;
 	}
