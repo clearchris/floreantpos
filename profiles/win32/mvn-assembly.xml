@@ -118,4 +118,12 @@
 			</includes>
 		</fileSet>
 	</fileSets>
+	<files>
+		<file>
+			<filtered>false</filtered>
+			<source>etc/${project.artifactId}.exe</source>
+			<outputDirectory>/</outputDirectory>
+			<destName>${project.build.finalName}.exe</destName>
+		</file>
+	</files>
 </assembly>
