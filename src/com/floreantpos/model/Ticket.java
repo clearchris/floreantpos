@@ -792,15 +792,15 @@ public class Ticket extends BaseTicket {
 
 		for (Iterator iterator = ticketItems.iterator(); iterator.hasNext();) {
 			TicketItem newItem = (TicketItem) iterator.next();
-			if (newItem.isPrintedToKitchen())
-				continue;
-			List<TicketItem> itemListInMap = itemMap.get(newItem.getItemId().toString());
+			
+			String key = newItem.getItemId().toString()+newItem.isPrintedToKitchen();
+			List<TicketItem> itemListInMap = itemMap.get(key);
 
 			if (itemListInMap == null) {
 				List<TicketItem> list = new ArrayList<TicketItem>();
 				list.add(newItem);
 
-				itemMap.put(newItem.getItemId().toString(), list);
+				itemMap.put(key, list);
 			}
 			else {
 				boolean merged = false;
