@@ -79,18 +79,23 @@ public class OrderFilterPanel extends JXCollapsiblePane {
 
 			List<FloreantPlugin> orderPlugins = ExtensionManager.getPlugins();
 			if (orderPlugins != null) {
+				boolean isVisible = false;
 				for (FloreantPlugin floreantPlugin : orderPlugins) {
 					if (floreantPlugin instanceof OnlineOrderPlugin) {
 						OnlineOrderPlugin orderPlugin = (OnlineOrderPlugin) floreantPlugin;
 						if (orderPlugin.getId().equals("fp-menugreat-plugin")) {
 							btnMenugreatOrder = orderPlugin.initFilterButton(filterByOrderPanel, ticketLists);
+							isVisible = true;
 						}
 						else if (orderPlugin.getId().equals("fp-woocommerce-plugin")) {
 							btnWoocommerceOrder = orderPlugin.initFilterButton(filterByOrderPanel, ticketLists);
+							isVisible = true;
 						}
 					}
 				}
-				getContentPane().add(filterByOrderPanel);
+				if (isVisible) {
+					getContentPane().add(filterByOrderPanel);
+				}
 			}
 		} catch (Exception e) {
 			PosLog.error(getClass(), e);
