@@ -179,11 +179,7 @@ public class ModifierSelectionDialog extends POSDialog implements ModifierGroupS
 		int minQuantity = menuItemModifierGroup.getMinQuantity();
 		int maxQuantity = menuItemModifierGroup.getMaxQuantity();
 
-		if (maxQuantity < minQuantity) {
-			maxQuantity = minQuantity;
-		}
-
-		if (numModifiers >= maxQuantity) {
+		if (numModifiers >= maxQuantity && maxQuantity > 0) {
 			POSMessageDialog.showError("You have added maximum number of allowed modifiers from group " + modifier.getModifierGroup().getDisplayName());
 			//			return;
 			//			if (Application.getInstance().getRestaurant().isAllowModifierMaxExceed()) {
@@ -202,7 +198,7 @@ public class ModifierSelectionDialog extends POSDialog implements ModifierGroupS
 			ticketItemModifier.setItemCount(ticketItemModifier.getItemCount() + 1);
 		}
 		updateView();
-		if ((numModifiers + 1) == maxQuantity) {
+		if ((numModifiers + 1) == maxQuantity && maxQuantity> 0) {
 			modifierGroupSelectionDone(modifier.getModifierGroup());
 		}
 	}
