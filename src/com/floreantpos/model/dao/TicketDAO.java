@@ -953,7 +953,7 @@ public class TicketDAO extends BaseTicketDAO {
 		else if (paymentStatusFilter == PaymentStatusFilter.PAID) {
 			criteria.add(Restrictions.eq(Ticket.PROP_PAID, Boolean.TRUE));
 			criteria.add(Restrictions.eq(Ticket.PROP_CLOSED, Boolean.FALSE));
-			if (!user.canViewAllOpenTickets() || !user.canViewAllCloseTickets()) {
+			if (!user.canViewAllCloseTickets()) {
 				criteria.add(Restrictions.eq(Ticket.PROP_OWNER, user));
 			}
 		}
