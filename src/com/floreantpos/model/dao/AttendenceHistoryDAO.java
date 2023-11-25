@@ -157,6 +157,7 @@ public class AttendenceHistoryDAO extends BaseAttendenceHistoryDAO {
 			criteria.add(Restrictions.ge(AttendenceHistory.PROP_CLOCK_IN_TIME, from));
 			criteria.add(Restrictions.le(AttendenceHistory.PROP_CLOCK_OUT_TIME, to));
 			criteria.addOrder(Order.asc(AttendenceHistory.PROP_USER));
+                        criteria.addOrder(Order.asc(AttendenceHistory.PROP_CLOCK_IN_TIME));
 			List list2 = criteria.list();
 
 			for (Iterator iterator = list2.iterator(); iterator.hasNext();) {
