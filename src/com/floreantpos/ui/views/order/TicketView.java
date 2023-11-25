@@ -745,8 +745,8 @@ public class TicketView extends JPanel {
 						btnEdit.setEnabled(!ticketItem.isPrintedToKitchen());
 					}
 					else if (ticketItem.isHasModifiers()) {
-						btnIncreaseAmount.setEnabled(false);
-						btnDecreaseAmount.setEnabled(false);
+						btnIncreaseAmount.setEnabled(true);
+						btnDecreaseAmount.setEnabled(true);
 						btnEdit.setEnabled(true);
 					}
 					else if (ticketItem.isFractionalUnit()) {
