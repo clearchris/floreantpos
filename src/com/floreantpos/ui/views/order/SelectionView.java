@@ -189,6 +189,15 @@ public abstract class SelectionView extends JPanel implements ComponentListener 
 
 		try {
 			ButtonPanel buttonPanel = null;
+
+                        if(items.size() > totalItem){
+                               btnPrev.setEnabled(true);
+                               btnNext.setEnabled(true);
+                               btnPrev.setVisible(true);
+                               btnNext.setVisible(true);
+                               revalidate();
+                        }
+
 			for (int i = 0; i < items.size(); i++) {
 				if (i % totalItem == 0) {
 					buttonPanel = new ButtonPanel("buttonpanel-" + i);
