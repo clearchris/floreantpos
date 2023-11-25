@@ -477,8 +477,8 @@ public class ReceiptPrintService {
 		map.put(CHECK_NO, POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL + ticket.getUniqueId());
 		map.put(TABLE_NO, POSConstants.RECEIPT_REPORT_TABLE_NO_LABEL + ticket.getTableNumbers());
 		map.put(GUEST_COUNT, POSConstants.RECEIPT_REPORT_GUEST_NO_LABEL + ticket.getNumberOfGuests());
-		if (ticket.getOwner() != null) {
-			map.put(SERVER_NAME, POSConstants.RECEIPT_REPORT_SERVER_LABEL + ticket.getOwner());
+		if (ticket.getOwner() != null && ticket.getOwner().getFirstName() != null) {
+			map.put(SERVER_NAME, POSConstants.RECEIPT_REPORT_SERVER_LABEL + ticket.getOwner().getFirstName());
 		}
 		map.put(REPORT_DATE, POSConstants.RECEIPT_REPORT_DATE_LABEL + Application.formatDate(new Date()));
 
@@ -644,9 +644,9 @@ public class ReceiptPrintService {
 			endRow(ticketHeaderBuilder);
 		}
 
-		if (ticket.getOwner() != null) {
+		if (ticket.getOwner() != null && ticket.getOwner().getFirstName() != null) {
 			beginRow(ticketHeaderBuilder);
-			addColumn(ticketHeaderBuilder, POSConstants.RECEIPT_REPORT_SERVER_LABEL + ticket.getOwner());
+			addColumn(ticketHeaderBuilder, POSConstants.RECEIPT_REPORT_SERVER_LABEL + ticket.getOwner().getFirstName());
 			endRow(ticketHeaderBuilder);
 		}
 
