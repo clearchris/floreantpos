@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
 import com.floreantpos.swing.ListTableModel;
 
 public class PayrollReportModel extends ListTableModel {
-	SimpleDateFormat dateFormat2 = new SimpleDateFormat("MMM-dd-yyyy hh:mm a"); //$NON-NLS-1$
+	SimpleDateFormat dateFormat2 = new SimpleDateFormat("MMM-dd-yyyy hh:mm a EEE"); //$NON-NLS-1$
 
 	DecimalFormat decimalFormat = new DecimalFormat("0.00"); //$NON-NLS-1$
 
