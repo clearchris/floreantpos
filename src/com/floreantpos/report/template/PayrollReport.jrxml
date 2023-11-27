@@ -4,7 +4,7 @@
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.5394743546921197"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="44"/>
+	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -36,20 +36,20 @@
 		<groupHeader>
 			<band height="44" splitType="Stretch">
 				<staticText>
-					<reportElement key="staticText-2" mode="Opaque" x="0" y="5" width="50" height="15" backcolor="#CCCCCC"/>
+					<reportElement key="staticText-2" mode="Opaque" x="309" y="5" width="73" height="15" backcolor="#CCCCCC"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
-					<textElement textAlignment="Center">
-						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<textElement textAlignment="Right">
+                        <font isBold="false" pdfFontName="Helvetica-Bold"/>
 					</textElement>
 					<text><![CDATA[User ID:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement key="staticText-3" mode="Opaque" x="165" y="5" width="63" height="15" backcolor="#CCCCCC"/>
+					<reportElement key="staticText-3" mode="Opaque" x="3" y="5" width="0" height="15" backcolor="#CCCCCC"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -127,25 +127,29 @@
 					<text><![CDATA[Payment]]></text>
 				</staticText>
 				<textField isBlankWhenNull="false">
-					<reportElement key="textField" isPrintRepeatedValues="false" mode="Opaque" x="50" y="5" width="115" height="15" printWhenGroupChanges="userID" backcolor="#CCCCCC"/>
+					<reportElement key="textField" isPrintRepeatedValues="false" mode="Opaque" x="382" y="5" width="153" height="15" printWhenGroupChanges="userID" backcolor="#CCCCCC"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
-					<textElement/>
+					<textElement>
+                        <font isBold="true"/>
+                    </textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{userID}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="false">
-					<reportElement key="textField" isPrintRepeatedValues="false" mode="Opaque" x="228" y="5" width="306" height="15" printWhenGroupChanges="userID" backcolor="#CCCCCC"/>
+					<reportElement key="textField" isPrintRepeatedValues="false" mode="Opaque" x="46" y="5" width="263" height="15" printWhenGroupChanges="userID" backcolor="#CCCCCC"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
-					<textElement/>
+					<textElement>
+                        <font isBold="true"/>
+                    </textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{userName}]]></textFieldExpression>
 				</textField>
 				<line>
@@ -162,6 +166,19 @@
 					<textElement/>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{userID}]]></textFieldExpression>
 				</textField>
+                <staticText>
+                    <reportElement key="staticText-2" mode="Opaque" x="0" y="5" width="46" height="15" backcolor="#CCCCCC"/>
+                    <box>
+                         <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                         <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                         <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                         <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                         <font isBold="false" pdfFontName="Helvetica-Bold"/>
+                    </textElement>
+                    <text><![CDATA[Name:]]></text>
+                </staticText>
 			</band>
 		</groupHeader>
 		<groupFooter>
@@ -253,7 +270,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font isBold="true" isItalic="true"/>
+					<font isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[From:]]></text>
 			</staticText>
@@ -266,7 +283,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font isBold="true" isItalic="true"/>
+					<font isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[To:]]></text>
 			</staticText>
@@ -341,8 +358,9 @@
 				<textElement/>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{from}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
-				<reportElement key="textField" x="145" y="0" width="135" height="15"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+                <reportElement key="textField" x="145" y="0" width="164" height="15" isPrintWhenDetailOverflows="true"/>
+
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -353,7 +371,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{to}]]></textFieldExpression>
 			</textField>
 			<textField pattern="0.00" isBlankWhenNull="true">
-				<reportElement key="textField" x="285" y="0" width="70" height="15"/>
+				<reportElement key="textField" x="305" y="0" width="50" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
