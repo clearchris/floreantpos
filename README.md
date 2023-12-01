@@ -9,3 +9,6 @@ Original authors can be found at [Orocube](http://floreant.org)
 Branches:
 * 'bringup15' -- Code forked from 2019-fattire-master at [6ef029b](https://github.com/clearchris/floreant/commit/6ef029bbfe3d7513e80c90c1de931f7b7b816444). Updates then applied via cherry picks from orocube svn to bring the code base up to v1.5.  Then remaining relevant commits cherry picked from 2019-fattire-master.
 
+Development Documentation:
+I have started documenting things I haven't seen documented elsewhere in /docs(docs)
+
