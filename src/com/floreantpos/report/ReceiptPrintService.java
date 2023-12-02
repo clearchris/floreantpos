@@ -449,7 +449,7 @@ public class ReceiptPrintService {
 
 		HashMap map = new HashMap();
 
-		map.put(JRParameter.IS_IGNORE_PAGINATION, false);
+		map.put(JRParameter.IS_IGNORE_PAGINATION, true);
 
 		String currencySymbol = CurrencyUtil.getCurrencySymbol();
 		map.put(CURRENCY_SYMBOL, currencySymbol);
