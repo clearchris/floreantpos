@@ -40,7 +40,7 @@
           <forms/>
         </constraints>
         <properties>
-          <text value="Experiation Date:"/>
+          <text value="Expiration Date:"/>
         </properties>
       </component>
       <component id="dfe0f" class="javax.swing.JTextField" binding="tfCouponName">
