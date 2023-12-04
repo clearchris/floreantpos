@@ -356,8 +356,7 @@ public class DiscountSelectionDialog extends OkCancelOptionDialog implements Act
 			this.discount = discount;
 			ticketItems = new ArrayList<TicketItem>();
 
-			setFont(getFont().deriveFont(Font.BOLD, PosUIManager.getFontSize(18)));
-			setText("<html><body><center>" + discount.getName() + "<br></center></body></html>"); //$NON-NLS-1$ //$NON-NLS-2$ 
+			setText("<html><body><center>" + discount.getName() + "<br></center></body></html>"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			if (discount.getQualificationType() == Discount.QUALIFICATION_TYPE_ITEM) {
 				setBackground(Color.CYAN);
