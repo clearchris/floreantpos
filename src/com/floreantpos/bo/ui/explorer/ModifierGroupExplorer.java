@@ -20,6 +20,8 @@ package com.floreantpos.bo.ui.explorer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -56,6 +58,14 @@ public class ModifierGroupExplorer extends TransparentPanel {
 		setLayout(new BorderLayout(5, 5));
 		add(new JScrollPane(table));
 
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				if (me.getClickCount() == 2) {
+					doEditSelectedMenuModifierGroup();
+				}
+			}
+		});
+
 		TransparentPanel panel = new TransparentPanel();
 		ExplorerButtonPanel explorerButton = new ExplorerButtonPanel();
 		JButton editButton = explorerButton.getEditButton();
@@ -63,27 +73,8 @@ public class ModifierGroupExplorer extends TransparentPanel {
 		JButton deleteButton = explorerButton.getDeleteButton();
 
 		editButton.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-				try {
-					int index = table.getSelectedRow();
-					if (index < 0)
-						return;
-
-					index = table.convertRowIndexToModel(index);
-
-					ModifierGroup category = mGroupList.get(index);
-
-					MenuModifierGroupForm editor = new MenuModifierGroupForm(category);
-					BeanEditorDialog dialog = new BeanEditorDialog(POSUtil.getBackOfficeWindow(), editor);
-					dialog.open();
-					if (dialog.isCanceled())
-						return;
-
-					table.repaint();
-				} catch (Throwable x) {
-					BOMessageDialog.showError(com.floreantpos.POSConstants.ERROR_MESSAGE, x);
-				}
+				doEditSelectedMenuModifierGroup();
 			}
 
 		});
@@ -137,6 +128,28 @@ public class ModifierGroupExplorer extends TransparentPanel {
 		panel.add(editButton);
 		panel.add(deleteButton);
 		add(panel, BorderLayout.SOUTH);
+	}
+
+	private void doEditSelectedMenuModifierGroup() {
+		try {
+			int index = table.getSelectedRow();
+			if (index < 0)
+				return;
+
+			index = table.convertRowIndexToModel(index);
+
+			ModifierGroup category = mGroupList.get(index);
+
+			MenuModifierGroupForm editor = new MenuModifierGroupForm(category);
+			BeanEditorDialog dialog = new BeanEditorDialog(POSUtil.getBackOfficeWindow(), editor);
+			dialog.open();
+			if (dialog.isCanceled())
+				return;
+
+			table.repaint();
+		} catch (Throwable x) {
+			BOMessageDialog.showError(com.floreantpos.POSConstants.ERROR_MESSAGE, x);
+		}
 	}
 
 	class ModifierGroupExplorerTableModel extends AbstractTableModel {

@@ -20,6 +20,8 @@ package com.floreantpos.bo.ui.explorer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -60,10 +62,40 @@ public class OrderTypeExplorer extends TransparentPanel {
 		table = new JXTable(tableModel);
 		table.setDefaultRenderer(Object.class, new CustomCellRenderer());
 
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				if (me.getClickCount() == 2) {
+					doEditSelectedOrderType();
+				}
+			}
+		});
+
 		setLayout(new BorderLayout(5, 5));
 		add(new JScrollPane(table));
 
 		addButtonPanel();
+	}
+
+	private void doEditSelectedOrderType() {
+		try {
+			int index = table.getSelectedRow();
+			if (index < 0)
+				return;
+
+			index = table.convertRowIndexToModel(index);
+			OrderType ordersType = tableModel.getRow(index);
+
+			OrderTypeForm editor = new OrderTypeForm(ordersType);
+			BeanEditorDialog dialog = new BeanEditorDialog(POSUtil.getBackOfficeWindow(), editor);
+			dialog.open();
+			if (dialog.isCanceled())
+				return;
+
+			table.repaint();
+
+		} catch (Throwable x) {
+			BOMessageDialog.showError(POSConstants.ERROR_MESSAGE, x);
+		}
 	}
 
 	private void addButtonPanel() {
@@ -92,25 +124,7 @@ public class OrderTypeExplorer extends TransparentPanel {
 		JButton editButton = new JButton(POSConstants.EDIT);
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					int index = table.getSelectedRow();
-					if (index < 0)
-						return;
-
-					index = table.convertRowIndexToModel(index);
-					OrderType ordersType = tableModel.getRow(index);
-
-					OrderTypeForm editor = new OrderTypeForm(ordersType);
-					BeanEditorDialog dialog = new BeanEditorDialog(POSUtil.getBackOfficeWindow(), editor);
-					dialog.open();
-					if (dialog.isCanceled())
-						return;
-
-					table.repaint();
-
-				} catch (Throwable x) {
-					BOMessageDialog.showError(POSConstants.ERROR_MESSAGE, x);
-				}
+				doEditSelectedOrderType();
 			}
 
 		});

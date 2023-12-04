@@ -22,6 +22,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -83,7 +85,37 @@ public class MenuCategoryExplorer extends TransparentPanel {
 		setLayout(new BorderLayout(5, 5));
 		add(new JScrollPane(table));
 
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				if (me.getClickCount() == 2) {
+					doEditSelectedMenuCategory();
+				}
+			}
+		});
+
 		addButtonPanel();
+	}
+
+	private void doEditSelectedMenuCategory() {
+		try {
+			int index = table.getSelectedRow();
+			if (index < 0)
+				return;
+
+			index = table.convertRowIndexToModel(index);
+			MenuCategory category = tableModel.getRow(index);
+
+			MenuCategoryForm editor = new MenuCategoryForm(category);
+			BeanEditorDialog dialog = new BeanEditorDialog(POSUtil.getBackOfficeWindow(), editor);
+			dialog.open();
+			if (dialog.isCanceled())
+				return;
+
+			table.repaint();
+
+		} catch (Throwable x) {
+			BOMessageDialog.showError(POSConstants.ERROR_MESSAGE, x);
+		}
 	}
 
 	private void addButtonPanel() {
@@ -112,27 +144,8 @@ public class MenuCategoryExplorer extends TransparentPanel {
 		JButton editButton = new JButton(POSConstants.EDIT);
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					int index = table.getSelectedRow();
-					if (index < 0)
-						return;
-
-					index = table.convertRowIndexToModel(index);
-					MenuCategory category = tableModel.getRow(index);
-
-					MenuCategoryForm editor = new MenuCategoryForm(category);
-					BeanEditorDialog dialog = new BeanEditorDialog(POSUtil.getBackOfficeWindow(), editor);
-					dialog.open();
-					if (dialog.isCanceled())
-						return;
-
-					table.repaint();
-
-				} catch (Throwable x) {
-					BOMessageDialog.showError(POSConstants.ERROR_MESSAGE, x);
-				}
+				doEditSelectedMenuCategory();
 			}
-
 		});
 		JButton deleteButton = new JButton(POSConstants.DELETE);
 		deleteButton.addActionListener(new ActionListener() {

@@ -22,6 +22,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,10 +87,39 @@ public class MenuGroupExplorer extends TransparentPanel {
 			}
 		});
 
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				if (me.getClickCount() == 2) {
+					doEditSelectedMenuGroup();
+				}
+			}
+		});
+
 		setLayout(new BorderLayout(5, 5));
 		add(new JScrollPane(table));
 
 		createButtonPanel();
+	}
+
+	private void doEditSelectedMenuGroup() {
+		try {
+			int index = table.getSelectedRow();
+			if (index < 0)
+				return;
+
+		index = table.convertRowIndexToModel(index);
+
+		MenuGroup menuGroup = tableModel.getRow(index);
+
+		MenuGroupForm editor = new MenuGroupForm(menuGroup);
+		BeanEditorDialog dialog = new BeanEditorDialog(POSUtil.getBackOfficeWindow(), editor);
+		dialog.open();
+		if (dialog.isCanceled())
+			return;
+		table.repaint();
+		} catch (Exception x) {
+			BOMessageDialog.showError(POSConstants.ERROR_MESSAGE, x);
+		}
 	}
 
 	private void createButtonPanel() {
@@ -101,26 +132,8 @@ public class MenuGroupExplorer extends TransparentPanel {
 
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					int index = table.getSelectedRow();
-					if (index < 0)
-						return;
-
-					index = table.convertRowIndexToModel(index);
-
-					MenuGroup menuGroup = tableModel.getRow(index);
-
-					MenuGroupForm editor = new MenuGroupForm(menuGroup);
-					BeanEditorDialog dialog = new BeanEditorDialog(POSUtil.getBackOfficeWindow(), editor);
-					dialog.open();
-					if (dialog.isCanceled())
-						return;
-					table.repaint();
-				} catch (Exception x) {
-					BOMessageDialog.showError(POSConstants.ERROR_MESSAGE, x);
-				}
+				doEditSelectedMenuGroup();
 			}
-
 		});
 
 		addButton.addActionListener(new ActionListener() {
