@@ -756,8 +756,8 @@ public class TicketItem extends BaseTicketItem implements ITicketItem {
 	}
 
 	@Override
-	public Double getSubTotalAmountDisplay() {
-		return getSubtotalAmount();
+	public String getSubTotalAmountDisplay() {
+		return NumberUtil.formatNumber(getSubtotalAmount());
 	}
 
 	@Override

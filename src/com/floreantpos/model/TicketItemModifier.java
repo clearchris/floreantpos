@@ -163,7 +163,7 @@ public class TicketItemModifier extends BaseTicketItemModifier implements ITicke
 			display += "*"; //$NON-NLS-1$
 		}
 
-		return display; //$NON-NLS-1$
+		return "- "+display; //$NON-NLS-1$
 	}
 
 	@Override
@@ -203,8 +203,8 @@ public class TicketItemModifier extends BaseTicketItemModifier implements ITicke
 	}
 
 	@Override
-	public Double getSubTotalAmountDisplay() {
-		return null;
+	public String getSubTotalAmountDisplay() {
+		return "";
 	}
 
 	@Override

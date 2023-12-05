@@ -66,8 +66,8 @@ public class TicketItemCookingInstruction extends BaseTicketItemCookingInstructi
 	}
 
 	@Override
-	public Double getSubTotalAmountDisplay() {
-		return null;
+	public String getSubTotalAmountDisplay() {
+		return "";
 	}
 
 	@Override

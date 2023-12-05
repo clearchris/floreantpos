@@ -775,8 +775,9 @@ public class TicketView extends JPanel {
 		else {
 			itemName = item.getNameDisplay();
 		}
-		double itemPrice = item.getSubTotalAmountDisplay() == null ? 0 : item.getSubTotalAmountDisplay();
-		String line = String.format("%-10s %9s", itemName, NumberUtil.formatNumber(itemPrice, true)); //$NON-NLS-1$
+
+		String line = String.format("%-10s %9s", itemName, item.getSubTotalAmountDisplay());
+
 		if (line.length() > 20) {
 			line = line.substring(0, 20);
 		}

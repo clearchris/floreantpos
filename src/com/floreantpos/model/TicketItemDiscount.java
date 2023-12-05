@@ -2,6 +2,7 @@ package com.floreantpos.model;
 
 import com.floreantpos.model.base.BaseTicketItemDiscount;
 import com.floreantpos.util.DiscountUtil;
+import com.floreantpos.util.NumberUtil;
 
 public class TicketItemDiscount extends BaseTicketItemDiscount implements ITicketItem {
 	private static final long serialVersionUID = 1L;
@@ -59,7 +60,7 @@ public class TicketItemDiscount extends BaseTicketItemDiscount implements ITicke
 
 	@Override
 	public String getNameDisplay() {
-		return "   * " + getName(); //$NON-NLS-1$
+		return "-- " + getName(); //$NON-NLS-1$
 	}
 
 	@Override
@@ -98,8 +99,8 @@ public class TicketItemDiscount extends BaseTicketItemDiscount implements ITicke
 	}
 
 	@Override
-	public Double getSubTotalAmountDisplay() {
-		return null;
+	public String getSubTotalAmountDisplay() {
+		return "(-"+NumberUtil.formatNumber(getDiscountAmount())+")";
 	}
 
 	@Override

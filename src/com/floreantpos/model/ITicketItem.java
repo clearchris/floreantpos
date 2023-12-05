@@ -37,7 +37,7 @@ public interface ITicketItem {
 
 	Double getTotalAmountWithoutModifiersDisplay();
 	
-	Double getSubTotalAmountDisplay();
+	String getSubTotalAmountDisplay();
 
 	Double getSubTotalAmountWithoutModifiersDisplay();
 	

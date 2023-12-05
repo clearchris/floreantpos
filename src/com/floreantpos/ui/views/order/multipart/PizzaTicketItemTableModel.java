@@ -30,10 +30,8 @@ public class PizzaTicketItemTableModel extends ListTableModel<ITicketItem> {
 				return " " + item.getNameDisplay();
 
 			case 1:
-				Double total = null;
 				if (item instanceof TicketItem) {
-					total = item.getSubTotalAmountDisplay();
-					return NumberUtil.roundToTwoDigit(total);
+					return item.getSubTotalAmountDisplay();
 				}
 				return null;
 
