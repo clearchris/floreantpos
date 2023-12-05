@@ -60,7 +60,7 @@ public class DiscountUtil {
 		TicketItemDiscount maxDiscount = Collections.max(discounts, new Comparator<TicketItemDiscount>() {
 			@Override
 			public int compare(TicketItemDiscount o1, TicketItemDiscount o2) {
-				return (int) (o1.getSubTotalAmountDisplay() - o2.getSubTotalAmountDisplay());
+				return (int) (o1.getDiscountAmount() - o2.getDiscountAmount());
 			}
 		});
 
