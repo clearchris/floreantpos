@@ -25,7 +25,9 @@ import java.util.Map;
 
 import com.floreantpos.model.Discount;
 import com.floreantpos.model.Ticket;
+import com.floreantpos.model.TicketItem;
 import com.floreantpos.model.TicketDiscount;
+import com.floreantpos.model.TicketItemDiscount;
 import com.floreantpos.swing.ListTableModel;
 
 public class SalesExceptionReport {
@@ -35,6 +37,12 @@ public class SalesExceptionReport {
 
 	private List<VoidData> voidedTickets = new ArrayList<VoidData>();
 	private Map<Integer, DiscountData> disountMap = new HashMap<Integer, DiscountData>();
+	private Map<Integer, ItemDiscountData> itemDiscountMap = new HashMap<Integer, ItemDiscountData>();
+
+		// number of orders with any item discounts
+	private int itemDiscountCount = 0;
+	private int totalTicketsForRange = 0;
+
 
 	public void addVoidToVoidData(Ticket ticket) {
 		double amount = ticket.getSubtotalAmount();
@@ -52,7 +60,7 @@ public class SalesExceptionReport {
 		//if (!found) {
 		VoidData voidData = new VoidData();
 		voidData.id = ticket.getId();
-		voidData.setReasonCode(voidReason);
+		voidData.setReasonCode(voidReason!=null?voidReason:"");
 		voidData.setCount(1);
 		voidData.setAmount(amount);
 		voidData.wasted = ticket.isWasted();
@@ -62,6 +70,7 @@ public class SalesExceptionReport {
 	}
 
 	public void addDiscountData(Ticket ticket) {
+
 		List<TicketDiscount> discounts = ticket.getDiscounts();
 		if (discounts != null) {
 			for (TicketDiscount discount : discounts) {
@@ -82,6 +91,35 @@ public class SalesExceptionReport {
 				discountData.checkSize = (double) (discountData.totalNetSales / (double) discountData.totalCount);
 			}
 		}
+	}
+
+	public void addItemDiscountData(Ticket ticket) {
+		List<Integer> ids = new ArrayList<Integer>();
+		ItemDiscountData discountData = null;
+		boolean discountPresent = false;
+
+		for(TicketItem item : ticket.getTicketItems()){
+			if(item.getDiscountAmount() > 0)
+				discountPresent = true;
+				for(TicketItemDiscount iDiscount : item.getDiscounts()){
+					discountData = itemDiscountMap.get(iDiscount.getDiscountId());
+					if (discountData == null) {
+						String name = iDiscount.getName();
+						discountData = new ItemDiscountData();
+						discountData.code = iDiscount.getDiscountId();
+						discountData.name = name;
+						itemDiscountMap.put(iDiscount.getDiscountId(), discountData);
+					}
+					if (iDiscount.getMinimumQuantity() == 0) discountData.itemCount++;
+					else discountData.itemCount += item.getItemCount() / iDiscount.getMinimumQuantity();
+					discountData.totalDiscount += iDiscount.getAmount();
+					if(!ids.contains(iDiscount.getDiscountId())) {
+						discountData.orderCount++;
+						ids.add(iDiscount.getDiscountId());
+					}
+				}
+		}
+		if (discountPresent) itemDiscountCount++;
 	}
 
 	public void addEmptyDiscounts(List<Discount> discounts) {
@@ -225,6 +263,109 @@ public class SalesExceptionReport {
 
 	}
 
+	public static class ItemDiscountData {
+		private int code;
+		private String name;
+		private int orderCount;
+		private int itemCount;
+		private double totalDiscount;
+		private double totalNetSales;
+		private double totalGuest;
+		private double partySize;
+		private double checkSize;
+		private double countPercentage;
+		private double ratioDNet;
+
+		public double getCheckSize() {
+			return checkSize;
+		}
+
+		public void setCheckSize(double checkSize) {
+			this.checkSize = checkSize;
+		}
+
+		public int getCode() {
+			return code;
+		}
+
+		public void setCode(int code) {
+			this.code = code;
+		}
+
+		public double getCountPercentage() {
+			return countPercentage;
+		}
+
+		public void setCountPercentage(double countPercentage) {
+			this.countPercentage = countPercentage;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public double getPartySize() {
+			return partySize;
+		}
+
+		public void setPartySize(double partySize) {
+			this.partySize = partySize;
+		}
+
+		public double getRatioDNet() {
+			return ratioDNet;
+		}
+
+		public void setRatioDNet(double ratioDNet) {
+			this.ratioDNet = ratioDNet;
+		}
+
+		public int getOrderCount() {
+			return orderCount;
+		}
+
+		public void setOrderCount(int orderCount) {
+			this.orderCount = orderCount;
+		}
+
+		public int getItemCount() {
+			return itemCount;
+		}
+
+		public void setItemCount(int itemCount) {
+			this.itemCount = itemCount;
+		}
+
+		public double getTotalDiscount() {
+			return totalDiscount;
+		}
+
+		public void setTotalDiscount(double totalDiscount) {
+			this.totalDiscount = totalDiscount;
+		}
+
+		public double getTotalGuest() {
+			return totalGuest;
+		}
+
+		public void setTotalGuest(double totalGuest) {
+			this.totalGuest = totalGuest;
+		}
+
+		public double getTotalNetSales() {
+			return totalNetSales;
+		}
+
+		public void setTotalNetSales(double totalNetSales) {
+			this.totalNetSales = totalNetSales;
+		}
+
+	}
+
 	/**
 	 * @param args
 	 */
@@ -256,6 +397,18 @@ public class SalesExceptionReport {
 		this.toDate = toDate;
 	}
 
+	public int getItemDiscountCount() {
+		return itemDiscountCount;
+	}
+
+	public int getTotalTicketsForRange() {
+		return totalTicketsForRange;
+	}
+
+	public void setTotalTicketsForRange(int totalTicketsForRange) {
+		this.totalTicketsForRange = totalTicketsForRange;
+	}
+
 	public VoidTableModel getVoidTableModel() {
 		VoidTableModel model = new VoidTableModel();
 		model.setRows(this.voidedTickets);
@@ -271,6 +424,13 @@ public class SalesExceptionReport {
 		return model;
 	}
 
+	public ItemDiscountTableModel getItemDiscountTableModel() {
+		ItemDiscountTableModel model = new ItemDiscountTableModel();
+		ArrayList list = new ArrayList(itemDiscountMap.values());
+		model.setRows(list);
+
+		return model;
+	}
 	public class VoidTableModel extends ListTableModel {
 		public VoidTableModel() {
 			setColumnNames(new String[] { "code", "reason", "wast", "qty", "amount" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
@@ -336,6 +496,52 @@ public class SalesExceptionReport {
 				case 9:
 					return data.countPercentage;
 				case 10:
+					return data.ratioDNet;
+			}
+
+			return null;
+		}
+
+	}
+
+	public class ItemDiscountTableModel extends ListTableModel {
+		public ItemDiscountTableModel() {
+			setColumnNames(new String[] {
+					"no", "name", "code", "orderCount", "itemCount", "totalDiscount", "totalNetSales", "totalGuests", "partySize", "checkSize", "countPercent", "ratioDnet" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
+		}
+
+		public Object getValueAt(int rowIndex, int columnIndex) {
+			ItemDiscountData data = (ItemDiscountData) rows.get(rowIndex);
+
+			switch (columnIndex) {
+				case 0:
+					return data.code;
+
+				case 1:
+					return data.name;
+
+				case 2:
+					return data.code;
+
+				case 3:
+					return data.orderCount;
+
+				case 4:
+					return data.itemCount;
+
+				case 5:
+					return data.totalDiscount;
+				case 6:
+					return data.totalNetSales;
+				case 7:
+					return data.totalGuest;
+				case 8:
+					return data.partySize;
+				case 9:
+					return data.checkSize;
+				case 10:
+					return data.countPercentage;
+				case 11:
 					return data.ratioDNet;
 			}
 

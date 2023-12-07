@@ -106,7 +106,8 @@ public class SalesExceptionReportView extends JPanel {
 		
 		JasperReport voidReport = ReportUtil.getReport("sales_summary_exception_voids"); //$NON-NLS-1$
 		JasperReport discountReport = ReportUtil.getReport("sales_summary_exception_discounts"); //$NON-NLS-1$
-		
+		JasperReport itemDiscountReport = ReportUtil.getReport("sales_summary_exception_item_discounts"); //$NON-NLS-1$
+
 		HashMap map = new HashMap();
 		ReportUtil.populateRestaurantProperties(map);
 		map.put("fromDate", shortDateFormatter.format(fromDate)); //$NON-NLS-1$
@@ -114,9 +115,12 @@ public class SalesExceptionReportView extends JPanel {
 		map.put("reportTime", fullDateFormatter.format(new Date())); //$NON-NLS-1$
 		map.put("voidReport", voidReport); //$NON-NLS-1$
 		map.put("voidReportDataSource", new JRTableModelDataSource(report.getVoidTableModel())); //$NON-NLS-1$
+		map.put("itemDiscountCount", new Integer(report.getItemDiscountCount()));
+		map.put("totalTicketsForRange", report.getTotalTicketsForRange());
 		map.put("discountReport", discountReport); //$NON-NLS-1$
 		map.put("discountReportDataSource", new JRTableModelDataSource(report.getDiscountTableModel())); //$NON-NLS-1$
-		
+		map.put("itemDiscountReport", itemDiscountReport); //$NON-NLS-1$
+		map.put("itemDiscountReportDataSource", new JRTableModelDataSource(report.getItemDiscountTableModel())); //$NON-NLS-1$
 		
 		JasperReport jasperReport = ReportUtil.getReport("sales_summary_exception"); //$NON-NLS-1$
 		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, new JREmptyDataSource());

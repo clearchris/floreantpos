@@ -562,23 +562,30 @@ public class ReportService {
 				report.addVoidToVoidData(ticket);
 			}
 
+			// TODO: Refunds are not listed in the report
+
 			//discounts
 			criteria = session.createCriteria(Ticket.class);
 			criteria.add(Restrictions.ge(Ticket.PROP_CREATE_DATE, fromDate));
 			criteria.add(Restrictions.le(Ticket.PROP_CREATE_DATE, toDate));
+			criteria.add(Restrictions.eq(Ticket.PROP_CLOSED, Boolean.TRUE));
 			criteria.add(Restrictions.eq(Ticket.PROP_VOIDED, Boolean.FALSE));
 			criteria.add(Restrictions.eq(Ticket.PROP_REFUNDED, Boolean.FALSE));
 
 			list = criteria.list();
+			int tickets = 0;
 			for (Iterator iter = list.iterator(); iter.hasNext();) {
 				Ticket ticket = (Ticket) iter.next();
-				report.addDiscountData(ticket);
+				report.addDiscountData(ticket);       // ticket based discounts
+				report.addItemDiscountData(ticket);   // item based discounts
+				tickets++;
 			}
+			report.setTotalTicketsForRange(tickets);
 
 			//find all valid discounts
-			DiscountDAO discountDAO = new DiscountDAO();
-			List<Discount> availableCoupons = discountDAO.getValidCoupons();
-			report.addEmptyDiscounts(availableCoupons);
+			//DiscountDAO discountDAO = new DiscountDAO();
+			//List<Discount> availableCoupons = discountDAO.getValidCoupons();
+			//report.addEmptyDiscounts(availableCoupons);
 
 			return report;
 		} finally {
