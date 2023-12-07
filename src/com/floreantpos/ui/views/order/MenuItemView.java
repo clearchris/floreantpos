@@ -53,6 +53,7 @@ import com.floreantpos.swing.PosButton;
 import com.floreantpos.swing.PosUIManager;
 import com.floreantpos.ui.views.order.actions.ItemSelectionListener;
 import com.floreantpos.util.CurrencyUtil;
+import com.floreantpos.util.NumberUtil;
 
 /**
  * 
@@ -216,7 +217,7 @@ public class MenuItemView extends SelectionView {
 					setText("<html><body><center>" + menuItem.getName()
 							+ (!showPrice ? ""
 									: "<br><h4>" + "<span style='color:white;background-color:green;margin:1;'>" + "&nbsp;" + "&nbsp;" + "&nbsp;"
-											+ CurrencyUtil.getCurrencySymbol() + menuItem.getPrice() + "&nbsp;" + "&nbsp;" + "&nbsp;" + "</span>")
+											+ CurrencyUtil.getCurrencySymbol() + NumberUtil.formatNumber(menuItem.getPrice()) + "&nbsp;" + "&nbsp;" + "&nbsp;" + "</span>")
 							+ "&nbsp;"
 							+ (!showStockCount ? ""
 									: "<span style='color:white;background-color:red;margin:1;'>" + "&nbsp;" + "&nbsp;" + "&nbsp;" + menuItem.getStockAmount()
