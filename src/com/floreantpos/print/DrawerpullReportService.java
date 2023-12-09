@@ -135,19 +135,15 @@ public class DrawerpullReportService {
 			criteria.add(Restrictions.eq(Ticket.PROP_REFUNDED, Boolean.FALSE));
 			criteria.add(Restrictions.eq(Ticket.PROP_DRAWER_RESETTED, Boolean.FALSE));
 			criteria.add(Restrictions.eq(Ticket.PROP_TERMINAL, terminal));
-			List list = criteria.list();
+			List<Ticket> list = criteria.list();
 
-			for (Iterator iter = list.iterator(); iter.hasNext();) {
-				Ticket ticket = (Ticket) iter.next();
-				if (ticket.getDiscounts() != null) {
-					List<TicketDiscount> discounts = ticket.getDiscounts();
-					for (TicketDiscount discount2 : discounts) {
-						++totalDiscountCount;
-						totalDiscountAmount += discount2.getValue();
-						totalDiscountGuest += ticket.getNumberOfGuests();
-						totalDiscountSales += ticket.getTotalAmount();
-						totalDiscountCheckSize++;
-					}
+			for(Ticket ticket : list){
+				if(ticket.getDiscountAmount()>0) {
+					++totalDiscountCount;
+					totalDiscountAmount += ticket.getDiscountAmount();
+					totalDiscountGuest += ticket.getNumberOfGuests();
+					totalDiscountSales += ticket.getTotalAmount();
+					totalDiscountCheckSize++;
 				}
 			}
 
