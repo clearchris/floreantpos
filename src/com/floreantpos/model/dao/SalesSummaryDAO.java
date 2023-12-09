@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.floreantpos.model.util.DateUtil;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.ProjectionList;
@@ -94,6 +95,7 @@ public class SalesSummaryDAO extends _RootDAO {
 			criteria.add(Restrictions.eq("item." + TicketItem.PROP_BEVERAGE, Boolean.FALSE)); //$NON-NLS-1$
 			criteria.add(Restrictions.ge("t." + Ticket.PROP_ACTIVE_DATE, start)); //$NON-NLS-1$
 			criteria.add(Restrictions.le("t." + Ticket.PROP_ACTIVE_DATE, end)); //$NON-NLS-1$
+			criteria.add(Restrictions.ne("t." + Ticket.PROP_VOIDED, Boolean.TRUE));
 
 			if (userType != null) {
 				criteria.add(Restrictions.eq("u." + User.PROP_TYPE, userType)); //$NON-NLS-1$
@@ -134,6 +136,7 @@ public class SalesSummaryDAO extends _RootDAO {
 			criteria.add(Restrictions.eq("item." + TicketItem.PROP_BEVERAGE, Boolean.TRUE)); //$NON-NLS-1$
 			criteria.add(Restrictions.ge("t." + Ticket.PROP_ACTIVE_DATE, start)); //$NON-NLS-1$
 			criteria.add(Restrictions.le("t." + Ticket.PROP_ACTIVE_DATE, end)); //$NON-NLS-1$
+			criteria.add(Restrictions.ne("t." + Ticket.PROP_VOIDED, Boolean.TRUE));
 
 			if (userType != null) {
 				criteria.add(Restrictions.eq("u." + User.PROP_TYPE, userType)); //$NON-NLS-1$
@@ -179,6 +182,7 @@ public class SalesSummaryDAO extends _RootDAO {
 					criteria.add(Restrictions.eq("t." + Ticket.PROP_SHIFT, shift)); //$NON-NLS-1$
 					criteria.add(Restrictions.ge("t." + Ticket.PROP_ACTIVE_DATE, start)); //$NON-NLS-1$
 					criteria.add(Restrictions.le("t." + Ticket.PROP_ACTIVE_DATE, end)); //$NON-NLS-1$
+					criteria.add(Restrictions.ne("t." + Ticket.PROP_VOIDED, Boolean.TRUE));
 
 					if (userType != null) {
 						criteria.add(Restrictions.eq("u." + User.PROP_TYPE, userType)); //$NON-NLS-1$
@@ -223,6 +227,7 @@ public class SalesSummaryDAO extends _RootDAO {
 				criteria.add(Restrictions.eq("item." + TicketItem.PROP_CATEGORY_NAME, category.getName())); //$NON-NLS-1$
 				criteria.add(Restrictions.ge("t." + Ticket.PROP_ACTIVE_DATE, start)); //$NON-NLS-1$
 				criteria.add(Restrictions.le("t." + Ticket.PROP_ACTIVE_DATE, end)); //$NON-NLS-1$
+				criteria.add(Restrictions.ne("t." + Ticket.PROP_VOIDED, Boolean.TRUE));
 
 				if (userType != null) {
 					criteria.add(Restrictions.eq("u." + User.PROP_TYPE, userType)); //$NON-NLS-1$
