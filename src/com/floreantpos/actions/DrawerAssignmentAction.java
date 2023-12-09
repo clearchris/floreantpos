@@ -141,6 +141,7 @@ public class DrawerAssignmentAction extends PosAction {
 
 			terminal.setAssignedUser(user);
 			terminal.setCurrentBalance(drawerBalance);
+			terminal.setOpeningBalance(drawerBalance);
 
 			DrawerAssignedHistory history = new DrawerAssignedHistory();
 			history.setTime(new Date());
