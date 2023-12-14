@@ -296,7 +296,7 @@ public class DefaultCustomerListView extends CustomerSelector {
 	private void closeDialog(boolean canceled) {
 		Window windowAncestor = SwingUtilities.getWindowAncestor(DefaultCustomerListView.this);
 		if (windowAncestor instanceof POSDialog) {
-			((POSDialog) windowAncestor).setCanceled(false);
+			((POSDialog) windowAncestor).setCanceled(canceled);
 			windowAncestor.dispose();
 		}
 	}

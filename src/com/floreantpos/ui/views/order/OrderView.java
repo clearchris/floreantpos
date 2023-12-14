@@ -439,6 +439,7 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 		});
 
 		actionButtonPanel.add(btnOrderType);
+		setCustomerButton();
 		actionButtonPanel.add(btnCustomer);
 		actionButtonPanel.add(btnDeliveryInfo);
 		actionButtonPanel.add(btnTableNumber);
@@ -737,8 +738,8 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 		if (!dialog.isCanceled()) {
 			currentTicket.setCustomer(dialog.getSelectedCustomer());
 			btnCustomer.setText(Messages.getString("OrderView.15") + dialog.getSelectedCustomer().getName() + Messages.getString("OrderView.16")); //$NON-NLS-1$ //$NON-NLS-2$
-
 		}
+		setCustomerButton();
 	}
 
 	protected void addDiscount() {
@@ -843,6 +844,8 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 					btnSeatNo.setText(Messages.getString("OrderView.18")); //$NON-NLS-1$
 			}
 
+			setCustomerButton();
+
 			if (!type.isShowTableSelection()) {
 				btnGuestNo.setVisible(false);
 				btnTableNumber.setVisible(false);
@@ -946,6 +949,11 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 		repaint();
 	}
 
+	private void setCustomerButton(){
+		if(currentTicket != null && currentTicket.getCustomer() != null)
+			btnCustomer.setText(Messages.getString("OrderView.15") + currentTicket.getCustomer().getName() + Messages.getString("OrderView.16"));
+		else btnCustomer.setText(POSConstants.CUSTOMER_SELECTION_BUTTON_TEXT);
+	}
 	private void setHideButtonForRetailView() {
 		btnDone.setVisible(false);
 		btnCancel.setVisible(false);
@@ -1017,7 +1025,7 @@ public class OrderView extends ViewPanel implements PaymentListener, TicketEditL
 	}
 
 	public void updateView() {
-		btnCustomer.setText(POSConstants.CUSTOMER_SELECTION_BUTTON_TEXT);
+		setCustomerButton();
 		if (currentTicket != null) {
 			OrderType type = currentTicket.getOrderType();
 			if (type.isRetailOrder()) {
