@@ -440,11 +440,11 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 
 		ticket = TicketDAO.getInstance().loadFullTicket(ticket.getId());
 
-		//		int due = (int) POSUtil.getDouble(ticket.getDueAmount());
-		//		if (due != 0) {
-		//			POSMessageDialog.showError(this, Messages.getString("SwitchboardView.5")); //$NON-NLS-1$
-		//			return;
-		//		}
+		int due = (int) POSUtil.getDouble(ticket.getDueAmount());
+		if (due != 0) {
+			POSMessageDialog.showError(this, Messages.getString("SwitchboardView.5")); //$NON-NLS-1$
+			return;
+		}
 
 		int option = JOptionPane.showOptionDialog(Application.getPosWindow(),
 				Messages.getString("SwitchboardView.6") + ticket.getId() + Messages.getString("SwitchboardView.7"), POSConstants.CONFIRM, //$NON-NLS-1$ //$NON-NLS-2$
