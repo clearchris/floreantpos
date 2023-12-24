@@ -141,6 +141,7 @@ public class TicketDAO extends BaseTicketDAO {
 		try {
 			session = createNewSession();
 			tx = session.beginTransaction();
+			User user = Application.getCurrentUser();
 
 			ticket.setVoided(true);
 			ticket.setClosed(true);
@@ -166,6 +167,7 @@ public class TicketDAO extends BaseTicketDAO {
 				transaction.setPaymentType(PaymentType.CASH.name());
 				transaction.setAmount(ticket.getPaidAmount());
 				transaction.setTerminal(Application.getInstance().getTerminal());
+				transaction.setUser(user);
 				transaction.setCaptured(true);
 
 				ticket.addTotransactions(transaction);
