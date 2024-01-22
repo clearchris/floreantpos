@@ -74,12 +74,14 @@ public class ConfigurationDialog extends POSDialog implements ChangeListener, Ac
 
 		JPanel bottomPanel = new JPanel(new MigLayout("fill")); //$NON-NLS-1$
 
-		JButton btnOk = new JButton(CANCEL);
-		btnOk.addActionListener(this);
-		bottomPanel.add(btnOk, "dock east, gaptop 5, gapbottom 10, gapright 10"); //$NON-NLS-1$
-		JButton btnCancel = new JButton(OK);
+
+		JButton btnCancel = new JButton(CANCEL);
 		btnCancel.addActionListener(this);
-		bottomPanel.add(btnCancel, "dock east, gapright 5, gaptop 5, gapbottom 10"); //$NON-NLS-1$
+		bottomPanel.add(btnCancel, "dock east, gaptop 5, gapbottom 10, gapright 10"); //$NON-NLS-1$
+
+		JButton btnOk = new JButton(OK);
+		btnOk.addActionListener(this);
+		bottomPanel.add(btnOk, "dock east, gapright 5, gaptop 5, gapbottom 10"); //$NON-NLS-1$
 
 		add(bottomPanel, BorderLayout.SOUTH);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
