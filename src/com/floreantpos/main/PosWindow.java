@@ -64,7 +64,7 @@ public class PosWindow extends JFrame implements WindowListener {
 	private JLabel lblTaxInculed;
 	private JLabel lblTime;
 	private JPanel welcomeHeaderPanel;
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss aaa");
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aaa");
 	private Timer clockTimer = new Timer(1000, new ClockTimerHandler());
 	private Timer autoLogoffTimer;
 	private JPanel statusBar;
