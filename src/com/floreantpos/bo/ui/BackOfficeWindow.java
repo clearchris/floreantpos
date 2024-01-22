@@ -40,49 +40,7 @@ import javax.swing.JMenuBar;
 import com.floreantpos.Messages;
 import com.floreantpos.actions.AboutAction;
 import com.floreantpos.actions.UpdateAction;
-import com.floreantpos.bo.actions.AttendanceHistoryAction;
-import com.floreantpos.bo.actions.CategoryExplorerAction;
-import com.floreantpos.bo.actions.ConfigureRestaurantAction;
-import com.floreantpos.bo.actions.CookingInstructionExplorerAction;
-import com.floreantpos.bo.actions.CouponExplorerAction;
-import com.floreantpos.bo.actions.CreditCardReportAction;
-import com.floreantpos.bo.actions.CurrencyExplorerAction;
-import com.floreantpos.bo.actions.CustomPaymentReportAction;
-import com.floreantpos.bo.actions.DataExportAction;
-import com.floreantpos.bo.actions.DataImportAction;
-import com.floreantpos.bo.actions.DrawerPullReportExplorerAction;
-import com.floreantpos.bo.actions.EmployeeAttendanceAction;
-import com.floreantpos.bo.actions.GroupExplorerAction;
-import com.floreantpos.bo.actions.HourlyLaborReportAction;
-import com.floreantpos.bo.actions.ItemExplorerAction;
-import com.floreantpos.bo.actions.JournalReportAction;
-import com.floreantpos.bo.actions.KeyStatisticsSalesReportAction;
-import com.floreantpos.bo.actions.LanguageSelectionAction;
-import com.floreantpos.bo.actions.MenuItemSizeExplorerAction;
-import com.floreantpos.bo.actions.MenuUsageReportAction;
-import com.floreantpos.bo.actions.ModifierExplorerAction;
-import com.floreantpos.bo.actions.ModifierGroupExplorerAction;
-import com.floreantpos.bo.actions.MultiplierExplorerAction;
-import com.floreantpos.bo.actions.OpenTicketSummaryReportAction;
-import com.floreantpos.bo.actions.OrdersTypeExplorerAction;
-import com.floreantpos.bo.actions.PayrollReportAction;
-import com.floreantpos.bo.actions.PizzaCrustExplorerAction;
-import com.floreantpos.bo.actions.PizzaExplorerAction;
-import com.floreantpos.bo.actions.PizzaItemExplorerAction;
-import com.floreantpos.bo.actions.PizzaModifierExplorerAction;
-import com.floreantpos.bo.actions.PluginsAction;
-import com.floreantpos.bo.actions.SalesAnalysisReportAction;
-import com.floreantpos.bo.actions.SalesBalanceReportAction;
-import com.floreantpos.bo.actions.SalesDetailReportAction;
-import com.floreantpos.bo.actions.SalesExceptionReportAction;
-import com.floreantpos.bo.actions.SalesReportAction;
-import com.floreantpos.bo.actions.ServerProductivityReportAction;
-import com.floreantpos.bo.actions.ShiftExplorerAction;
-import com.floreantpos.bo.actions.TaxExplorerAction;
-import com.floreantpos.bo.actions.TicketExplorerAction;
-import com.floreantpos.bo.actions.UserExplorerAction;
-import com.floreantpos.bo.actions.UserTypeExplorerAction;
-import com.floreantpos.bo.actions.ViewGratuitiesAction;
+import com.floreantpos.bo.actions.*;
 import com.floreantpos.config.AppConfig;
 import com.floreantpos.config.TerminalConfig;
 import com.floreantpos.customPayment.CustomPaymentBrowserAction;
@@ -189,6 +147,13 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 		helpMenu.add(new PluginsAction());
 		helpMenu.add(new AboutAction());
 		menuBar.add(helpMenu);
+
+		// provide a way to close the window if run in full screen mode with no window manager
+		if(TerminalConfig.isFullscreenMode()) {
+			JMenu windowMenu = new JMenu(Messages.getString("BackOfficeWindow.3"));
+			windowMenu.add(new CloseDialogAction());
+			menuBar.add(windowMenu);
+		}
 
 		setJMenuBar(menuBar);
 	}
