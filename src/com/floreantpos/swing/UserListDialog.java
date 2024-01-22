@@ -20,11 +20,7 @@ package com.floreantpos.swing;
 import java.awt.BorderLayout;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 
 import com.floreantpos.Messages;
 import com.floreantpos.main.Application;
@@ -53,7 +49,7 @@ public class UserListDialog extends OkCancelOptionDialog {
 		userListTable = new JTable(tableModel);
 		userListTable.setRowHeight(PosUIManager.getSize(60));
 		userListTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		contentPane.add(new JScrollPane(userListTable));
+		contentPane.add(new PosScrollPane(userListTable));
 
 		List<User> userList = UserDAO.getInstance().findAll();
 		tableModel.addRows(userList);
