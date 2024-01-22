@@ -105,6 +105,7 @@ public class TerminalConfig {
 	private static final String KDS_TICKETS_PER_PAGE = "kds.ticket.per_page";
 
 	private static PropertiesConfiguration config = AppConfig.getConfig();
+	private static String BackOffice_Button = "backoffice_on_login";
 
 	public static int getTerminalId() {
 		return config.getInt(TERMINAL_ID, -1);
@@ -128,6 +129,14 @@ public class TerminalConfig {
 
 	public static void setShowKitchenBtnOnLoginScreen(boolean kitchenBtn) {
 		config.setProperty(Kitchen_Display_Button, kitchenBtn);
+	}
+
+	public static boolean isShowBackOfficeBtnOnLoginScreen() {
+		return config.getBoolean(BackOffice_Button, true);
+	}
+
+	public static void setShowBackOfficeBtnOnLoginScreen(boolean kitchenBtn) {
+		config.setProperty(BackOffice_Button, kitchenBtn);
 	}
 
 	public static String getAdminPassword() {

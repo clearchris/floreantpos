@@ -147,7 +147,8 @@ public class LoginView extends ViewPanel {
 		centerPanel.add(panel1, "cell 0 0, wrap, w " + width + "px, h " + height + "px, grow");
 
 		panel3.add(btnSwitchBoard);
-		panel3.add(btnBackOffice);
+		if (TerminalConfig.isShowBackOfficeBtnOnLoginScreen())
+			panel3.add(btnBackOffice);
 		if (TerminalConfig.isShowKitchenBtnOnLoginScreen()) {
 			panel3.add(btnKitchenDisplay);
 		}

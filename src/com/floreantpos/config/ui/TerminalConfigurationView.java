@@ -89,6 +89,7 @@ public class TerminalConfigurationView extends ConfigurationView {
 	private JCheckBox chkAllowQuickMaintenance = new JCheckBox(Messages.getString("TerminalConfigurationView.35")); //$NON-NLS-1$
 	private JCheckBox chkModifierCannotExceedMaxLimit = new JCheckBox(Messages.getString("TerminalConfigurationView.36")); //$NON-NLS-1$
 	private JCheckBox chkAutoLoginConfig = new JCheckBox(Messages.getString("TerminalConfigurationView.37")); //$NON-NLS-1$
+	private JCheckBox cbBackOfficeLogin = new JCheckBox(Messages.getString("TerminalConfigurationView.48"));
 
 	private JComboBox cbUsers = new JComboBox<>();
 	private JComboBox<String> cbFonts = new JComboBox<String>();
@@ -136,6 +137,7 @@ public class TerminalConfigurationView extends ConfigurationView {
 		contentPanel.add(tfSecretKeyLength, "wrap"); //$NON-NLS-1$
 
 		contentPanel.add(cbShowDbConfiguration, "spanx 3"); //$NON-NLS-1$
+		contentPanel.add(cbBackOfficeLogin, "newline, span");
 
 		cbAutoLogoff.addActionListener(new ActionListener() {
 			@Override
@@ -284,6 +286,7 @@ public class TerminalConfigurationView extends ConfigurationView {
 		TerminalConfig.setDefaultPassLen(defaultPassLen);
 		TerminalConfig.setFullscreenMode(cbFullscreenMode.isSelected());
 		TerminalConfig.setShowDbConfigureButton(cbShowDbConfiguration.isSelected());
+		TerminalConfig.setShowDbConfigureButton(cbBackOfficeLogin.isSelected());
 		TerminalConfig.setUseTranslatedName(cbTranslatedName.isSelected());
 
 		TerminalConfig.setTouchScreenButtonHeight(buttonHeight);
@@ -349,6 +352,7 @@ public class TerminalConfigurationView extends ConfigurationView {
 		tfSecretKeyLength.setText(String.valueOf(TerminalConfig.getDefaultPassLen()));
 		cbFullscreenMode.setSelected(TerminalConfig.isFullscreenMode());
 		cbShowDbConfiguration.setSelected(TerminalConfig.isShowDbConfigureButton());
+		cbBackOfficeLogin.setSelected(TerminalConfig.isShowBackOfficeBtnOnLoginScreen());
 		cbUseSettlementPrompt.setSelected(TerminalConfig.isUseSettlementPrompt());
 		cbShowBarCodeOnReceipt.setSelected(TerminalConfig.isShowBarcodeOnReceipt());
 		cbGroupKitchenReceiptItems.setSelected(TerminalConfig.isGroupKitchenReceiptItems());
