@@ -36,6 +36,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.floreantpos.ui.forms.CustomerForm;
 import net.miginfocom.swing.MigLayout;
 
 import org.apache.commons.lang.StringUtils;
@@ -64,6 +65,7 @@ import com.floreantpos.util.TicketAlreadyExistsException;
 public class DefaultCustomerListView extends CustomerSelector {
 
 	private PosButton btnCreateNewCustomer;
+	private PosButton btnEditCustomer;
 	private CustomerTable customerTable;
 	private POSTextField tfMobile;
 	private POSTextField tfLoyaltyNo;
@@ -191,6 +193,15 @@ public class DefaultCustomerListView extends CustomerSelector {
 		btnHistory.setEnabled(false);
 		panel.add(btnHistory, ""); //$NON-NLS-1$
 
+		btnEditCustomer = new PosButton(Messages.getString("CustomerSelectionDialog.33")); //$NON-NLS-1$
+		btnEditCustomer.setFocusable(false);
+		panel.add(btnEditCustomer, ""); //$NON-NLS-1$
+		btnEditCustomer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				editCustomer();
+			}
+		});
+
 		btnCreateNewCustomer = new PosButton(Messages.getString("CustomerSelectionDialog.25")); //$NON-NLS-1$
 		btnCreateNewCustomer.setFocusable(false);
 		panel.add(btnCreateNewCustomer, ""); //$NON-NLS-1$
@@ -305,6 +316,27 @@ public class DefaultCustomerListView extends CustomerSelector {
 		if (ticket != null) {
 			ticket.setCustomer(customer);
 			TicketDAO.getInstance().saveOrUpdate(ticket);
+		}
+	}
+
+	private void editCustomer(){
+		try {
+			Customer customer = getSelectedCustomer();
+
+			if (selectedCustomer == null) {
+				return;
+			}
+
+			CustomerForm editor = new CustomerForm(true);
+			editor.enableCustomerFields(true);
+			editor.setBean(customer);
+			BeanEditorDialog dialog = new BeanEditorDialog(POSUtil.getBackOfficeWindow(), editor);
+			dialog.open();
+			if (dialog.isCanceled())
+				return;
+			customerTable.repaint();
+		} catch (Exception e) {
+			PosLog.error(DefaultCustomerListView.class, e);
 		}
 	}
 

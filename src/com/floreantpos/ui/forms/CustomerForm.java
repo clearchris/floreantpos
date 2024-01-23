@@ -90,7 +90,7 @@ public class CustomerForm extends BeanEditor<Customer> {
 	private JLabel lblSocialSecurityNumber;
 	private FixedLengthTextField tfHomePhone;
 	private FixedLengthTextField tfWorkPhone;
-	private IntegerTextField tfMobile;
+	private FixedLengthTextField tfMobile;
 	private FixedLengthTextField tfSocialSecurityNumber;
 	private QwertyKeyPad qwertyKeyPad;
 
@@ -194,7 +194,7 @@ public class CustomerForm extends BeanEditor<Customer> {
 		lblMobile = new JLabel(Messages.getString("CustomerForm.32")); //$NON-NLS-1$
 		add(lblMobile, "cell 3 3 ,right"); //$NON-NLS-1$
 
-		tfMobile = new IntegerTextField(10);
+		tfMobile = new FixedLengthTextField();
 		add(tfMobile, "cell 4 3,grow"); //$NON-NLS-1$
 
 		lblHomePhone = new JLabel("Home Phone");//$NON-NLS-1$
@@ -213,6 +213,7 @@ public class CustomerForm extends BeanEditor<Customer> {
 		add(lblEmail, "cell 3 6 ,right"); //$NON-NLS-1$
 
 		tfEmail = new FixedLengthTextField();
+		tfEmail.setLength(39);
 		add(tfEmail, "cell 4 6,grow"); //$NON-NLS-1$
 
 		lblLoyaltyPoint = new JLabel(Messages.getString("CustomerForm.34")); //$NON-NLS-1$
@@ -319,14 +320,14 @@ public class CustomerForm extends BeanEditor<Customer> {
 		tfLoyaltyNo.setEnabled(enable);
 		tfAddress.setEnabled(enable);
 		tfCity.setEnabled(enable);
-		tfCreditLimit.setEnabled(enable);
+		tfCreditLimit.setEnabled(false);
 		tfZip.setEnabled(enable);
 		tfCountry.setEnabled(enable);
 		cbVip.setEnabled(enable);
 		tfDoB.setEnabled(enable);
 		btnClearImage.setEnabled(enable);
 		btnSelectImage.setEnabled(enable);
-		tfLoyaltyPoint.setEnabled(enable);
+		tfLoyaltyPoint.setEnabled(false);
 
 		tfHomePhone.setEnabled(enable);
 		tfWorkPhone.setEnabled(enable);
@@ -503,7 +504,7 @@ public class CustomerForm extends BeanEditor<Customer> {
 			customer = new Customer();
 			setBean(customer, false);
 		}
-		customer.setSalutation(cbSalutation.getSelectedItem().toString());
+		customer.setSalutation(cbSalutation.getSelectedItem()==null?null:cbSalutation.getSelectedItem().toString());
 		customer.setFirstName(tfFirstName.getText());
 		customer.setLastName(tfLastName.getText());
 		customer.setDob(tfDoB.getText());
