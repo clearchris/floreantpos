@@ -168,6 +168,8 @@ public class MenuItemForm extends BeanEditor<MenuItem> implements ActionListener
 	private DoubleTextField tfStockCount;
 	private JLabel lblStockCount;
 	private JCheckBox cbDisableStockCount;
+	private JCheckBox cbGiftCertificate;
+
 	private JLabel lblSortOrder;
 
 	/** Creates new form FoodItemEditor */
@@ -250,6 +252,7 @@ public class MenuItemForm extends BeanEditor<MenuItem> implements ActionListener
 		lblStockCount = new JLabel(Messages.getString("MenuItemForm.17")); //$NON-NLS-1$
 		tfStockCount = new DoubleTextField(1);
 		cbDisableStockCount = new JCheckBox(Messages.getString("MenuItemForm.18")); //$NON-NLS-1$
+		cbGiftCertificate = new JCheckBox(Messages.getString("MenuItemForm.52"));
 		lblButtonColor = new JLabel(Messages.getString("MenuItemForm.19")); //$NON-NLS-1$
 		tabbedPane = new javax.swing.JTabbedPane();
 		tabGeneral = new javax.swing.JPanel();
@@ -448,6 +451,7 @@ public class MenuItemForm extends BeanEditor<MenuItem> implements ActionListener
 		tabGeneral.add(chkVisible, "cell 1 10"); //$NON-NLS-1$
 		tabGeneral.add(cbFractionalUnit, "cell 1 11"); //$NON-NLS-1$
 		tabGeneral.add(cbDisableStockCount, "cell 1 12"); //$NON-NLS-1$
+		tabGeneral.add(cbGiftCertificate, "cell 1 13");
 
 		// right side
 
@@ -823,6 +827,7 @@ public class MenuItemForm extends BeanEditor<MenuItem> implements ActionListener
 		chkVisible.setSelected(menuItem.isVisible());
 		cbShowTextWithImage.setSelected(menuItem.isShowImageOnly());
 		cbDisableStockCount.setSelected(menuItem.isDisableWhenStockAmountIsZero());
+		cbGiftCertificate.setSelected(menuItem.isGiftCertificateType());
 		ImageIcon menuItemImage = menuItem.getImage();
 		if (menuItemImage != null) {
 			lblImagePreview.setIcon(menuItemImage);
@@ -871,6 +876,7 @@ public class MenuItemForm extends BeanEditor<MenuItem> implements ActionListener
 		menuItem.setShowImageOnly(cbShowTextWithImage.isSelected());
 		menuItem.setFractionalUnit(cbFractionalUnit.isSelected());
 		menuItem.setDisableWhenStockAmountIsZero(cbDisableStockCount.isSelected());
+		menuItem.setGiftCertificateType(cbGiftCertificate.isSelected());
 
 		menuItem.setTranslatedName(tfTranslatedName.getText());
 		menuItem.setSortOrder(tfSortOrder.getInteger());

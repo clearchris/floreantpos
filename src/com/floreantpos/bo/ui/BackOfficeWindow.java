@@ -209,6 +209,7 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 		subMenuPizza.add(new PizzaItemExplorerAction());
 		subMenuPizza.add(new PizzaModifierExplorerAction());
 		explorerMenu.add(new MultiplierExplorerAction());
+		explorerMenu.add(new GiftCertificateExplorerAction());
 		explorerMenu.add(new CustomerExplorerAction());
 
 		OrderServiceExtension plugin = (OrderServiceExtension) ExtensionManager.getPlugin(OrderServiceExtension.class);

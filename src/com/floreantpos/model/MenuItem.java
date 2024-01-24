@@ -201,6 +201,7 @@ public class MenuItem extends BaseMenuItem {
 		ticketItem.setMenuItem(this);
 
 		ticketItem.setPizzaType(isPizzaType());
+		ticketItem.setGiftCertificateType(isGiftCertificateType());
 		ticketItem.setFractionalUnit(this.isFractionalUnit());
 
 		if (this.isFractionalUnit()) {

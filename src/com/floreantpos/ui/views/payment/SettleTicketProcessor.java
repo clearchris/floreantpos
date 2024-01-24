@@ -23,6 +23,7 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
+import com.floreantpos.model.*;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.StaleStateException;
 
@@ -33,17 +34,6 @@ import com.floreantpos.config.CardConfig;
 import com.floreantpos.config.TerminalConfig;
 import com.floreantpos.extension.PaymentGatewayPlugin;
 import com.floreantpos.main.Application;
-import com.floreantpos.model.CardReader;
-import com.floreantpos.model.CashTransaction;
-import com.floreantpos.model.CustomPayment;
-import com.floreantpos.model.GiftCertificateTransaction;
-import com.floreantpos.model.Gratuity;
-import com.floreantpos.model.OrderType;
-import com.floreantpos.model.PaymentType;
-import com.floreantpos.model.PosTransaction;
-import com.floreantpos.model.Ticket;
-import com.floreantpos.model.User;
-import com.floreantpos.model.UserPermission;
 import com.floreantpos.report.ReceiptPrintService;
 import com.floreantpos.services.PosTransactionService;
 import com.floreantpos.ui.RefreshableView;
@@ -146,12 +136,20 @@ public class SettleTicketProcessor implements CardInputListener {
 				break;
 
 			case GIFT_CERTIFICATE:
-				GiftCertDialog giftCertDialog = new GiftCertDialog();
-				giftCertDialog.pack();
-				giftCertDialog.open();
+				// get gift certificate
+				GiftCertificateDialog giftCertificateDialog = new GiftCertificateDialog(ticket.getDueAmount());
+				giftCertificateDialog.pack();
+				giftCertificateDialog.open();
 
-				if (giftCertDialog.isCanceled())
-					return;
+				if (giftCertificateDialog.isCanceled()) return;
+
+				GiftCertificate giftCertificate = giftCertificateDialog.getGiftCertificate();
+                GiftCertificateTransactionDialog giftCertificateTransactionDialog =
+                    new GiftCertificateTransactionDialog(giftCertificate, ticket.getDueAmount());
+                giftCertificateTransactionDialog.pack();
+                giftCertificateTransactionDialog.open();
+                if (giftCertificateTransactionDialog.isCanceled()) return;
+                //TODO: insert new dialog here to update gift certificate with new value
 
 				transaction = new GiftCertificateTransaction();
 				transaction.setPaymentType(PaymentType.GIFT_CERTIFICATE.name());
@@ -159,22 +157,26 @@ public class SettleTicketProcessor implements CardInputListener {
 				transaction.setCaptured(true);
 				setTransactionAmounts(transaction);
 
-				double giftCertFaceValue = giftCertDialog.getGiftCertFaceValue();
+				double currentBalance = giftCertificate.getCurrentBalance();
 				double giftCertCashBackAmount = 0;
-				transaction.setTenderAmount(giftCertFaceValue);
+				transaction.setTenderAmount(currentBalance);
 
-				if (giftCertFaceValue >= ticket.getDueAmount()) {
+				if (currentBalance >= ticket.getDueAmount()) {
 					transaction.setAmount(ticket.getDueAmount());
-					giftCertCashBackAmount = giftCertFaceValue - ticket.getDueAmount();
+                    transaction.setTenderAmount(ticket.getDueAmount());
+					giftCertCashBackAmount = currentBalance - ticket.getDueAmount();
 				}
 				else {
-					transaction.setAmount(giftCertFaceValue);
+					transaction.setAmount(currentBalance);
 				}
 
-				transaction.setGiftCertNumber(giftCertDialog.getGiftCertNumber());
-				transaction.setGiftCertFaceValue(giftCertFaceValue);
+				transaction.setGiftCertNumber(giftCertificate.getNumber());
+				transaction.setGiftCertFaceValue(currentBalance);
 				transaction.setGiftCertPaidAmount(transaction.getAmount());
-				transaction.setGiftCertCashBackAmount(giftCertCashBackAmount);
+				//transaction.setGiftCertCashBackAmount(giftCertCashBackAmount);
+				// no cash back on gift certificates
+				transaction.setGiftCertCashBackAmount(0.0);
+				// table gift_certificate updated in PosTransaction so it can be atomic
 
 				settleTicket(transaction);
 				break;

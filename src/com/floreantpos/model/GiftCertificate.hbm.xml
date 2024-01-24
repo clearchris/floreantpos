@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.floreantpos.model">
+  <class lazy="false" name="com.floreantpos.model.GiftCertificate" table="GIFT_CERTIFICATE">
+    <id column="ID" name="id" type="java.lang.Integer">
+      <generator class="identity"/>
+    </id>
+    <property column="NUMBER" name="number" type="string"/>
+    <property column="PIN" name="pin" type="string"/>
+    <property column="CREATE_DATE" name="createDate" type="java.util.Date"/>
+    <property column="SOLD_DATE" name="soldDate" type="java.util.Date"/>
+    <property column="EXPIRY_DATE" name="expiryDate" type="java.util.Date"/>
+    <property column="FACE_VALUE" name="faceValue" type="java.lang.Double"/>
+    <property column="CURRENT_BALANCE" name="currentBalance" type="java.lang.Double"/>
+    <property column="SOLD_TRANSACTION" name="soldTransaction" type="java.lang.Integer"/>  <!-- many to one -->
+    <property column="TICKET_ID" name="ticketId" type="java.lang.Integer"/>  <!-- many to one -->
+    <property column="TICKET_ITEM_ID" name="ticketItemId" type="java.lang.Integer"/>  <!-- many to one -->
+    <property column="ITEM_ID" name="itemId" type="java.lang.Integer"/>  <!-- many to one -->
+    <property column="USER_AUTO_ID" name="user" type="java.lang.Integer" />
+  </class>
+</hibernate-mapping>

@@ -29,6 +29,7 @@
 		<mapping resource="com/floreantpos/model/CookingInstruction.hbm.xml" />
 		<mapping resource="com/floreantpos/model/CouponAndDiscount.hbm.xml" />
 		<mapping resource="com/floreantpos/model/Gratuity.hbm.xml" />
+		<mapping resource="com/floreantpos/model/GiftCertificate.hbm.xml" />
 		<mapping resource="com/floreantpos/model/MenuCategory.hbm.xml" />
 		<mapping resource="com/floreantpos/model/MenuGroup.hbm.xml" />
 		<mapping resource="com/floreantpos/model/MenuItem.hbm.xml" />

@@ -19,23 +19,13 @@ package com.floreantpos.services;
 
 import java.util.Date;
 
+import com.floreantpos.PosException;
+import com.floreantpos.model.*;
+import com.floreantpos.model.dao.GiftCertificateDAO;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.floreantpos.main.Application;
-import com.floreantpos.model.ActionHistory;
-import com.floreantpos.model.CashTransaction;
-import com.floreantpos.model.GiftCertificateTransaction;
-import com.floreantpos.model.Gratuity;
-import com.floreantpos.model.OrderType;
-import com.floreantpos.model.PaymentType;
-import com.floreantpos.model.PosTransaction;
-import com.floreantpos.model.RefundTransaction;
-import com.floreantpos.model.Terminal;
-import com.floreantpos.model.Ticket;
-import com.floreantpos.model.TransactionType;
-import com.floreantpos.model.User;
-import com.floreantpos.model.VoidTransaction;
 import com.floreantpos.model.dao.ActionHistoryDAO;
 import com.floreantpos.model.dao.GenericDAO;
 import com.floreantpos.model.dao.TicketDAO;
@@ -67,6 +57,9 @@ public class PosTransactionService {
 			ticket.setVoided(false);
 			ticket.setDrawerResetted(false);
 			ticket.setTerminal(terminal);
+
+			if (PaymentType.GIFT_CERTIFICATE.name().equals(transaction.getPaymentType()))
+				adjustGiftCertificate(session, transaction);  // charge gift certificate
 			ticket.setPaidAmount(ticket.getPaidAmount() + transaction.getAmount());
 
 			ticket.calculatePrice();
@@ -112,6 +105,7 @@ public class PosTransactionService {
 			//					assignedDriver.setAvailableForDelivery(true);
 			//					UserDAO.getInstance().saveOrUpdate(assignedDriver, session);
 			//				}
+			createGiftCertificate(session, ticket);
 
 			tx.commit();
 		} catch (Exception e) {
@@ -127,7 +121,25 @@ public class PosTransactionService {
 		//			SETTLE ACTION
 		String actionMessage = com.floreantpos.POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL + ":" + ticket.getId(); //$NON-NLS-1$
 		actionMessage += ";" + com.floreantpos.POSConstants.TOTAL + ":" + NumberUtil.formatNumber(ticket.getTotalAmount()); //$NON-NLS-1$ //$NON-NLS-2$
-		ActionHistoryDAO.getInstance().saveHistory(Application.getCurrentUser(), ActionHistory.SETTLE_CHECK, actionMessage);
+		ActionHistoryDAO.getInstance().saveHistory(Application.getCurrentUser(), ActionHistory.SETTLE_CHECK, actionMessage, ticket.getId());
+	}
+
+	private void createGiftCertificate (Session session, Ticket ticket) throws Exception {
+		for (TicketItem ticketItem : ticket.getTicketItems()) {
+			if (ticketItem.isGiftCertificateType()) {
+				GiftCertificate gc = new GiftCertificate();
+				gc.ticketItemToGiftCertificate(ticketItem);
+				GiftCertificateDAO.getInstance().saveOrUpdate(gc, session);
+				TicketItemCookingInstruction ticketItemCookingInstruction = new TicketItemCookingInstruction();
+				ticketItemCookingInstruction.setDescription(gc.getNumber());
+				ticketItem.addCookingInstruction(ticketItemCookingInstruction);
+			}
+		}
+	}
+
+	private void adjustGiftCertificate (Session session, PosTransaction transaction) throws PosException, Exception {
+		GiftCertificateDAO giftCertificateDAO = new GiftCertificateDAO();
+		giftCertificateDAO.chargeGiftCertificate(session, transaction.getGiftCertNumber(), transaction.getGiftCertPaidAmount() );
 	}
 
 	public void bookBartabTicket(Ticket ticket, PosTransaction transaction, boolean closed) throws Exception {
@@ -151,6 +163,9 @@ public class PosTransactionService {
 			ticket.setTerminal(terminal);
 			ticket.calculatePrice();
 
+			if (PaymentType.GIFT_CERTIFICATE.name().equals(transaction.getPaymentType()))
+				adjustGiftCertificate(session, transaction);  // charge gift certificate
+
 			if (closed) {
 				ticket.setPaid(true);
 				closeTicketIfApplicable(ticket, currentDate);
@@ -169,6 +184,8 @@ public class PosTransactionService {
 			ticket.addTotransactions(transaction);
 
 			TicketDAO.getInstance().saveOrUpdate(ticket, session);
+			createGiftCertificate(session, ticket);
+
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();

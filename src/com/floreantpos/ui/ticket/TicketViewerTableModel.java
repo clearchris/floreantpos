@@ -125,13 +125,17 @@ public class TicketViewerTableModel extends AbstractTableModel {
 				return addTicketItemToTicket(ticketItem);
 			}
 
-			if (ticketItem.getItemId().equals(item.getItemId()) && !item.isPrintedToKitchen() && !item.isInventoryHandled()) {
+			if (ticketItem.getItemId().equals(item.getItemId()) && !item.isPrintedToKitchen()
+					&& !item.isInventoryHandled() && !item.isGiftCertificateType()) {
 				if (ticketItem.isFractionalUnit()) {
 					item.setItemQuantity(previousFractionalItemQuantity + ticketItem.getItemQuantity());
 					previousFractionalItemQuantity = item.getItemQuantity();
 				}
 				else {
-					item.setItemCount(item.getItemCount() + 1);
+					// increasing quantity of an item should be handled through the +/- buttons
+					// not doing it this way can cause issues with discounts
+					return addTicketItemToTicket(ticketItem);
+					//item.setItemCount(item.getItemCount() + 1);
 				}
 				return values.length - 1;
 			}

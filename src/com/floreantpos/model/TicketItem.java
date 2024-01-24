@@ -430,6 +430,7 @@ public class TicketItem extends BaseTicketItem implements ITicketItem {
 	}
 
 	public boolean isMergable(TicketItem otherItem, boolean merge) {
+		if (this.isGiftCertificateType()) return false;
 		if (this.isFractionalUnit() || this.getItemId() == 0 || (this.getCookingInstructions() != null && this.getCookingInstructions().size() > 0)) {
 			return false;
 		}
@@ -527,6 +528,7 @@ public class TicketItem extends BaseTicketItem implements ITicketItem {
 		}
 		return true;
 	}
+    // TODO don't merge gift certs
 
 	public void merge(TicketItem otherItem) {
 		if (!this.isHasModifiers() && !otherItem.isHasModifiers()) {
@@ -987,7 +989,18 @@ public class TicketItem extends BaseTicketItem implements ITicketItem {
 	}
 
 	public void setQuantity(Double quantity) {
+		if(this.isGiftCertificateType() && quantity > 1) return;
 		super.setItemQuantity(this.quantity = quantity);
 		setItemCount(super.getItemQuantity().intValue());
 	}
+
+	@Override
+	public void setItemCount (java.lang.Integer itemCount) {
+		if(this.isGiftCertificateType() && itemCount > 1){
+			this.itemCount = 1;
+			return;
+		}
+		super.setItemCount(itemCount);
+	}
+
 }

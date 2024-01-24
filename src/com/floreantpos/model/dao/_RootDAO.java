@@ -19,88 +19,12 @@ package com.floreantpos.model.dao;
 
 import java.sql.Connection;
 
+import com.floreantpos.model.*;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 
 import com.floreantpos.Database;
 import com.floreantpos.config.AppConfig;
-import com.floreantpos.model.ActionHistory;
-import com.floreantpos.model.AttendenceHistory;
-import com.floreantpos.model.CashDrawer;
-import com.floreantpos.model.CashDrawerResetHistory;
-import com.floreantpos.model.CookingInstruction;
-import com.floreantpos.model.Currency;
-import com.floreantpos.model.CurrencyBalance;
-import com.floreantpos.model.CustomPayment;
-import com.floreantpos.model.Customer;
-import com.floreantpos.model.DataUpdateInfo;
-import com.floreantpos.model.DeliveryAddress;
-import com.floreantpos.model.DeliveryCharge;
-import com.floreantpos.model.DeliveryConfiguration;
-import com.floreantpos.model.DeliveryInstruction;
-import com.floreantpos.model.Discount;
-import com.floreantpos.model.DrawerAssignedHistory;
-import com.floreantpos.model.DrawerPullReport;
-import com.floreantpos.model.EmployeeInOutHistory;
-import com.floreantpos.model.GlobalConfig;
-import com.floreantpos.model.Gratuity;
-import com.floreantpos.model.GuestCheckPrint;
-import com.floreantpos.model.InventoryGroup;
-import com.floreantpos.model.InventoryItem;
-import com.floreantpos.model.InventoryLocation;
-import com.floreantpos.model.InventoryMetaCode;
-import com.floreantpos.model.InventoryTransaction;
-import com.floreantpos.model.InventoryUnit;
-import com.floreantpos.model.InventoryVendor;
-import com.floreantpos.model.InventoryWarehouse;
-import com.floreantpos.model.KitchenTicket;
-import com.floreantpos.model.KitchenTicketItem;
-import com.floreantpos.model.MenuCategory;
-import com.floreantpos.model.MenuGroup;
-import com.floreantpos.model.MenuItem;
-import com.floreantpos.model.MenuItemModifierGroup;
-import com.floreantpos.model.MenuItemShift;
-import com.floreantpos.model.MenuItemSize;
-import com.floreantpos.model.MenuModifier;
-import com.floreantpos.model.ModifierGroup;
-import com.floreantpos.model.ModifierMultiplierPrice;
-import com.floreantpos.model.Multiplier;
-import com.floreantpos.model.OnlineOrder;
-import com.floreantpos.model.PackagingUnit;
-import com.floreantpos.model.PayoutReason;
-import com.floreantpos.model.PayoutRecepient;
-import com.floreantpos.model.PizzaCrust;
-import com.floreantpos.model.PizzaModifierPrice;
-import com.floreantpos.model.PizzaPrice;
-import com.floreantpos.model.PosTransaction;
-import com.floreantpos.model.PrinterConfiguration;
-import com.floreantpos.model.PrinterGroup;
-import com.floreantpos.model.PurchaseOrder;
-import com.floreantpos.model.Recepie;
-import com.floreantpos.model.RecepieItem;
-import com.floreantpos.model.Restaurant;
-import com.floreantpos.model.Shift;
-import com.floreantpos.model.ShopFloor;
-import com.floreantpos.model.ShopFloorTemplate;
-import com.floreantpos.model.ShopTable;
-import com.floreantpos.model.ShopTableStatus;
-import com.floreantpos.model.ShopTableType;
-import com.floreantpos.model.TableBookingInfo;
-import com.floreantpos.model.Tax;
-import com.floreantpos.model.TaxGroup;
-import com.floreantpos.model.Terminal;
-import com.floreantpos.model.TerminalPrinters;
-import com.floreantpos.model.Ticket;
-import com.floreantpos.model.TicketDiscount;
-import com.floreantpos.model.TicketItem;
-import com.floreantpos.model.TicketItemDiscount;
-import com.floreantpos.model.TicketItemModifier;
-import com.floreantpos.model.User;
-import com.floreantpos.model.UserPermission;
-import com.floreantpos.model.UserType;
-import com.floreantpos.model.VirtualPrinter;
-import com.floreantpos.model.VoidReason;
-import com.floreantpos.model.ZipCodeVsDeliveryCharge;
 
 public abstract class _RootDAO extends com.floreantpos.model.dao._BaseRootDAO {
 
@@ -195,6 +119,7 @@ public abstract class _RootDAO extends com.floreantpos.model.dao._BaseRootDAO {
 		configuration.addClass(TaxGroup.class);
 		configuration.addClass(GuestCheckPrint.class);
 		configuration.addClass(OnlineOrder.class);
+		configuration.addClass(GiftCertificate.class);
 
 		configureInventoryClasses(configuration);
 

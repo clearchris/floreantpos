@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.floreantpos.model.dao.GiftCertificateDAO;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.ProjectionList;
@@ -300,8 +301,9 @@ public class ReportService {
 			report.setCashReceiptsAmount(calculateCreditReceipt(session, CashTransaction.class, fromDate, toDate, user));
 			report.setCreditCardReceiptsAmount(calculateCreditReceipt(session, CreditCardTransaction.class, fromDate, toDate, user));
 
-			//report.setGiftCertSalesAmount(calculateGiftCertSoldAmount(session, fromDate, toDate));
-			//report.setGiftCertReturnAmount(calculateCreditReceipt(session, GiftCertificateTransaction.class, fromDate, toDate));
+			// this method needs to be updated / fixed
+			report.setGiftCertSalesAmount(calculateGiftCertSoldAmount(session, fromDate, toDate));
+			report.setGiftCertReturnAmount(calculateCreditReceipt(session, GiftCertificateTransaction.class, fromDate, toDate, user));
 
 			//			
 			////			gift cert
@@ -446,15 +448,8 @@ public class ReportService {
 	}
 
 	private double calculateGiftCertSoldAmount(Session session, Date fromDate, Date toDate) {
-		//cash receipt
-		Criteria criteria = session.createCriteria(GiftCertificateTransaction.class);
-		criteria.add(Restrictions.ge(GiftCertificateTransaction.PROP_TRANSACTION_TIME, fromDate));
-		criteria.add(Restrictions.le(GiftCertificateTransaction.PROP_TRANSACTION_TIME, toDate));
-		criteria.add(Restrictions.eq(GiftCertificateTransaction.PROP_TRANSACTION_TYPE, TransactionType.CREDIT.name()));
-
-		criteria.setProjection(Projections.sum(GiftCertificateTransaction.PROP_GIFT_CERT_FACE_VALUE));
-
-		return getDoubleAmount(criteria.uniqueResult());
+		GiftCertificateDAO giftCertificateDAO = new GiftCertificateDAO();
+		return giftCertificateDAO.calculateGiftCertSoldAmount(fromDate, toDate);
 	}
 
 	private double calculateTips(Session session, Date fromDate, Date toDate, User user) {

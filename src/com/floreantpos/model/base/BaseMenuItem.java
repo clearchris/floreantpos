@@ -99,6 +99,7 @@ public abstract class BaseMenuItem  implements Comparable, Serializable {
 		protected java.lang.Boolean showImageOnly;
 		protected java.lang.Boolean fractionalUnit;
 		protected java.lang.Boolean pizzaType;
+		protected java.lang.Boolean giftCertificateType;
 		protected java.lang.Integer defaultSellPortion;
 
 	// many to one
@@ -473,6 +474,12 @@ public abstract class BaseMenuItem  implements Comparable, Serializable {
 	}
 
 
+	public java.lang.Boolean isGiftCertificateType() {
+		return giftCertificateType == null ? Boolean.FALSE : giftCertificateType;
+	}
+	public void setGiftCertificateType(Boolean giftCertificateType) {
+		this.giftCertificateType = giftCertificateType;
+	}
 
 	/**
 	 * Return the value associated with the column: DEFAULT_SELL_PORTION

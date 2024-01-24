@@ -32,6 +32,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import com.floreantpos.model.*;
 import net.miginfocom.swing.MigLayout;
 
 import org.apache.commons.io.IOUtils;
@@ -46,14 +47,6 @@ import com.floreantpos.config.CardConfig;
 import com.floreantpos.config.TerminalConfig;
 import com.floreantpos.extension.PaymentGatewayPlugin;
 import com.floreantpos.main.Application;
-import com.floreantpos.model.CardReader;
-import com.floreantpos.model.CashTransaction;
-import com.floreantpos.model.GiftCertificateTransaction;
-import com.floreantpos.model.Gratuity;
-import com.floreantpos.model.PaymentType;
-import com.floreantpos.model.PosTransaction;
-import com.floreantpos.model.Restaurant;
-import com.floreantpos.model.Ticket;
 import com.floreantpos.report.ReceiptPrintService;
 import com.floreantpos.services.PosTransactionService;
 import com.floreantpos.swing.PosScrollPane;
@@ -413,33 +406,44 @@ public class GroupSettleTicketDialog extends POSDialog implements CardInputListe
 					break;
 
 				case GIFT_CERTIFICATE:
-					GiftCertDialog giftCertDialog = new GiftCertDialog();
-					giftCertDialog.pack();
-					giftCertDialog.open();
+					GiftCertificateDialog giftCertificateDialog = new GiftCertificateDialog(ticket.getDueAmount());
+					giftCertificateDialog.pack();
+					giftCertificateDialog.open();
 
-					if (giftCertDialog.isCanceled())
+					if (giftCertificateDialog.isCanceled())
 						return;
+
+					GiftCertificate giftCertificate = giftCertificateDialog.getGiftCertificate();
+	                GiftCertificateTransactionDialog giftCertificateTransactionDialog =
+                        new GiftCertificateTransactionDialog(giftCertificate, totalDueAmount);
+					giftCertificateTransactionDialog.pack();
+                    giftCertificateTransactionDialog.open();
+                    if(giftCertificateTransactionDialog.isCanceled()) return;
 
 					transaction = new GiftCertificateTransaction();
 					transaction.setPaymentType(PaymentType.GIFT_CERTIFICATE.name());
 					transaction.setCaptured(true);
 
-					double giftCertFaceValue = giftCertDialog.getGiftCertFaceValue();
+					double currentBalance = giftCertificate.getCurrentBalance();
 					double giftCertCashBackAmount = 0;
-					transaction.setTenderAmount(giftCertFaceValue);
+					transaction.setTenderAmount(currentBalance);
 
-					if (giftCertFaceValue >= totalDueAmount) {
+					if (currentBalance >= totalDueAmount) {
 						transaction.setAmount(totalDueAmount);
-						giftCertCashBackAmount = giftCertFaceValue - totalDueAmount;
+						transaction.setTenderAmount(totalDueAmount);
+						giftCertCashBackAmount = currentBalance - totalDueAmount;
 					}
 					else {
-						transaction.setAmount(giftCertFaceValue);
+						transaction.setAmount(currentBalance);
 					}
 
-					transaction.setGiftCertNumber(giftCertDialog.getGiftCertNumber());
-					transaction.setGiftCertFaceValue(giftCertFaceValue);
+					transaction.setGiftCertNumber(giftCertificate.getNumber());
+					transaction.setGiftCertFaceValue(currentBalance);
 					transaction.setGiftCertPaidAmount(transaction.getAmount());
-					transaction.setGiftCertCashBackAmount(giftCertCashBackAmount);
+					// no cash back on gift cards
+					//transaction.setGiftCertCashBackAmount(giftCertCashBackAmount);
+					transaction.setGiftCertCashBackAmount(0D);
+					// table gift_certificate updated in PosTransaction so it can be atomic
 
 					settleTicket(transaction);
 					break;

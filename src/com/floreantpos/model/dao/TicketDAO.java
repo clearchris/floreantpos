@@ -172,6 +172,7 @@ public class TicketDAO extends BaseTicketDAO {
 
 				ticket.addTotransactions(transaction);
 			}
+			GiftCertificateDAO.getInstance().voidGiftCertificatesByTicket(session, ticket);
 
 			session.update(ticket);
 			session.update(terminal);

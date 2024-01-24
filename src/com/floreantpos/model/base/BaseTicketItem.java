@@ -24,6 +24,7 @@ public abstract class BaseTicketItem  implements Comparable, Serializable {
 	public static String PROP_ITEM_UNIT_NAME = "itemUnitName"; //$NON-NLS-1$
 	public static String PROP_DISCOUNT_AMOUNT = "discountAmount"; //$NON-NLS-1$
 	public static String PROP_PIZZA_TYPE = "pizzaType"; //$NON-NLS-1$
+	public static String PROP_GIFT_CERTIFICATE_TYPE = "giftCertificateType";
 	public static String PROP_PIZZA_SECTION_MODE_TYPE = "pizzaSectionModeType"; //$NON-NLS-1$
 	public static String PROP_SHOULD_PRINT_TO_KITCHEN = "shouldPrintToKitchen"; //$NON-NLS-1$
 	public static String PROP_TICKET = "ticket"; //$NON-NLS-1$
@@ -114,6 +115,7 @@ public abstract class BaseTicketItem  implements Comparable, Serializable {
 		protected java.lang.String status;
 		protected java.lang.Boolean stockAmountAdjusted;
 		protected java.lang.Boolean pizzaType;
+		protected java.lang.Boolean giftCertificateType;
 		protected java.lang.Integer pizzaSectionModeType;
 
 	// many to one
@@ -615,7 +617,12 @@ public abstract class BaseTicketItem  implements Comparable, Serializable {
 		this.pizzaType = pizzaType;
 	}
 
-
+	public java.lang.Boolean isGiftCertificateType() {
+		return giftCertificateType == null ? Boolean.FALSE : giftCertificateType;
+	}
+	public void setGiftCertificateType(Boolean giftCertificateType) {
+		this.giftCertificateType = giftCertificateType;
+	}
 
 	/**
 	 * Return the value associated with the column: PIZZA_SECTION_MODE
