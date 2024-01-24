@@ -311,6 +311,7 @@ public class SettleTicketProcessor implements CardInputListener {
 
 				PosTransaction transaction = paymentType.createTransaction();
 				transaction.setTicket(ticket);
+				transaction.setTipsAmount(ticket.getGratuityAmount());
 
 				if (!confirmPayment()) {
 					return;
