@@ -240,10 +240,17 @@ public class SettleTicketProcessor implements CardInputListener {
 			return;
 		}
 
+		Gratuity gratuity = ticket.getGratuity();
 		double gratuityAmount = d.getGratuityAmount();
-		Gratuity gratuity = ticket.createGratuity();
-		gratuity.setAmount(gratuityAmount);
+		if(gratuityAmount < 0) gratuityAmount = 0;
 
+		if (gratuity != null){  // only one gratuity per ticket, change existing instead of creating more
+			gratuity.setAmount(gratuityAmount);
+		} else {
+			if (gratuityAmount <= 0) return;
+			gratuity = ticket.createGratuity();
+			gratuity.setAmount(gratuityAmount);
+		}
 		ticket.setGratuity(gratuity);
 		ticket.calculatePrice();
 		OrderController.saveOrder(ticket);
