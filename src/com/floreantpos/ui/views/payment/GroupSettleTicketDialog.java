@@ -583,13 +583,13 @@ public class GroupSettleTicketDialog extends POSDialog implements CardInputListe
 				transaction.setCaptured(false);
 				transaction.setCardMerchantGateway(paymentGateway.getProductName());
 
-				if (ticket.getOrderType().isPreAuthCreditCard()) {
-					paymentGateway.getProcessor().preAuth(transaction);
+                for (Ticket ticket : tickets) {
+				   if (ticket.getOrderType().isPreAuthCreditCard()) {
+					   paymentGateway.getProcessor().preAuth(transaction);
+				   } else {
+					   paymentGateway.getProcessor().chargeAmount(transaction);
+				   }
 				}
-				else {
-					paymentGateway.getProcessor().chargeAmount(transaction);
-				}
-
 				settleTicket(transaction);
 
 				return;
