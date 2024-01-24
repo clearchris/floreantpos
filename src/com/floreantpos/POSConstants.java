@@ -491,4 +491,12 @@ public class POSConstants {
 	public static final String RECEIPT_REPORT_PAIDAMOUNT_LABEL = Messages.getString("RECEIPT_REPORT_PAIDAMOUNT_LABEL"); //$NON-NLS-1$
 	public static final String RECEIPT_REPORT_DUEAMOUNT_LABEL = Messages.getString("RECEIPT_REPORT_DUEAMOUNT_LABEL"); //$NON-NLS-1$
 	public static final String RECEIPT_REPORT_CHANGEAMOUNT_LABEL = Messages.getString("RECEIPT_REPORT_CHANGEAMOUNT_LABEL"); //$NON-NLS-1$
+	public static final String PIN = "PIN";
+	public static final String FACE_VALUE = "Face Value";
+	public static final String CURRENT_BALANCE = "Current Balance";
+	public static final String CREATE_DATE = "Create Date";
+	public static final String SOLD_DATE = "Sold Date";
+	public static final String TRANSACTION = "Transaction";
+
+
 }
