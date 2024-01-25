@@ -418,9 +418,10 @@ public class Application {
 
 				for (Component component : components) {
 					if (component instanceof JButton) {
-						component.setPreferredSize(new Dimension(100, 80));
+						component.revalidate();;
+						Dimension dimension = component.getPreferredSize();
 						JButton button = (JButton) component;
-						button.setPreferredSize(PosUIManager.getSize(100, 50));
+						button.setPreferredSize(PosUIManager.getSize((int)dimension.getWidth(), 50));
 					}
 				}
 			}
@@ -432,6 +433,7 @@ public class Application {
 		dialog.setLocation(dialog.getLocation().x, y + 60);
 		dialog.setVisible(true);
 		Object selectedValue = (String) optionPane.getValue();
+		if (selectedValue == null) return;  // closed window, no buttons pushed
 		if (selectedValue.equals(Messages.getString("Application.3"))) { //$NON-NLS-1$
 			try {
 				Main.restart();
