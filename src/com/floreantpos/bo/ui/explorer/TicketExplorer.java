@@ -50,7 +50,7 @@ import com.floreantpos.ui.util.UiUtil;
 import com.floreantpos.util.POSUtil;
 
 public class TicketExplorer extends TransparentPanel {
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy, h:m a"); //$NON-NLS-1$
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy, h:mm a"); //$NON-NLS-1$
 
 	private JXDatePicker fromDatePicker = UiUtil.getCurrentMonthStart();
 	private JXDatePicker toDatePicker = UiUtil.getCurrentMonthEnd();
@@ -165,7 +165,7 @@ public class TicketExplorer extends TransparentPanel {
 	class TicketExplorerTableModel extends ListTableModel<Ticket> {
 		String[] columnNames = { POSConstants.ID, POSConstants.CREATED_BY.toUpperCase(), POSConstants.CREATE_TIME.toUpperCase(),
 				POSConstants.SETTLE_TIME.toUpperCase(), POSConstants.SUBTOTAL.toUpperCase(), POSConstants.DISCOUNT.toUpperCase(),
-				POSConstants.TAX.toUpperCase(), POSConstants.TOTAL, POSConstants.PAID, POSConstants.VOID };
+				POSConstants.TAX.toUpperCase(), POSConstants.TOTAL, POSConstants.PAID, POSConstants.VOID, POSConstants.TICKET_TYPE };
 
 		@Override
 		public String[] getColumnNames() {
@@ -219,6 +219,8 @@ public class TicketExplorer extends TransparentPanel {
 
 				case 9:
 					return Boolean.valueOf(ticket.isVoided());
+				case 10:
+					return ticket.getTicketType();
 			}
 			return null;
 		}
