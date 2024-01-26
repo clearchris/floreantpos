@@ -19,6 +19,7 @@ package com.floreantpos.report;
 
 import java.util.Date;
 
+import com.floreantpos.model.MenuGroup;
 import net.sf.jasperreports.view.JRViewer;
 
 import com.floreantpos.model.Terminal;
@@ -35,6 +36,7 @@ public abstract class Report {
 	private int reportType = REPORT_TYPE_1;
 	private boolean includeFreeItem = false;
 	protected JRViewer viewer;
+	private MenuGroup menuGroup;
 
 	public abstract void refresh() throws Exception;
 
@@ -79,6 +81,14 @@ public abstract class Report {
 
 	public void setTerminal(Terminal terminal) {
 		this.terminal = terminal;
+	}
+
+	public MenuGroup getMenuGroup() {
+		return menuGroup;
+	}
+
+	public void setMenuGroup(MenuGroup menuGroup) {
+		this.menuGroup = menuGroup;
 	}
 	
 	public UserType getUserType() {

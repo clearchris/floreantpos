@@ -17,14 +17,13 @@
  */
 package com.floreantpos.report;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
 
+import com.floreantpos.POSConstants;
+import com.floreantpos.model.MenuGroup;
+import com.floreantpos.model.dao.GenericDAO;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -32,6 +31,11 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import net.sf.jasperreports.view.JRViewer;
 
+import org.apache.commons.collections4.set.UnmodifiableSortedSet;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.jdesktop.swingx.calendar.DateUtils;
 
 import com.floreantpos.Messages;
@@ -100,25 +104,41 @@ public class SalesReport extends Report {
 		Date date1 = DateUtils.startOfDay(getStartDate());
 		Date date2 = DateUtils.endOfDay(getEndDate());
 
-		List<Ticket> tickets = TicketDAO.getInstance().findTickets(date1, date2, getReportType() == Report.REPORT_TYPE_1 ? true : false, getTerminal());
+		//List<Ticket> tickets = TicketDAO.getInstance().findTickets(date1, date2, getReportType() == Report.REPORT_TYPE_1 ? true : false, getTerminal());
 
-		HashMap<String, ReportItem> itemMap = new HashMap<String, ReportItem>();
-		HashMap<String, ReportItem> modifierMap = new HashMap<String, ReportItem>();
+		GenericDAO dao = new GenericDAO();
+		Session session = null;
 
-		for (Iterator iter = tickets.iterator(); iter.hasNext();) {
-			Ticket t = (Ticket) iter.next();
+		//try {
+			session = dao.getSession();
 
-			Ticket ticket = TicketDAO.getInstance().loadFullTicket(t.getId());
+			Criteria criteria = session.createCriteria(TicketItem.class, "item"); //$NON-NLS-1$
+			criteria.createCriteria("ticket", "t"); //$NON-NLS-1$ //$NON-NLS-2$
+			//ProjectionList projectionList = Projections.projectionList();
+			//projectionList.add(Projections.sum(TicketItem.PROP_ITEM_COUNT));
+			//projectionList.add(Projections.sum(TicketItem.PROP_SUBTOTAL_AMOUNT));
+			//projectionList.add(Projections.sum(TicketItem.PROP_DISCOUNT_AMOUNT));
+			//criteria.setProjection(projectionList);
+			if(!isIncludedFreeItems())
+				criteria.add(Restrictions.ne("item." + TicketItem.PROP_UNIT_PRICE,0.0));
+			if(getMenuGroup()!=null && getMenuGroup() instanceof MenuGroup)
+				criteria.add(Restrictions.eq("item." + TicketItem.PROP_GROUP_NAME, getMenuGroup().getName()));
+			criteria.add(Restrictions.ge("t." + Ticket.PROP_CREATE_DATE, date1)); //$NON-NLS-1$
+			criteria.add(Restrictions.le("t." + Ticket.PROP_CREATE_DATE, date2)); //$NON-NLS-1$
+			criteria.add(Restrictions.eq("t." + Ticket.PROP_PAID, Boolean.TRUE)); //$NON-NLS-1$
+			criteria.add(Restrictions.eq("t." + Ticket.PROP_VOIDED, Boolean.FALSE));
+			criteria.add(Restrictions.eq("t." + Ticket.PROP_REFUNDED, Boolean.FALSE));
+			criteria.add(Restrictions.eq("t." + Ticket.PROP_CLOSED, Boolean.TRUE));
+			criteria.addOrder(Order.asc("item." + TicketItem.PROP_NAME));
 
-			List<TicketItem> ticketItems = ticket.getTicketItems();
-			if (ticketItems == null)
-				continue;
+			List<TicketItem> list = criteria.list();
+
+			HashMap<String, ReportItem> itemMap = new HashMap<String, ReportItem>();
+			HashMap<String, ReportItem> modifierMap = new HashMap<String, ReportItem>();
 
 			String key = null;
-			for (TicketItem ticketItem : ticketItems) {
-				if (ticketItem.getUnitPrice() == 0 && !isIncludedFreeItems()) {
-					continue;
-				}
+			for (TicketItem ticketItem : list) {
+
 				if (ticketItem.getItemId() == null) {
 					key = ticketItem.getName();
 				}
@@ -182,16 +202,15 @@ public class SalesReport extends Report {
 
 							modifierMap.put(key, modifierReportItem);
 						}
-						modifierReportItem.setQuantity(modifierReportItem.getQuantity() + modifier.getItemCount());
+						modifierReportItem.setQuantity(modifierReportItem.getQuantity() + modifier.getItemCount() * ticketItem.getItemCount());
 						modifierReportItem.setGrossTotal(modifierReportItem.getGrossTotal() + modifier.getTotalAmount());
 						modifierReportItem.setTaxTotal(modifierReportItem.getTaxTotal() + modifier.getTaxAmount());
 						modifierReportItem.setTotal(modifierReportItem.getTotal() + modifier.getSubTotalAmount());
 					}
 				}
 			}
-			ticket = null;
-			iter.remove();
-		}
+
+
 		itemReportModel = new SalesReportModel();
 
 		List<ReportItem> itemList = new ArrayList<ReportItem>(itemMap.values());

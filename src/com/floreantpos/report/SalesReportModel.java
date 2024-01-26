@@ -74,10 +74,10 @@ public class SalesReportModel extends AbstractTableModel {
 				return formatter.format(item.getTotal());
 
 			case 5:
-				return String.valueOf(item.getDiscount());
+				return formatter.format(item.getDiscount());
 
 			case 6:
-				return String.valueOf(item.getTaxRate()) + "%"; //$NON-NLS-1$
+				return formatter.format(item.getTaxRate()) + "%"; //$NON-NLS-1$
 
 			case 7:
 				return formatter.format(item.getTaxTotal());

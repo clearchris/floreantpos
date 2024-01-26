@@ -37,6 +37,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
+import com.floreantpos.model.MenuGroup;
+import com.floreantpos.model.dao.MenuGroupDAO;
 import net.miginfocom.swing.MigLayout;
 
 import org.jdesktop.swingx.JXDatePicker;
@@ -69,6 +71,8 @@ public class ReportViewer extends JPanel {
 	private JCheckBox chkBoxFree;
 	private JLabel lblUserType;
 	private JComboBox cbUserType;
+	private JLabel lblMenuGroup;
+	private JComboBox cbMenuGroup;
 	private TransparentPanel reportSearchOptionPanel;
 	private TransparentPanel reportConstraintPanel;
 	private TransparentPanel reportPanel;
@@ -95,6 +99,12 @@ public class ReportViewer extends JPanel {
 
 		cbTerminal.setModel(new ListComboBoxModel(drawerTerminals));
 
+		MenuGroupDAO menuGroupDAO = new MenuGroupDAO();
+		List menuGroups = new ArrayList<MenuGroup>();
+		menuGroups.add(0, com.floreantpos.POSConstants.ALL);
+		menuGroups.addAll(menuGroupDAO.findAll());
+		cbMenuGroup.setModel(new ListComboBoxModel(menuGroups));
+
 		setReport(report);
 	}
 
@@ -115,6 +125,10 @@ public class ReportViewer extends JPanel {
 
 		cbTerminal = new JComboBox();
 		cbTerminal.setPreferredSize(new Dimension(115, 0));
+
+		lblMenuGroup = new JLabel("Menu Group");
+		cbMenuGroup = new JComboBox();
+		cbMenuGroup.setPreferredSize(new Dimension(115, 0));
 
 		lblFromDate = new JLabel(com.floreantpos.POSConstants.START_DATE + ":");
 		dpStartDate = UiUtil.getCurrentMonthStart();
@@ -146,8 +160,9 @@ public class ReportViewer extends JPanel {
 		reportConstraintPanel.add(lblToDate);
 		reportConstraintPanel.add(dpEndDate, "wrap");
 		reportConstraintPanel.add(new JLabel(""));
-		reportConstraintPanel.add(chkBoxFree, "wrap");
-		reportConstraintPanel.add(new JLabel(""));
+		reportConstraintPanel.add(chkBoxFree);
+		reportConstraintPanel.add(lblMenuGroup);
+		reportConstraintPanel.add(cbMenuGroup);
 		reportConstraintPanel.add(btnRefresh);
 		
 		reportSearchOptionPanel.add(reportConstraintPanel, BorderLayout.NORTH);
@@ -188,6 +203,13 @@ public class ReportViewer extends JPanel {
 					terminal = (Terminal) cbTerminal.getSelectedItem();
 				}
 				report.setTerminal(terminal);
+
+				MenuGroup menuGroup = null;
+				if (cbMenuGroup.getSelectedItem() instanceof MenuGroup) {
+					menuGroup = (MenuGroup) cbMenuGroup.getSelectedItem();
+				}
+				report.setMenuGroup(menuGroup);
+
 				report.setStartDate(fromDate);
 				report.setEndDate(toDate);
 				report.setIncludeFreeItems(chkBoxFree.isSelected());
