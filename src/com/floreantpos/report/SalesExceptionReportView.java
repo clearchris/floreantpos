@@ -47,7 +47,7 @@ import com.floreantpos.ui.dialog.POSMessageDialog;
 import com.floreantpos.ui.util.UiUtil;
 
 public class SalesExceptionReportView extends JPanel {
-	private SimpleDateFormat fullDateFormatter = new SimpleDateFormat("yyyy MMM dd, hh:mm a"); //$NON-NLS-1$
+	private SimpleDateFormat fullDateFormatter = new SimpleDateFormat("dd MMM yyyy, HH:mm"); //$NON-NLS-1$
 	private SimpleDateFormat shortDateFormatter = new SimpleDateFormat("yyyy MMM dd"); //$NON-NLS-1$
 	
 	private JXDatePicker fromDatePicker = UiUtil.getCurrentMonthStart();
@@ -105,16 +105,19 @@ public class SalesExceptionReportView extends JPanel {
 		SalesExceptionReport report = reportService.getSalesExceptionReport(fromDate, toDate);
 		
 		JasperReport voidReport = ReportUtil.getReport("sales_summary_exception_voids"); //$NON-NLS-1$
+		JasperReport refundReport = ReportUtil.getReport("sales_summary_exception_refunds"); //$NON-NLS-1$
 		JasperReport discountReport = ReportUtil.getReport("sales_summary_exception_discounts"); //$NON-NLS-1$
 		JasperReport itemDiscountReport = ReportUtil.getReport("sales_summary_exception_item_discounts"); //$NON-NLS-1$
 
 		HashMap map = new HashMap();
 		ReportUtil.populateRestaurantProperties(map);
-		map.put("fromDate", shortDateFormatter.format(fromDate)); //$NON-NLS-1$
-		map.put("toDate", shortDateFormatter.format(toDate)); //$NON-NLS-1$
+		map.put("fromDate", fullDateFormatter.format(fromDate)); //$NON-NLS-1$
+		map.put("toDate", fullDateFormatter.format(toDate)); //$NON-NLS-1$
 		map.put("reportTime", fullDateFormatter.format(new Date())); //$NON-NLS-1$
 		map.put("voidReport", voidReport); //$NON-NLS-1$
 		map.put("voidReportDataSource", new JRTableModelDataSource(report.getVoidTableModel())); //$NON-NLS-1$
+		map.put("refundReport", refundReport); //$NON-NLS-1$
+		map.put("refundReportDataSource", new JRTableModelDataSource(report.getRefundTableModel())); //$NON-NLS-1$
 		map.put("itemDiscountCount", new Integer(report.getItemDiscountCount()));
 		map.put("totalTicketsForRange", report.getTotalTicketsForRange());
 		map.put("discountReport", discountReport); //$NON-NLS-1$

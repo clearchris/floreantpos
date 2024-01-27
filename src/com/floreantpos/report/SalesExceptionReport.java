@@ -23,11 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.floreantpos.model.Discount;
-import com.floreantpos.model.Ticket;
-import com.floreantpos.model.TicketItem;
-import com.floreantpos.model.TicketDiscount;
-import com.floreantpos.model.TicketItemDiscount;
+import com.floreantpos.model.*;
 import com.floreantpos.swing.ListTableModel;
 
 public class SalesExceptionReport {
@@ -36,6 +32,7 @@ public class SalesExceptionReport {
 	private Date reportTime;
 
 	private List<VoidData> voidedTickets = new ArrayList<VoidData>();
+	private List<RefundData> refundTickets = new ArrayList<RefundData>();
 	private Map<Integer, DiscountData> disountMap = new HashMap<Integer, DiscountData>();
 	private Map<Integer, ItemDiscountData> itemDiscountMap = new HashMap<Integer, ItemDiscountData>();
 
@@ -61,12 +58,22 @@ public class SalesExceptionReport {
 		VoidData voidData = new VoidData();
 		voidData.id = ticket.getId();
 		voidData.setReasonCode(voidReason!=null?voidReason:"");
+		// TODO: fix count, hardcoded here
 		voidData.setCount(1);
 		voidData.setAmount(amount);
 		voidData.wasted = ticket.isWasted();
 
 		voidedTickets.add(voidData);
 		//}
+	}
+
+	public void addRefundToRefundData(Ticket ticket, PosTransaction transaction) {
+		double amount = transaction.getAmount();
+		RefundData refundData = new RefundData();
+		refundData.id = ticket.getId();
+		refundData.setAmount(amount);
+		refundData.wasted = ticket.isWasted();
+		refundTickets.add(refundData);
 	}
 
 	public void addDiscountData(Ticket ticket) {
@@ -161,13 +168,15 @@ public class SalesExceptionReport {
 		}
 
 		public String getReasonCode() {
-			return reasonCode;
+			return reasonCode!=null ? reasonCode : "";
 		}
 
 		public void setReasonCode(String reasonCode) {
 			this.reasonCode = reasonCode;
 		}
 	}
+
+	public static class RefundData extends VoidData {}
 
 	public static class DiscountData {
 		private int code;
@@ -416,6 +425,12 @@ public class SalesExceptionReport {
 		return model;
 	}
 
+	public RefundTableModel getRefundTableModel() {
+		RefundTableModel model = new RefundTableModel();
+		model.setRows(this.refundTickets);
+		return model;
+	}
+
 	public DiscountTableModel getDiscountTableModel() {
 		DiscountTableModel model = new DiscountTableModel();
 		ArrayList list = new ArrayList(disountMap.values());
@@ -431,6 +446,7 @@ public class SalesExceptionReport {
 
 		return model;
 	}
+	public class RefundTableModel extends VoidTableModel {}
 	public class VoidTableModel extends ListTableModel {
 		public VoidTableModel() {
 			setColumnNames(new String[] { "code", "reason", "wast", "qty", "amount" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$

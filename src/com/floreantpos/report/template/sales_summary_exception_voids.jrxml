@@ -2,8 +2,8 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sales_summary_exception_voids" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="1.771561000000001"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.zoom" value="1.9487171000000025"/>
+	<property name="ireport.x" value="14"/>
 	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
@@ -30,7 +30,7 @@
 		<band height="1" splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="49" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<staticText>
 				<reportElement key="staticText-1" x="0" y="0" width="526" height="14"/>
 				<box>
@@ -45,7 +45,7 @@
 				<text><![CDATA[VOIDS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-2" x="2" y="21" width="137" height="14"/>
+				<reportElement key="staticText-2" x="2" y="16" width="137" height="14"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -55,10 +55,10 @@
 				<textElement>
 					<font isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<text><![CDATA[ID]]></text>
+				<text><![CDATA[TICKET ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-3" x="142" y="21" width="176" height="14"/>
+				<reportElement key="staticText-3" x="142" y="16" width="176" height="14"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -71,7 +71,7 @@
 				<text><![CDATA[REASON]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-4" x="318" y="21" width="73" height="13"/>
+				<reportElement key="staticText-4" x="318" y="16" width="73" height="13"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -84,7 +84,7 @@
 				<text><![CDATA[WASTED]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-5" x="391" y="21" width="59" height="14"/>
+				<reportElement key="staticText-5" x="391" y="16" width="59" height="14"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -97,7 +97,7 @@
 				<text><![CDATA[QTY]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-6" x="455" y="21" width="77" height="14"/>
+				<reportElement key="staticText-6" x="455" y="16" width="77" height="14"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -110,10 +110,14 @@
 				<text><![CDATA[AMOUNT]]></text>
 			</staticText>
 			<line>
-				<reportElement key="line-2" x="1" y="34" width="531" height="1"/>
+				<reportElement key="line-2" x="1" y="28" width="531" height="1"/>
 			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-1" x="2" y="36" width="137" height="13"/>
+				<reportElement key="textField-1" x="0" y="0" width="137" height="13"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -124,7 +128,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-2" x="142" y="36" width="176" height="13"/>
+				<reportElement key="textField-2" x="142" y="0" width="176" height="13"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -135,7 +139,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{reason}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-3" x="322" y="36" width="69" height="13"/>
+				<reportElement key="textField-3" x="322" y="0" width="69" height="13"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -146,7 +150,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{wast}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-4" x="391" y="36" width="59" height="13"/>
+				<reportElement key="textField-4" x="396" y="0" width="59" height="13"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -157,7 +161,7 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{qty}]]></textFieldExpression>
 			</textField>
 			<textField pattern="0.00" isBlankWhenNull="false">
-				<reportElement key="textField-5" x="455" y="36" width="77" height="13"/>
+				<reportElement key="textField-5" x="455" y="0" width="77" height="13"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -168,11 +172,11 @@
 				<textFieldExpression class="java.lang.Double"><![CDATA[$F{amount}]]></textFieldExpression>
 			</textField>
 		</band>
-	</columnHeader>
-	<detail>
+	</detail>
+	<columnFooter>
 		<band height="17" splitType="Stretch">
 			<staticText>
-				<reportElement key="staticText-7" x="2" y="3" width="175" height="14"/>
+				<reportElement key="staticText-7" x="0" y="3" width="175" height="14"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -205,12 +209,9 @@
 				<textFieldExpression class="java.lang.Double"><![CDATA[$V{totalAmount}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement key="line-1" x="1" y="2" width="531" height="1"/>
+				<reportElement key="line-1" x="1" y="0" width="531" height="1"/>
 			</line>
 		</band>
-	</detail>
-	<columnFooter>
-		<band height="3" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band splitType="Stretch"/>
@@ -219,7 +220,7 @@
 		<band splitType="Stretch"/>
 	</summary>
 	<noData>
-		<band height="15">
+		<band height="19">
 			<staticText>
 				<reportElement x="0" y="0" width="500" height="15"/>
 				<box>
