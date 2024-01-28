@@ -22,30 +22,12 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.floreantpos.model.*;
 import com.floreantpos.model.dao.GiftCertificateDAO;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 
-import com.floreantpos.model.ActionHistory;
-import com.floreantpos.model.CashTransaction;
-import com.floreantpos.model.CreditCardTransaction;
-import com.floreantpos.model.DebitCardTransaction;
-import com.floreantpos.model.Discount;
-import com.floreantpos.model.DrawerPullReport;
-import com.floreantpos.model.GiftCertificateTransaction;
-import com.floreantpos.model.Gratuity;
-import com.floreantpos.model.MenuCategory;
-import com.floreantpos.model.PayOutTransaction;
-import com.floreantpos.model.PaymentType;
-import com.floreantpos.model.PosTransaction;
-import com.floreantpos.model.Ticket;
-import com.floreantpos.model.TicketItem;
-import com.floreantpos.model.TransactionType;
-import com.floreantpos.model.User;
-import com.floreantpos.model.dao.DiscountDAO;
 import com.floreantpos.model.dao.GenericDAO;
 import com.floreantpos.report.JournalReportModel;
 import com.floreantpos.report.JournalReportModel.JournalReportData;
@@ -289,9 +271,10 @@ public class ReportService {
 			session = dao.getSession();
 
 			//gross taxable sales
-			report.setGrossTaxableSalesAmount(calculateGrossSales(session, fromDate, toDate, user, true));
+			report.setGrossTaxableSalesAmount(calculateGrossSales(session, fromDate, toDate, user, true, false));
 			//gross non-taxable sales
-			report.setGrossNonTaxableSalesAmount(calculateGrossSales(session, fromDate, toDate, user, false));
+			report.setGrossNonTaxableSalesAmount(calculateGrossSales(session, fromDate, toDate, user, false, false));
+			report.setTaxableLessDiscount(calculateGrossSales(session, fromDate, toDate, user, true, true));
 			//discount
 			report.setDiscountAmount(calculateDiscount(session, fromDate, toDate, user));
 			//tax
@@ -395,6 +378,7 @@ public class ReportService {
 		criteria.createAlias(Ticket.PROP_GRATUITY, "gratuity"); //$NON-NLS-1$
 		criteria.add(Restrictions.ge(Ticket.PROP_CREATE_DATE, fromDate));
 		criteria.add(Restrictions.le(Ticket.PROP_CREATE_DATE, toDate));
+		criteria.add(Restrictions.eq(Ticket.PROP_PAID, Boolean.TRUE));
 
 		criteria.add(Restrictions.eq("gratuity." + Gratuity.PROP_PAID, Boolean.TRUE)); //$NON-NLS-1$
 
@@ -462,10 +446,11 @@ public class ReportService {
 		if (user != null) {
 			criteria.add(Restrictions.eq(Ticket.PROP_OWNER, user));
 		}
-		//FIXME: HOW ABOUT TIPS ON VOID OR REFUNDED TICKET?
-
-		//criteria.add(Restrictions.eq(Ticket.PROP_VOIDED, Boolean.FALSE));
-		//criteria.add(Restrictions.eq(Ticket.PROP_REFUNDED, Boolean.FALSE));
+		// general policy, if there's a problem with a closed ticket, void it, make a new one
+		// partial refunds cause issues because they are not linked to items, gratuities or anything.
+		criteria.add(Restrictions.eq(Ticket.PROP_VOIDED, Boolean.FALSE));
+		criteria.add(Restrictions.eq(Ticket.PROP_REFUNDED, Boolean.FALSE));
+		criteria.add(Restrictions.eq(Ticket.PROP_PAID, Boolean.TRUE));
 
 		criteria.setProjection(Projections.sum("g." + Gratuity.PROP_AMOUNT)); //$NON-NLS-1$
 
@@ -479,6 +464,7 @@ public class ReportService {
 		criteria.add(Restrictions.le(Ticket.PROP_CREATE_DATE, toDate));
 		criteria.add(Restrictions.eq(Ticket.PROP_VOIDED, Boolean.FALSE));
 		criteria.add(Restrictions.eq(Ticket.PROP_REFUNDED, Boolean.FALSE));
+		criteria.add(Restrictions.eq(Ticket.PROP_PAID, Boolean.TRUE));
 
 		if (user != null) {
 			criteria.add(Restrictions.eq(Ticket.PROP_OWNER, user));
@@ -503,6 +489,7 @@ public class ReportService {
 		criteria.add(Restrictions.le(Ticket.PROP_CREATE_DATE, toDate));
 		criteria.add(Restrictions.eq(Ticket.PROP_VOIDED, Boolean.FALSE));
 		criteria.add(Restrictions.eq(Ticket.PROP_REFUNDED, Boolean.FALSE));
+		criteria.add(Restrictions.eq(Ticket.PROP_PAID, Boolean.TRUE));
 
 		if (user != null) {
 			criteria.add(Restrictions.eq(Ticket.PROP_OWNER, user));
@@ -513,23 +500,59 @@ public class ReportService {
 		return getDoubleAmount(criteria.uniqueResult());
 	}
 
-	private double calculateGrossSales(Session session, Date fromDate, Date toDate, User user, boolean taxableSales) {
-		Criteria criteria = session.createCriteria(Ticket.class);
-		criteria.add(Restrictions.ge(Ticket.PROP_CREATE_DATE, fromDate));
-		criteria.add(Restrictions.le(Ticket.PROP_CREATE_DATE, toDate));
-		criteria.add(Restrictions.eq(Ticket.PROP_VOIDED, Boolean.FALSE));
-		criteria.add(Restrictions.eq(Ticket.PROP_REFUNDED, Boolean.FALSE));
+	private double calculateGrossSales(Session session, Date fromDate, Date toDate, User user, boolean taxableSales, boolean netDiscount) {
+
+		Criteria criteria = session.createCriteria(TicketItem.class, "item"); //$NON-NLS-1$
+		criteria.createCriteria("ticket", "t"); //$NON-NLS-1$ //$NON-NLS-2$
+
+		if(taxableSales) {
+			criteria.add(Restrictions.ne("t." + Ticket.PROP_TAX_EXEMPT, Boolean.TRUE));
+			criteria.add(Restrictions.gt("item." + TicketItem.PROP_TAX_RATE, 0.0));
+		}
+		else {
+			Disjunction disjunction = Restrictions.disjunction();
+			disjunction.add(Restrictions.eq("t." + Ticket.PROP_TAX_EXEMPT, Boolean.TRUE));
+			disjunction.add(Restrictions.eq("item." + TicketItem.PROP_TAX_RATE, 0.0));
+			criteria.add(disjunction);
+		}
+		criteria.add(Restrictions.ge("t." + Ticket.PROP_CREATE_DATE, fromDate)); //$NON-NLS-1$
+		criteria.add(Restrictions.le("t." + Ticket.PROP_CREATE_DATE, toDate)); //$NON-NLS-1$
+		criteria.add(Restrictions.eq("t." + Ticket.PROP_VOIDED, Boolean.FALSE)); //$NON-NLS-1$
+		criteria.add(Restrictions.eq("t." + Ticket.PROP_REFUNDED, Boolean.FALSE)); //$NON-NLS-1$
+		criteria.add(Restrictions.eq("t." + Ticket.PROP_PAID, Boolean.TRUE));
 
 		if (user != null) {
-			criteria.add(Restrictions.eq(Ticket.PROP_OWNER, user));
+			criteria.add(Restrictions.eq("t." + Ticket.PROP_OWNER, user));
 		}
 
-		criteria.add(Restrictions.eq(Ticket.PROP_TAX_EXEMPT, Boolean.valueOf(!taxableSales)));
+		double total;
+		if (netDiscount) {
+			//criteria.setProjection(Projections.sum("item." + TicketItem.PROP_TOTAL_AMOUNT));
+			ProjectionList projectionList = Projections.projectionList();
+			projectionList.add(Projections.sum("item." + TicketItem.PROP_SUBTOTAL_AMOUNT));
+			projectionList.add(Projections.sum("item." + TicketItem.PROP_DISCOUNT_AMOUNT));
+			criteria.setProjection(projectionList);
 
-		criteria.setProjection(Projections.sum(Ticket.PROP_SUBTOTAL_AMOUNT));
-
-		return getDoubleAmount(criteria.uniqueResult());
+			Object[] o = (Object[]) criteria.uniqueResult();
+			double subtotal = 0.0;
+			double discount = 0.0;
+			if (o != null) {
+				if (o.length > 0 && o[0] != null) {
+					subtotal = ((Number) o[0]).doubleValue();
+				}
+				if (o.length > 1 && o[1] != null) {
+					discount = ((Number) o[1]).doubleValue();
+				}
+			}
+			total = subtotal - discount;
+		}
+		else {
+			criteria.setProjection(Projections.sum("item." + TicketItem.PROP_SUBTOTAL_AMOUNT));
+			total = getDoubleAmount(criteria.uniqueResult());
+		}
+		return total;
 	}
+
 
 	public SalesExceptionReport getSalesExceptionReport(Date fromDate, Date toDate) {
 		GenericDAO dao = new GenericDAO();
@@ -550,6 +573,7 @@ public class ReportService {
 			criteria.add(Restrictions.ge(Ticket.PROP_CREATE_DATE, fromDate));
 			criteria.add(Restrictions.le(Ticket.PROP_CREATE_DATE, toDate));
 			criteria.add(Restrictions.eq(Ticket.PROP_VOIDED, Boolean.TRUE));
+			criteria.addOrder(Order.asc(Ticket.PROP_ID));
 
 			List list = criteria.list();
 			for (Iterator iter = list.iterator(); iter.hasNext();) {
@@ -557,13 +581,30 @@ public class ReportService {
 				report.addVoidToVoidData(ticket);
 			}
 
+			//refund tickets
+			// TODO get refund amount, listed in transactions, not with ticket
+			criteria = session.createCriteria(Ticket.class);
+			criteria.add(Restrictions.ge(Ticket.PROP_CREATE_DATE, fromDate));
+			criteria.add(Restrictions.le(Ticket.PROP_CREATE_DATE, toDate));
+			criteria.add(Restrictions.eq(Ticket.PROP_REFUNDED, Boolean.TRUE));
+			// void has implicit refund, get only refunded tickets
+			criteria.add(Restrictions.ne(Ticket.PROP_VOIDED, Boolean.TRUE));
+			criteria.addOrder(Order.asc(Ticket.PROP_ID));
+
+			list = criteria.list();
+			for (Iterator iter = list.iterator(); iter.hasNext();) {
+				Ticket ticket = (Ticket) iter.next();
+				for (PosTransaction transaction : ticket.getTransactions())
+					if (transaction instanceof RefundTransaction)
+						report.addRefundToRefundData(ticket, transaction);
+			}
 			// TODO: Refunds are not listed in the report
 
 			//discounts
 			criteria = session.createCriteria(Ticket.class);
 			criteria.add(Restrictions.ge(Ticket.PROP_CREATE_DATE, fromDate));
 			criteria.add(Restrictions.le(Ticket.PROP_CREATE_DATE, toDate));
-			criteria.add(Restrictions.eq(Ticket.PROP_CLOSED, Boolean.TRUE));
+			//criteria.add(Restrictions.eq(Ticket.PROP_CLOSED, Boolean.TRUE));
 			criteria.add(Restrictions.eq(Ticket.PROP_VOIDED, Boolean.FALSE));
 			criteria.add(Restrictions.eq(Ticket.PROP_REFUNDED, Boolean.FALSE));
 

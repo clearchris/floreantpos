@@ -54,7 +54,7 @@ import com.floreantpos.ui.util.UiUtil;
 import com.floreantpos.util.NumberUtil;
 
 public class SalesBalanceReportView extends JPanel {
-	private SimpleDateFormat fullDateFormatter = new SimpleDateFormat("dd MMM yyyy, hh:mm a"); //$NON-NLS-1$
+	private SimpleDateFormat fullDateFormatter = new SimpleDateFormat("dd MMM yyyy, HH:mm"); //$NON-NLS-1$
 	private SimpleDateFormat shortDateFormatter = new SimpleDateFormat("dd MMM yyyy"); //$NON-NLS-1$
 
 	private JXDatePicker fromDatePicker = UiUtil.getCurrentMonthStart();
@@ -147,8 +147,8 @@ public class SalesBalanceReportView extends JPanel {
 
 		HashMap map = new HashMap();
 		ReportUtil.populateRestaurantProperties(map);
-		map.put("fromDate", shortDateFormatter.format(fromDate)); //$NON-NLS-1$
-		map.put("toDate", shortDateFormatter.format(toDate)); //$NON-NLS-1$
+		map.put("fromDate", fullDateFormatter.format(fromDate)); //$NON-NLS-1$
+		map.put("toDate", fullDateFormatter.format(toDate)); //$NON-NLS-1$
 		map.put("reportTime", fullDateFormatter.format(new Date())); //$NON-NLS-1$
 		map.put("userName", user == null ? com.floreantpos.POSConstants.ALL : user.getFullName()); //$NON-NLS-1$
 
@@ -158,6 +158,7 @@ public class SalesBalanceReportView extends JPanel {
 		map.put("netSales", NumberUtil.formatNumber(report.getNetSalesAmount())); //$NON-NLS-1$
 		map.put("salesTaxes", NumberUtil.formatNumber(report.getSalesTaxAmount())); //$NON-NLS-1$
 		map.put("totalRevenues", NumberUtil.formatNumber(report.getTotalRevenueAmount())); //$NON-NLS-1$
+		map.put("taxableLessDiscount", NumberUtil.formatNumber(report.getTaxableLessDiscount())); //$NON-NLS-1$
 		map.put("giftCertSold", NumberUtil.formatNumber(report.getGiftCertSalesAmount())); //$NON-NLS-1$
 		map.put("payIns", NumberUtil.formatNumber(report.getPayInsAmount())); //$NON-NLS-1$
 		map.put("chargedTips", NumberUtil.formatNumber(report.getChargedTipsAmount())); //$NON-NLS-1$

@@ -124,7 +124,7 @@ public class SalesDetailReportView extends JPanel {
 		map.put("creditCardReport", creditCardReport); //$NON-NLS-1$
 		map.put("creditCardReportDatasource", new JRTableModelDataSource(report.getCreditCardDataTableModel())); //$NON-NLS-1$
 		
-		JasperReport jasperReport = ReportUtil.getReport("sales_summary_balace_detail"); //$NON-NLS-1$
+		JasperReport jasperReport = ReportUtil.getReport("sales_summary_balance_detail"); //$NON-NLS-1$
 		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, new JREmptyDataSource());
 		JRViewer viewer = new JRViewer(jasperPrint);
 		reportContainer.removeAll();

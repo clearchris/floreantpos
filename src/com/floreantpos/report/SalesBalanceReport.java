@@ -54,6 +54,7 @@ public class SalesBalanceReport {
 	private double masterCardAmount;
 	private double amexAmount;
 	private double discoveryAmount;
+	private double taxableLessDiscount;
 
 	public double getArReceiptsAmount() {
 		return arReceiptsAmount;
@@ -182,6 +183,11 @@ public class SalesBalanceReport {
 	public void setGrossNonTaxableSalesAmount(double grossNonTaxableSalesAmount) {
 		this.grossNonTaxableSalesAmount = grossNonTaxableSalesAmount;
 	}
+	public void setTaxableLessDiscount(double taxableLessDiscount) {
+		this.taxableLessDiscount = taxableLessDiscount;
+	}
+
+	public double getTaxableLessDiscount(){ return taxableLessDiscount; }
 
 	public double getGrossReceiptsAmount() {
 		return grossReceiptsAmount;
