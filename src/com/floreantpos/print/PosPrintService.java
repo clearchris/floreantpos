@@ -52,13 +52,9 @@ import net.sf.jasperreports.engine.export.JRPrintServiceExporterParameter;
 public class PosPrintService {
 	private static Log logger = LogFactory.getLog(PosPrintService.class);
 
-	public static void printDrawerPullReport(DrawerPullReport drawerPullReport, Terminal terminal) {
+	public static JasperPrint createDrawerPullReport(DrawerPullReport drawerPullReport, Terminal terminal, boolean drawerClosed){
 
-		try {
-			String reportPrinter = Application.getPrinters().getReportPrinter();
-			if (reportPrinter == null || reportPrinter.isEmpty()) {
-				throw new PosException("No report printer is configured!");
-			}
+		try{
 			HashMap parameters = new HashMap();
 			Restaurant restaurant = RestaurantDAO.getInstance().get(Integer.valueOf(1));
 
@@ -67,20 +63,46 @@ public class PosPrintService {
 			if (drawerPullReport.getAssignedUser() != null)
 				parameters.put("user", Messages.getString("PosPrintService.4") + drawerPullReport.getAssignedUser().getFullName()); //$NON-NLS-1$ //$NON-NLS-2$
 			parameters.put("date", new Date()); //$NON-NLS-1$
-			parameters.put("totalVoid", drawerPullReport.getTotalVoid()); //$NON-NLS-1$
+			if (drawerClosed) parameters.put("reportName", Messages.getString("PosPrintService.6"));
+			else parameters.put("reportName", Messages.getString("PosPrintService.5"));
 
 			JasperReport subReportCurrencyBalance = ReportUtil.getReport("drawer-currency-balance"); //$NON-NLS-1$
-			JasperReport subReport = ReportUtil.getReport("drawer-pull-void-veport"); //$NON-NLS-1$
+			JasperReport subReportVoid = ReportUtil.getReport("drawer-pull-void-report"); //$NON-NLS-1$
+			JasperReport subReportRefund = ReportUtil.getReport("drawer-pull-refund-report"); //$NON-NLS-1$
 
 			parameters.put("currencyBalanceReport", subReportCurrencyBalance); //$NON-NLS-1$
-			parameters.put("subreportParameter", subReport); //$NON-NLS-1$
+			parameters.put("voidTicketsReport", subReportVoid); //$NON-NLS-1$
+			parameters.put("voidTickets", new JRTableModelDataSource(drawerPullReport.getVoidTableModel())); //$NON-NLS-1$
+			parameters.put("totalVoid", drawerPullReport.getTotalVoid()); //$NON-NLS-1$
+
+			parameters.put("refundTicketsReport", subReportRefund); //$NON-NLS-1$
+			parameters.put("refundTickets", new JRTableModelDataSource(drawerPullReport.getRefundTableModel())); //$NON-NLS-1$
+			parameters.put("totalRefund", drawerPullReport.getTotalRefund()); //$NON-NLS-1$
 
 			JasperReport mainReport = ReportUtil.getReport("drawer-pull-report"); //$NON-NLS-1$
 			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(Arrays.asList(new DrawerPullReport[] { drawerPullReport }));
 			JasperPrint jasperPrint = JasperFillManager.fillReport(mainReport, parameters, dataSource);
 			//TODO: handle exception
 			jasperPrint.setProperty("printerName", Application.getPrinters().getReportPrinter()); //$NON-NLS-1$
-			jasperPrint.setName("DrawerPullReport" + drawerPullReport.getId());
+			jasperPrint.setName("DrawerPullReport" + drawerPullReport.getId()!=null?"drawer status":drawerPullReport.getId().toString());
+
+			return jasperPrint;
+		} catch (PosException e) {
+			throw e;
+		} catch (Exception e) {
+			PosLog.error(PosPrintService.class, e.getMessage());
+			logger.error("error print drawer pull report", e); //$NON-NLS-1$
+		}
+		return null;
+	}
+	public static void printDrawerPullReport(DrawerPullReport drawerPullReport, Terminal terminal) {
+
+		try {
+			String reportPrinter = Application.getPrinters().getReportPrinter();
+			if (reportPrinter == null || reportPrinter.isEmpty()) {
+				throw new PosException("No report printer is configured!");
+			}
+			JasperPrint jasperPrint = createDrawerPullReport(drawerPullReport, terminal, true);
 
 			JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);

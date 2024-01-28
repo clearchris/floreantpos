@@ -17,6 +17,7 @@
  */
 package com.floreantpos.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +25,9 @@ import com.floreantpos.model.base.BaseDrawerPullReport;
 
 public class DrawerPullReport extends BaseDrawerPullReport {
 	private static final long serialVersionUID = 1L;
+	private Set<DrawerPullVoidTicketEntry> refundTickets;
+	protected java.lang.Double totalRefundWaste;
+	protected java.lang.Double totalRefund;
 
 	/*[CONSTRUCTOR MARKER BEGIN]*/
 	public DrawerPullReport() {
@@ -86,6 +90,38 @@ public class DrawerPullReport extends BaseDrawerPullReport {
 		getVoidTickets().add(entry);
 	}
 
+	public void addRefundTicketEntry(DrawerPullVoidTicketEntry entry) {
+		if (getRefundTickets() == null) {
+			setRefundTickets(new HashSet<DrawerPullVoidTicketEntry>());
+		}
+		getRefundTickets().add(entry);
+	}
+
+	public void setRefundTickets (java.util.Set<DrawerPullVoidTicketEntry> refundTickets) {
+		this.refundTickets = refundTickets;
+	}
+
+	public java.util.Set<DrawerPullVoidTicketEntry> getRefundTickets () {
+		return refundTickets;
+	}
+
+	public Double getTotalRefund() {
+		return totalRefund;
+	}
+
+	public void setTotalRefund(Double totalRefund) {
+		this.totalRefund = totalRefund;
+	}
+
+
+	public Double getTotalRefundWaste() {
+		return totalRefundWaste;
+	}
+
+	public void setTotalRefundWaste(Double totalRefundWaste) {
+		this.totalRefundWaste = totalRefundWaste;
+	}
+
 	public void addCurrencyBalances(Set<CurrencyBalance> currencyBalance) {
 		getCurrencyBalances().addAll(currencyBalance);
 	}
@@ -130,4 +166,25 @@ public class DrawerPullReport extends BaseDrawerPullReport {
 			setTotalVoid(totalVoidAmount);
 		}
 	}
+
+	public DrawerPullVoidTicketEntryTableModel getVoidTableModel() {
+		DrawerPullVoidTicketEntryTableModel model = new DrawerPullVoidTicketEntryTableModel();
+		if (getVoidTickets()!=null) {
+			ArrayList<DrawerPullVoidTicketEntry> list = new ArrayList(getVoidTickets());
+			model.setRows(list);
+		}
+
+		return model;
+	}
+
+	public DrawerPullVoidTicketEntryTableModel getRefundTableModel() {
+		DrawerPullVoidTicketEntryTableModel model = new DrawerPullVoidTicketEntryTableModel();
+		if (getRefundTickets()!=null) {
+			ArrayList<DrawerPullVoidTicketEntry> list = new ArrayList(getRefundTickets());
+			model.setRows(list);
+		}
+
+		return model;
+	}
+
 }

@@ -39,6 +39,7 @@ import javax.swing.JSeparator;
 
 import net.miginfocom.swing.MigLayout;
 
+import net.sf.jasperreports.engine.JasperPrint;
 import org.apache.ecs.Document;
 import org.apache.ecs.html.BR;
 import org.apache.ecs.html.HR;
@@ -90,10 +91,7 @@ public class DrawerPullReportDialog extends POSDialog {
 	}
 
 	public void initialize() throws Exception {
-		terminal = Application.getInstance().refreshAndGetTerminal();
 
-		drawerPullReport = DrawerpullReportService.buildDrawerPullReport();
-		drawerPullReport.setAssignedUser(terminal.getAssignedUser());
 
 		taReport.setContentType("text/html"); //$NON-NLS-1$
 		taReport.setEditable(false);
@@ -119,7 +117,16 @@ public class DrawerPullReportDialog extends POSDialog {
 		taReport = new JEditorPane();
 		taReport.setContentType("text/html"); //$NON-NLS-1$
 
-		PosScrollPane scrollPane = new PosScrollPane(taReport);
+		//PosScrollPane scrollPane = new PosScrollPane(taReport);
+		terminal = Application.getInstance().refreshAndGetTerminal();
+		try {
+			drawerPullReport = DrawerpullReportService.buildDrawerPullReport();
+			drawerPullReport.setAssignedUser(terminal.getAssignedUser());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		jrViewer = new net.sf.jasperreports.swing.JRViewer(showReport());
+		PosScrollPane scrollPane = new PosScrollPane(jrViewer);
 		add(scrollPane);
 
 		JPanel buttonPanel = new JPanel(new MigLayout("fill", "", "[fill, grow][]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -176,6 +183,8 @@ public class DrawerPullReportDialog extends POSDialog {
 	private com.floreantpos.swing.PosButton btnPrint;
 	//    private com.floreantpos.swing.PosButton btnResetCashDrawer;
 	private javax.swing.JEditorPane taReport;
+	private net.sf.jasperreports.swing.JRViewer jrViewer;
+
 	private com.floreantpos.ui.TitlePanel titlePanel1;
 
 	// End of variables declaration//GEN-END:variables
@@ -402,6 +411,18 @@ public class DrawerPullReportDialog extends POSDialog {
 	public void setTitle(String title) {
 		titlePanel1.setTitle(title);
 		super.setTitle(title);
+	}
+
+	public JasperPrint showReport() {
+		try {
+			return PosPrintService.createDrawerPullReport(drawerPullReport, terminal, false);
+		} catch (PosException exception) {
+			POSMessageDialog.showError(POSUtil.getFocusedWindow(), exception.getMessage());
+		} catch (Exception ex) {
+			POSMessageDialog.showError(DrawerPullReportDialog.this, Messages.getString("DrawerPullReportDialog.122") + ex.getMessage()); //$NON-NLS-1$
+			PosLog.error(getClass(), ex);
+		}
+		return null;
 	}
 
 	private void doPrintReport() {

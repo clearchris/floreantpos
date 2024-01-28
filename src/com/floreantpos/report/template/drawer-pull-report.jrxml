@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DrawerPullJReport" pageWidth="225" pageHeight="550" columnWidth="223" leftMargin="1" rightMargin="1" topMargin="1" bottomMargin="1" isIgnorePagination="true">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DrawerPullJReport" pageWidth="225" pageHeight="550" columnWidth="225" leftMargin="0" rightMargin="0" topMargin="1" bottomMargin="1" isIgnorePagination="true">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="1.6105100000000008"/>
+	<property name="ireport.zoom" value="1.3310000000000013"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="573"/>
+	<property name="ireport.y" value="8"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
 	<parameter name="netSales" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["/home/mshahriar/workspace/floreantpos/src/com/floreantpos/report/"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="subreportParameter" class="net.sf.jasperreports.engine.JasperReport" isForPrompting="false"/>
 	<parameter name="headerLine1" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="totalVoid" class="java.lang.Double" isForPrompting="false"/>
 	<parameter name="user" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="terminal" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="date" class="java.util.Date" isForPrompting="false"/>
 	<parameter name="currencyBalanceReport" class="net.sf.jasperreports.engine.JasperReport" isForPrompting="false"/>
+	<parameter name="reportName" class="java.lang.String"/>
+	<parameter name="voidTicketsReport" class="net.sf.jasperreports.engine.JasperReport" isForPrompting="false"/>
+	<parameter name="voidTickets" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<parameter name="refundTicketsReport" class="net.sf.jasperreports.engine.JasperReport" isForPrompting="false"/>
+	<parameter name="refundTickets" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<parameter name="totalRefund" class="java.lang.Double" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -154,20 +156,20 @@
 	<field name="reportTime" class="java.util.Date">
 		<fieldDescription><![CDATA[reportTime]]></fieldDescription>
 	</field>
-	<field name="voidTickets" class="java.util.Set">
-		<fieldDescription><![CDATA[voidTickets]]></fieldDescription>
-	</field>
 	<field name="currencyBalances" class="java.util.Set">
 		<fieldDescription><![CDATA[currencyBalances]]></fieldDescription>
 	</field>
 	<field name="refundAmount" class="java.lang.Double">
 		<fieldDescription><![CDATA[refundAmount]]></fieldDescription>
 	</field>
+	<field name="totalRefund" class="java.lang.Double">
+		<fieldDescription><![CDATA[totalVoid]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="78" splitType="Stretch">
+		<band height="94" splitType="Stretch">
 			<textField isBlankWhenNull="true">
 				<reportElement key="textField-12" x="15" y="0" width="188" height="18" isRemoveLineWhenBlank="true"/>
 				<box>
@@ -220,6 +222,19 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$P{user}]]></textFieldExpression>
 			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="textField-112" x="15" y="76" width="188" height="18" isRemoveLineWhenBlank="true"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{reportName}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -231,7 +246,7 @@
 	<detail>
 		<band height="520" splitType="Stretch">
 			<staticText>
-				<reportElement key="staticText-1" x="15" y="7" width="188" height="15"/>
+				<reportElement key="staticText-1" positionType="Float" x="15" y="42" width="188" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -244,7 +259,7 @@
 				<text><![CDATA[SALES BALANCE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-2" x="15" y="27" width="91" height="15"/>
+				<reportElement key="staticText-2" positionType="Float" x="15" y="62" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -257,7 +272,7 @@
 				<text><![CDATA[   NET SALES]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-3" x="15" y="72" width="91" height="15"/>
+				<reportElement key="staticText-3" positionType="Float" x="15" y="107" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -270,7 +285,7 @@
 				<text><![CDATA[+CHARGED TIPS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-4" x="15" y="57" width="91" height="15"/>
+				<reportElement key="staticText-4" positionType="Float" x="15" y="92" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -283,7 +298,7 @@
 				<text><![CDATA[=TOTAL REVENUES]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-5" x="15" y="42" width="91" height="15"/>
+				<reportElement key="staticText-5" positionType="Float" x="15" y="77" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -293,16 +308,16 @@
 				<textElement verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<text><![CDATA[+SALS TAX]]></text>
+				<text><![CDATA[+SALES TAX]]></text>
 			</staticText>
 			<line>
-				<reportElement key="line-1" x="15" y="88" width="183" height="2"/>
+				<reportElement key="line-1" positionType="Float" x="15" y="123" width="183" height="2"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineStyle="Solid"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement key="staticText-6" x="15" y="90" width="91" height="15"/>
+				<reportElement key="staticText-6" positionType="Float" x="15" y="125" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -315,7 +330,7 @@
 				<text><![CDATA[=GROSS RECEIPTS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-7" x="15" y="112" width="91" height="15"/>
+				<reportElement key="staticText-7" positionType="Float" x="15" y="147" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -328,7 +343,7 @@
 				<text><![CDATA[-CASH RECEIPTS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-9" x="15" y="142" width="91" height="15"/>
+				<reportElement key="staticText-9" positionType="Float" x="15" y="177" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -341,7 +356,7 @@
 				<text><![CDATA[-DEBIT CARDS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-10" x="15" y="127" width="91" height="15"/>
+				<reportElement key="staticText-10" positionType="Float" x="15" y="162" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -354,7 +369,7 @@
 				<text><![CDATA[-CREDIT CARDS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-8" x="15" y="157" width="91" height="15"/>
+				<reportElement key="staticText-8" positionType="Float" x="15" y="192" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -367,7 +382,7 @@
 				<text><![CDATA[-GIFT RETURNS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-12" x="15" y="172" width="91" height="15"/>
+				<reportElement key="staticText-12" positionType="Float" x="15" y="207" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -380,7 +395,7 @@
 				<text><![CDATA[+GIFT CERT. CHANGE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-14" x="15" y="202" width="91" height="15"/>
+				<reportElement key="staticText-14" positionType="Float" x="15" y="237" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -393,13 +408,13 @@
 				<text><![CDATA[+CASH BACK]]></text>
 			</staticText>
 			<line>
-				<reportElement key="line-3" x="15" y="216" width="188" height="1"/>
+				<reportElement key="line-3" positionType="Float" x="15" y="251" width="188" height="1"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineStyle="Solid"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement key="staticText-15" x="15" y="219" width="91" height="15"/>
+				<reportElement key="staticText-15" positionType="Float" x="15" y="254" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -412,7 +427,7 @@
 				<text><![CDATA[=RECEIPT DIFFERENTIAL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-16" x="15" y="241" width="91" height="15"/>
+				<reportElement key="staticText-16" positionType="Float" x="15" y="276" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -425,7 +440,7 @@
 				<text><![CDATA[+CHARGED TIPS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-17" x="15" y="256" width="91" height="15"/>
+				<reportElement key="staticText-17" positionType="Float" x="15" y="291" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -438,13 +453,13 @@
 				<text><![CDATA[-TIPS PAID]]></text>
 			</staticText>
 			<line>
-				<reportElement key="line-4" x="15" y="271" width="183" height="1"/>
+				<reportElement key="line-4" positionType="Float" x="15" y="306" width="183" height="1"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineStyle="Solid"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement key="staticText-18" x="15" y="273" width="91" height="15"/>
+				<reportElement key="staticText-18" positionType="Float" x="15" y="308" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -457,7 +472,7 @@
 				<text><![CDATA[=TIPS DIFFERENTIAL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-20" x="15" y="318" width="91" height="15"/>
+				<reportElement key="staticText-20" positionType="Float" x="15" y="353" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -470,7 +485,7 @@
 				<text><![CDATA[   CASH]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-21" x="15" y="380" width="91" height="15"/>
+				<reportElement key="staticText-21" positionType="Float" x="15" y="415" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -483,7 +498,7 @@
 				<text><![CDATA[-CASH BACK]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-22" x="15" y="348" width="91" height="15"/>
+				<reportElement key="staticText-22" positionType="Float" x="15" y="383" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -496,7 +511,7 @@
 				<text><![CDATA[-PAY OUT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-23" x="15" y="333" width="91" height="15"/>
+				<reportElement key="staticText-23" positionType="Float" x="15" y="368" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -509,13 +524,13 @@
 				<text><![CDATA[-TIPS PAID]]></text>
 			</staticText>
 			<line>
-				<reportElement key="line-5" x="15" y="425" width="188" height="1"/>
+				<reportElement key="line-5" positionType="Float" x="15" y="460" width="188" height="1"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineStyle="Solid"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement key="staticText-24" x="15" y="395" width="91" height="15"/>
+				<reportElement key="staticText-24" positionType="Float" x="15" y="430" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -528,7 +543,7 @@
 				<text><![CDATA[+BEGIN CASH]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-25" x="15" y="427" width="91" height="15"/>
+				<reportElement key="staticText-25" positionType="Float" x="15" y="462" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -541,7 +556,7 @@
 				<text><![CDATA[=DRAWER ACCOUNTABLE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-26" x="15" y="410" width="91" height="15"/>
+				<reportElement key="staticText-26" positionType="Float" x="15" y="445" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -554,7 +569,7 @@
 				<text><![CDATA[-DRAWER BLEED]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-27" x="15" y="442" width="91" height="15"/>
+				<reportElement key="staticText-27" positionType="Float" x="15" y="477" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -566,121 +581,121 @@
 				</textElement>
 				<text><![CDATA[>CASH TO DEPOSIT]]></text>
 			</staticText>
-			<subreport>
-				<reportElement x="15" y="494" width="188" height="21"/>
+			<subreport isUsingCache="true" runToBottom="true">
+				<reportElement x="0" y="0" width="225" height="21" isRemoveLineWhenBlank="true"/>
 				<subreportParameter name="totalVoid">
 					<subreportParameterExpression><![CDATA[$P{totalVoid}]]></subreportParameterExpression>
 				</subreportParameter>
-				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{voidTickets})]]></dataSourceExpression>
-				<subreportExpression class="net.sf.jasperreports.engine.JasperReport"><![CDATA[$P{subreportParameter}]]></subreportExpression>
+				<dataSourceExpression><![CDATA[$P{voidTickets}]]></dataSourceExpression>
+				<subreportExpression class="net.sf.jasperreports.engine.JasperReport"><![CDATA[$P{voidTicketsReport}]]></subreportExpression>
 			</subreport>
 			<textField>
-				<reportElement x="106" y="27" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="62" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{netSales})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="42" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="77" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{salesTax})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="57" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="92" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{totalRevenue})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="72" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="107" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{chargedTips})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="90" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="125" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{grossReceipts})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="112" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="147" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{cashReceiptAmount})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="127" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="162" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{creditCardReceiptAmount})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="142" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="177" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{debitCardReceiptAmount})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="172" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="207" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{giftCertChangeAmount})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="157" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="192" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{giftCertReturnAmount})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="202" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="237" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{cashBack})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="219" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="254" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{receiptDifferential})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="241" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="276" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{chargedTips})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="257" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="292" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{tipsPaid})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="273" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="308" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{tipsDifferential})]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement key="staticText-1" x="15" y="296" width="188" height="15"/>
+				<reportElement key="staticText-1" positionType="Float" x="15" y="331" width="188" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -693,75 +708,70 @@
 				<text><![CDATA[CASH BALANCE]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="106" y="318" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="353" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{cashReceiptAmount})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="333" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="368" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{tipsPaid})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="348" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="383" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{payOutAmount})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="380" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="415" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{cashBack})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="395" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="430" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{beginCash})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="410" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="445" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{drawerBleedAmount})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="427" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="462" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{drawerAccountable})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="442" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="477" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{cashToDeposit})]]></textFieldExpression>
 			</textField>
-			<subreport>
-				<reportElement x="15" y="464" width="188" height="26"/>
-				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{currencyBalances})]]></dataSourceExpression>
-				<subreportExpression class="net.sf.jasperreports.engine.JasperReport"><![CDATA[$P{currencyBalanceReport}]]></subreportExpression>
-			</subreport>
 			<textField>
-				<reportElement x="106" y="187" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="222" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{refundAmount})]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement key="staticText-14" x="15" y="187" width="91" height="15"/>
+				<reportElement key="staticText-14" positionType="Float" x="15" y="222" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -774,14 +784,14 @@
 				<text><![CDATA[+REFUND]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="106" y="364" width="97" height="15"/>
+				<reportElement positionType="Float" x="106" y="399" width="97" height="15"/>
 				<textElement textAlignment="Right">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("0.00").format($F{refundAmount})]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement key="staticText-21" x="15" y="365" width="91" height="15"/>
+				<reportElement key="staticText-21" positionType="Float" x="15" y="400" width="91" height="15"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -793,6 +803,14 @@
 				</textElement>
 				<text><![CDATA[-REFUND]]></text>
 			</staticText>
+			<subreport isUsingCache="true" runToBottom="true">
+				<reportElement positionType="Float" x="0" y="21" width="225" height="21" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="totalRefund">
+					<subreportParameterExpression><![CDATA[$P{totalRefund}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[$P{refundTickets}]]></dataSourceExpression>
+				<subreportExpression class="net.sf.jasperreports.engine.JasperReport"><![CDATA[$P{refundTicketsReport}]]></subreportExpression>
+			</subreport>
 		</band>
 	</detail>
 	<columnFooter>

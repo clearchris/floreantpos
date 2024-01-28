@@ -22,27 +22,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.floreantpos.model.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 import com.floreantpos.config.TerminalConfig;
 import com.floreantpos.main.Application;
-import com.floreantpos.model.CashDrawer;
-import com.floreantpos.model.CashDropTransaction;
-import com.floreantpos.model.CashTransaction;
-import com.floreantpos.model.CreditCardTransaction;
-import com.floreantpos.model.CurrencyBalance;
-import com.floreantpos.model.DebitCardTransaction;
-import com.floreantpos.model.DrawerPullReport;
-import com.floreantpos.model.GiftCertificateTransaction;
-import com.floreantpos.model.Gratuity;
-import com.floreantpos.model.PayOutTransaction;
-import com.floreantpos.model.PosTransaction;
-import com.floreantpos.model.RefundTransaction;
-import com.floreantpos.model.Terminal;
-import com.floreantpos.model.Ticket;
-import com.floreantpos.model.TicketDiscount;
 import com.floreantpos.model.dao.CashDropTransactionDAO;
 import com.floreantpos.model.dao.GenericDAO;
 import com.floreantpos.model.dao.PayOutTransactionDAO;
@@ -100,6 +87,7 @@ public class DrawerpullReportService {
 				populateCurrencyBalanceSection(session, terminal, report);
 			}
 			populateVoidSection(session, terminal, report);
+			populateRefundSection(session, terminal, report);
 			//
 			//			//gift cert
 			//			criteria = session.createCriteria(GiftCertificateTransaction.class);
@@ -192,18 +180,18 @@ public class DrawerpullReportService {
 
 		for (Iterator iter = list.iterator(); iter.hasNext();) {
 			Ticket ticket = (Ticket) iter.next();
-			/*DrawerPullVoidTicketEntry entry = new DrawerPullVoidTicketEntry();
+			DrawerPullVoidTicketEntry entry = new DrawerPullVoidTicketEntry();
 			entry.setCode(ticket.getId());
-			entry.setAmount(ticket.getSubtotalAmount());
+			entry.setAmount(ticket.getTotalAmount());
 			entry.setReason(ticket.getVoidReason());
+			entry.setQuantity(1);
 			if (ticket.isWasted()) {
-				entry.setHast("Yes"); //$NON-NLS-1$
+				entry.setHast("Y"); //$NON-NLS-1$
 			}
 			else {
-				entry.setHast("No"); //$NON-NLS-1$
+				entry.setHast("N"); //$NON-NLS-1$
 			}
-
-			report.addVoidTicketEntry(entry);*/
+			report.addVoidTicketEntry(entry);
 
 			totalVoid += ticket.getSubtotalAmount();
 			if (ticket.isWasted()) {
@@ -213,6 +201,47 @@ public class DrawerpullReportService {
 
 		report.setTotalVoid(totalVoid);
 		report.setTotalVoidWst(totalWaste);
+	}
+
+	private static void populateRefundSection(Session session, Terminal terminal, DrawerPullReport report) {
+		//refunds that are not also voids
+		Criteria criteria = session.createCriteria(Ticket.class, "t"); //$NON-NLS-1$
+		criteria.add(Restrictions.eq(Ticket.PROP_VOIDED, Boolean.FALSE));
+		criteria.add(Restrictions.eq(Ticket.PROP_REFUNDED, Boolean.TRUE));
+		criteria.add(Restrictions.eq(Ticket.PROP_DRAWER_RESETTED, Boolean.FALSE));
+		criteria.add(Restrictions.eq(Ticket.PROP_TERMINAL, terminal));
+		List<Ticket> list = criteria.list();
+
+		double totalWaste = 0;
+		double total = 0;
+
+		for (Ticket ticket : list) {
+			// TODO:  need to make this data type an "exception" type and void and refund be subclass types
+			// might also need to remove from the database and build these based on ticket and posTransaction data
+			// though it might not be a bad idea to keep a copy with the pull reports...
+			for (PosTransaction transaction : ticket.getTransactions()) {
+				if (transaction instanceof RefundTransaction) {
+					DrawerPullVoidTicketEntry entry = new DrawerPullVoidTicketEntry();
+					entry.setCode(ticket.getId());
+					entry.setAmount(transaction.getAmount());
+					entry.setReason(ticket.getVoidReason());
+					entry.setQuantity(1);
+					// TODO: wasted needs the name fixed and type changed to boolean
+					if (ticket.isWasted()) {
+						entry.setHast("Y"); //$NON-NLS-1$
+					} else {
+						entry.setHast("N"); //$NON-NLS-1$
+					}
+					report.addRefundTicketEntry(entry);
+					total += transaction.getAmount();
+					if (ticket.isWasted()) {
+						totalWaste += ticket.getSubtotalAmount();
+					}
+				}
+			}
+		}
+		report.setTotalRefund(total);
+		report.setTotalRefundWaste(totalWaste);
 	}
 
 	private static void populateNetSales(Session session, Terminal terminal, DrawerPullReport report) {
