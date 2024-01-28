@@ -106,7 +106,11 @@ public class Ticket extends BaseTicket {
 
 	public static final String CUSTOMER_MOBILE = "CUSTOMER_MOBILE"; //$NON-NLS-1$
 	public static final String CUSTOMER_NAME = "CUSTOMER_NAME"; //$NON-NLS-1$
+	public static final String CUSTOMER_LAST_NAME = "CUSTOMER_LAST_NAME";
 	public static final String CUSTOMER_ID = "CUSTOMER_ID"; //$NON-NLS-1$
+	public static final String CUSTOMER_ADDRESS = "CUSTOMER_ADDRESS";
+	public static final String CUSTOMER_CITY = "CUSTOMER_CITY";
+	public static final String CUSTOMER_STATE = "CUSTOMER_STATE";
 	public static final String CUSTOMER_ZIP_CODE = "CUSTOMER_ZIP_CODE"; //$NON-NLS-1$
 	public static final String MANAGER_INSTRUCTION = "MANAGER_INSTRUCTION"; //$NON-NLS-1$
 	public static final String PHONE_EXTENSION = "PHONE_EXTENSION";
@@ -752,7 +756,11 @@ public class Ticket extends BaseTicket {
 		if (customer != null) {
 			addProperty(Ticket.CUSTOMER_ID, String.valueOf(customer.getAutoId()));
 			addProperty(Ticket.CUSTOMER_NAME, customer.getFirstName());
+			addProperty(Ticket.CUSTOMER_LAST_NAME, customer.getLastName());
 			addProperty(Ticket.CUSTOMER_MOBILE, customer.getMobileNo());
+			addProperty(Ticket.CUSTOMER_ADDRESS, customer.getAddress());
+			addProperty(Ticket.CUSTOMER_CITY, customer.getCity());
+			addProperty(Ticket.CUSTOMER_STATE, customer.getState());
 			addProperty(Ticket.CUSTOMER_ZIP_CODE, customer.getZipCode());
 			setCustomerId(customer.getAutoId());
 			this.customer = customer;
@@ -763,6 +771,10 @@ public class Ticket extends BaseTicket {
 		removeProperty(CUSTOMER_ID);
 		removeProperty(CUSTOMER_NAME);
 		removeProperty(CUSTOMER_MOBILE);
+		removeProperty(CUSTOMER_LAST_NAME);
+		removeProperty(CUSTOMER_ADDRESS);
+		removeProperty(CUSTOMER_CITY);
+		removeProperty(CUSTOMER_STATE);
 		removeProperty(CUSTOMER_ZIP_CODE);
 	}
 
