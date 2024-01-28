@@ -582,7 +582,6 @@ public class ReportService {
 			}
 
 			//refund tickets
-			// TODO get refund amount, listed in transactions, not with ticket
 			criteria = session.createCriteria(Ticket.class);
 			criteria.add(Restrictions.ge(Ticket.PROP_CREATE_DATE, fromDate));
 			criteria.add(Restrictions.le(Ticket.PROP_CREATE_DATE, toDate));
