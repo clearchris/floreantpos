@@ -33,7 +33,7 @@ import com.floreantpos.report.ReceiptPrintService;
 import com.floreantpos.util.NumberUtil;
 
 public class PosTransactionService {
-	private static PosTransactionService paymentService = new PosTransactionService();
+	private static final PosTransactionService paymentService = new PosTransactionService();
 
 	public void settleTicket(Ticket ticket, PosTransaction transaction) throws Exception {
 		Application application = Application.getInstance();
@@ -291,7 +291,7 @@ public class PosTransactionService {
 			//String title = "- REFUND RECEIPT -";
 			//String data = "Ticket #" + ticket.getId() + ", amount " + refundAmount + " was refunded.";
 
-			ReceiptPrintService.printRefundTicket(ticket, posTransaction);
+			ReceiptPrintService.printTransaction(posTransaction);
 
 		} catch (Exception e) {
 			try {

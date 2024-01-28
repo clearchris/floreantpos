@@ -305,7 +305,7 @@ public class VoidTicketDialog extends POSDialog {
 				String data = Messages.getString("VoidTicketDialog.1") + ticket.getId() + " was voided."; //$NON-NLS-1$ //$NON-NLS-2$
 
 				if (refundTransaction != null && refundAmount > 0)
-					ReceiptPrintService.printRefundTicket(ticket, refundTransaction);
+					ReceiptPrintService.printTransaction(refundTransaction);
 
 				ReceiptPrintService.printGenericReport(title, data);
 			} catch (Exception ee) {

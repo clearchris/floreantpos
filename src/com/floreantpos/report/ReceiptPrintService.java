@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.floreantpos.model.*;
+import com.floreantpos.model.dao.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,23 +41,6 @@ import com.floreantpos.config.CardConfig;
 import com.floreantpos.config.TerminalConfig;
 import com.floreantpos.extension.PaymentGatewayPlugin;
 import com.floreantpos.main.Application;
-import com.floreantpos.model.CardReader;
-import com.floreantpos.model.Currency;
-import com.floreantpos.model.KitchenTicket;
-import com.floreantpos.model.OrderType;
-import com.floreantpos.model.PaymentType;
-import com.floreantpos.model.PosTransaction;
-import com.floreantpos.model.Printer;
-import com.floreantpos.model.RefundTransaction;
-import com.floreantpos.model.Restaurant;
-import com.floreantpos.model.TerminalPrinters;
-import com.floreantpos.model.Ticket;
-import com.floreantpos.model.User;
-import com.floreantpos.model.VirtualPrinter;
-import com.floreantpos.model.dao.KitchenTicketDAO;
-import com.floreantpos.model.dao.RestaurantDAO;
-import com.floreantpos.model.dao.TerminalPrintersDAO;
-import com.floreantpos.model.dao.TicketDAO;
 import com.floreantpos.model.util.DateUtil;
 import com.floreantpos.ui.dialog.POSMessageDialog;
 import com.floreantpos.util.CurrencyUtil;
@@ -194,7 +179,7 @@ public class ReceiptPrintService {
 				return;
 			}
 
-			TicketPrintProperties printProperties = new TicketPrintProperties("*** ORDER " + ticket.getUniqueId() + " ***", false, true, true); //$NON-NLS-1$ //$NON-NLS-2$
+			TicketPrintProperties printProperties = new TicketPrintProperties("*** ORDER " + ticket.getUniqueId() + " ***", true, true, true); //$NON-NLS-1$ //$NON-NLS-2$
 			printProperties.setPrintCookingInstructions(false);
 			HashMap map = populateTicketProperties(ticket, printProperties, null);
 
@@ -251,7 +236,8 @@ public class ReceiptPrintService {
 			if (StringUtils.isEmpty(receiptPrinter)) {
 				return;
 			}
-			TicketPrintProperties printProperties = new TicketPrintProperties("*** ORDER " + ticket.getUniqueId() + " ***", false, true, true); //$NON-NLS-1$ //$NON-NLS-2$
+			//TicketPrintProperties printProperties = new TicketPrintProperties("*** ORDER " + ticket.getUniqueId() + " ***", false, true, true); //$NON-NLS-1$ //$NON-NLS-2$
+            TicketPrintProperties printProperties = new TicketPrintProperties("*** NOT A RECEIPT ***", true, true, true); //$NON-NLS-1$ //$NON-NLS-2$
 			printProperties.setPrintCookingInstructions(false);
 			HashMap map = populateTicketProperties(ticket, printProperties, null);
 			map.put("copyType", copyType); //$NON-NLS-1$
@@ -297,36 +283,9 @@ public class ReceiptPrintService {
 		}
 	}
 
-	public static JasperPrint createRefundPrint(Ticket ticket, HashMap map) throws Exception {
-		TicketDataSource dataSource = new TicketDataSource(ticket);
-		return createJasperPrint(ReportUtil.getReport("RefundReceipt"), map, new JRTableModelDataSource(dataSource)); //$NON-NLS-1$
-	}
-
-	public static void printRefundTicket(Ticket ticket, RefundTransaction posTransaction) {
-		try {
-			String receiptPrinter = Application.getPrinters().getReceiptPrinter();
-			if (StringUtils.isEmpty(receiptPrinter)) {
-				return;
-			}
-
-			TicketPrintProperties printProperties = new TicketPrintProperties("*** REFUND RECEIPT ***", true, true, true); //$NON-NLS-1$
-			printProperties.setPrintCookingInstructions(false);
-			HashMap map = populateTicketProperties(ticket, printProperties, posTransaction);
-			map.put("refundAmountText", Messages.getString("ReceiptPrintService.1")); //$NON-NLS-1$ //$NON-NLS-2$
-			map.put("refundAmount", NumberUtil.formatNumber(posTransaction.getAmount())); //$NON-NLS-1$
-			map.put("cashRefundText", Messages.getString("ReceiptPrintService.2")); //$NON-NLS-1$ //$NON-NLS-2$
-			map.put("cashRefund", NumberUtil.formatNumber(posTransaction.getAmount())); //$NON-NLS-1$
-
-			JasperPrint jasperPrint = createRefundPrint(ticket, map);
-			jasperPrint.setName("REFUND_" + ticket.getId()); //$NON-NLS-1$
-			jasperPrint.setProperty(PROP_PRINTER_NAME, receiptPrinter);
-			printQuitely(jasperPrint);
-
-		} catch (Exception e) {
-			logger.error(com.floreantpos.POSConstants.PRINT_ERROR, e);
-		}
-	}
-
+	/**
+	 * Print credit card transaction receipts
+	 */
 	public static void printTransaction(PosTransaction transaction) {
 		try {
 			Ticket ticket = transaction.getTicket();
@@ -384,6 +343,9 @@ public class ReceiptPrintService {
 		}
 	}
 
+	/**
+	 * Print credit card transaction receipts
+	 */
 	public static void printTransaction(PosTransaction transaction, boolean printStoreCopy, boolean printCustomerCopy) {
 		try {
 			Ticket ticket = transaction.getTicket();
@@ -468,7 +430,6 @@ public class ReceiptPrintService {
 		map.put("dueAmountText", POSConstants.RECEIPT_REPORT_DUEAMOUNT_LABEL + " " + currencySymbol); //$NON-NLS-1$
 		map.put("changeAmountText", POSConstants.RECEIPT_REPORT_CHANGEAMOUNT_LABEL + " " + currencySymbol); //$NON-NLS-1$
 
-		map.put(RECEIPT_TYPE, printProperties.getReceiptTypeName());
 		map.put(SHOW_SUBTOTAL, Boolean.valueOf(printProperties.isShowSubtotal()));
 		map.put(SHOW_HEADER_SEPARATOR, Boolean.TRUE);
 		map.put(SHOW_FOOTER, Boolean.valueOf(printProperties.isShowFooter()));
@@ -480,12 +441,14 @@ public class ReceiptPrintService {
 		if (ticket.getOwner() != null && ticket.getOwner().getFirstName() != null) {
 			map.put(SERVER_NAME, POSConstants.RECEIPT_REPORT_SERVER_LABEL + ticket.getOwner().getFirstName());
 		}
-		map.put(REPORT_DATE, POSConstants.RECEIPT_REPORT_DATE_LABEL + Application.formatDate(new Date()));
+		if (ticket.isPaid()) map.put(REPORT_DATE, POSConstants.RECEIPT_REPORT_DATE_LABEL + Application.formatDate(ticket.getClosingDate()));
+		else map.put(REPORT_DATE, POSConstants.RECEIPT_REPORT_DATE_LABEL + Application.formatDate(new Date()));
 
-		StringBuilder ticketHeaderBuilder = buildTicketHeader(ticket, printProperties);
-
-		map.put("ticketHeader", ticketHeaderBuilder.toString()); //$NON-NLS-1$
-
+		String orderTypeName = ticket.getOrderType().name();
+		if(orderTypeName.equals("PHONE ORDER") || orderTypeName.equals(("WHOLESALE"))) {
+			StringBuilder ticketHeaderBuilder = buildTicketHeader(ticket, printProperties);
+			map.put("ticketHeader", ticketHeaderBuilder.toString()); //$NON-NLS-1$
+		}
 		if (TerminalConfig.isShowBarcodeOnReceipt()) {
 			map.put("barcode", String.valueOf(ticket.getUniqueId())); //$NON-NLS-1$
 		}
@@ -529,13 +492,15 @@ public class ReceiptPrintService {
 				map.put("tenderedAmount", NumberUtil.formatNumber(transaction.getTenderAmount())); //$NON-NLS-1$
 			}
 			map.put("paidAmount", NumberUtil.formatNumber(ticket.getPaidAmount())); //$NON-NLS-1$
-			map.put("dueAmount", NumberUtil.formatNumber(ticket.getDueAmount())); //$NON-NLS-1$
+			if(ticket.getDueAmount() != 0)
+				map.put("dueAmount", NumberUtil.formatNumber(ticket.getDueAmount())); //$NON-NLS-1$
 			map.put("footerMessage", restaurant.getTicketFooterMessage()); //$NON-NLS-1$
 			map.put("copyType", printProperties.getReceiptCopyType()); //$NON-NLS-1$
 
 			if (ticket.isRefunded()) {
 				populateRefundProperties(ticket.getTransactions(), map);
-			}
+				map.put(RECEIPT_TYPE, "*** REFUND RECEIPT ***");
+			} else map.put(RECEIPT_TYPE, printProperties.getReceiptTypeName());
 
 			if (transaction != null) {
 				double changedAmount = transaction.getTenderAmount() - transaction.getAmount();
@@ -575,15 +540,19 @@ public class ReceiptPrintService {
 	private static void populateRefundProperties(Set<PosTransaction> transactions, HashMap map) {
 		if (transactions == null)
 			return;
-		TicketPrintProperties printProperties = new TicketPrintProperties("*** REFUND RECEIPT ***", true, true, true); //$NON-NLS-1$
-		printProperties.setPrintCookingInstructions(false);
 		double refundAmount = 0;
+		Date date = null;
 		for (PosTransaction transaction : transactions) {
-			if (transaction instanceof RefundTransaction)
+			if (transaction instanceof RefundTransaction) {
 				refundAmount += transaction.getAmount();
+				if (date == null) date = transaction.getTransactionTime();
+				else if (date.before(transaction.getTransactionTime()))
+					date = transaction.getTransactionTime();
+			}
 		}
-		map.put("additionalProperties",
-				"<html><b>" + Messages.getString("ReceiptPrintService.1") + " " + CurrencyUtil.getCurrencySymbol() + "&nbsp;" + refundAmount + "</b></html>");
+		map.put("refundAmount", NumberUtil.formatNumber(refundAmount));
+		map.put("refundAmountText", POSConstants.RECEIPT_REPORT_REFUNDAMOUNT_LABEL + " " + CurrencyUtil.getCurrencySymbol());
+		map.put(REPORT_DATE, POSConstants.RECEIPT_REPORT_DATE_LABEL + Application.formatDate(date));
 	}
 
 	private static String getCardInformation(PosTransaction transaction) {
@@ -621,7 +590,7 @@ public class ReceiptPrintService {
 
 		if (ticket.getOrderType() != null) {
 			beginRow(ticketHeaderBuilder);
-			addColumn(ticketHeaderBuilder, "*" + ticket.getOrderType() + "*"); //$NON-NLS-1$ //$NON-NLS-2$
+			addColumn(ticketHeaderBuilder, "<b>*" + ticket.getOrderType() + "*</b>"); //$NON-NLS-1$ //$NON-NLS-2$
 			endRow(ticketHeaderBuilder);
 		}
 
@@ -681,6 +650,8 @@ public class ReceiptPrintService {
 			String customerName = ticket.getProperty(Ticket.CUSTOMER_NAME);
 			String customerMobile = ticket.getProperty(Ticket.CUSTOMER_MOBILE);
 
+			Customer customer = CustomerDAO.getInstance().findById(ticket.getCustomerId());
+
 			if (StringUtils.isNotEmpty(customerName)) {
 				beginRow(ticketHeaderBuilder);
 				addColumn(ticketHeaderBuilder, Messages.getString("ReceiptPrintService.9")); //$NON-NLS-1$
@@ -696,6 +667,16 @@ public class ReceiptPrintService {
 					beginRow(ticketHeaderBuilder);
 					addColumn(ticketHeaderBuilder, ticket.getDeliveryAddress());
 					endRow(ticketHeaderBuilder);
+
+					if(StringUtils.isNotEmpty(customer.getCity()) ||
+							StringUtils.isNotEmpty(customer.getState()) ||
+							StringUtils.isNotEmpty(customer.getZipCode())){
+						beginRow(ticketHeaderBuilder);
+						addColumn(ticketHeaderBuilder, customer.getCity()+", ");
+						addColumn(ticketHeaderBuilder, customer.getState()+" ");
+						addColumn(ticketHeaderBuilder, customer.getZipCode());
+						endRow(ticketHeaderBuilder);
+					}
 
 					if (StringUtils.isNotEmpty(ticket.getExtraDeliveryInfo())) {
 						beginRow(ticketHeaderBuilder);
