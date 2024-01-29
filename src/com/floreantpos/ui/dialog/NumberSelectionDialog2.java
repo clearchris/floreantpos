@@ -59,12 +59,17 @@ public class NumberSelectionDialog2 extends OkCancelOptionDialog {
 
 	@Override
 	public void doOk() {
-		if (!validate(tfNumber.getText())) {
-			POSMessageDialog.showError(this, POSConstants.INVALID_NUMBER);
-			return;
+		try {
+			if (!validate(tfNumber.getText())) {
+				setGlassPaneVisible(true);
+				POSMessageDialog.showError(this, POSConstants.INVALID_NUMBER);
+				return;
+			}
+			setCanceled(false);
+			dispose();
+		} finally {
+			setGlassPaneVisible(false);
 		}
-		setCanceled(false);
-		dispose();
 	}
 
 	private boolean validate(String str) {

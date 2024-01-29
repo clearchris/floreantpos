@@ -27,9 +27,11 @@ import javax.swing.JFrame;
 
 import com.floreantpos.config.TerminalConfig;
 import com.floreantpos.main.Application;
+import com.floreantpos.swing.GlassPane;
 
 public class POSDialog extends JDialog {
 	protected boolean canceled = true;
+	private GlassPane glassPane;
 
 	public POSDialog() throws HeadlessException {
 		super(Application.getPosWindow(), true);
@@ -59,7 +61,17 @@ public class POSDialog extends JDialog {
 		initUI();
 	}
 	
-	protected void initUI() {}
+	protected void initUI() {
+		glassPane = new GlassPane();
+		glassPane.setOpacity(0.6f);
+		setGlassPane(glassPane);
+		setGlassPaneVisible(false);
+	}
+
+	protected void setGlassPaneVisible(boolean b) {
+		if (glassPane == null) this.initUI();
+		glassPane.setVisible(b);
+	}
 
 	public void open() {
 		canceled = true;

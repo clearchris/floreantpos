@@ -18,6 +18,7 @@
 package com.floreantpos.actions;
 
 import com.floreantpos.POSConstants;
+import com.floreantpos.main.Application;
 import com.floreantpos.ui.dialog.PayoutDialog;
 
 public class PayoutAction extends PosAction {
@@ -28,8 +29,13 @@ public class PayoutAction extends PosAction {
 
 	@Override
 	public void execute() {
-		PayoutDialog dialog = new PayoutDialog();
-		dialog.open();
+		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
+			PayoutDialog dialog = new PayoutDialog();
+			dialog.open();
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
+		}
 	}
 
 }

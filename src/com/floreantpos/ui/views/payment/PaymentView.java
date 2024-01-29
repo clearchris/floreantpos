@@ -34,6 +34,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.floreantpos.main.Application;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.StaleStateException;
 
@@ -560,7 +561,12 @@ public class PaymentView extends JPanel {
 	}
 
 	protected void doSetGratuity() {
-		ticketProcessor.doSetGratuity();
+		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
+			ticketProcessor.doSetGratuity();
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
+		}
 	}
 
 	protected void doTaxExempt() {

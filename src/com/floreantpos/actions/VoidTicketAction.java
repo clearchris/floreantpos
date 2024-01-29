@@ -46,6 +46,7 @@ public class VoidTicketAction extends PosAction {
 	public void execute() {
 		try {
 			Ticket ticket = ticketList.getSelectedTicket();
+			Application.getPosWindow().setGlassPaneVisible(true);
 
 			if (ticket == null) {
 				int ticketId = NumberSelectionDialog2.takeIntInput(Messages.getString("VoidTicketAction.0")); //$NON-NLS-1$
@@ -72,6 +73,8 @@ public class VoidTicketAction extends PosAction {
 			POSMessageDialog.showError(Application.getPosWindow(), e.getMessage());
 		} catch (Exception e) {
 			POSMessageDialog.showError(Application.getPosWindow(), e.getMessage(), e);
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
 	}
 

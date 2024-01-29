@@ -72,6 +72,7 @@ public class DrawerAssignmentAction extends PosAction {
 	@Override
 	public void execute() {
 		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
 			Terminal terminal = Application.getInstance().getTerminal();
 			User assignedUser = terminal.getAssignedUser();
 
@@ -92,6 +93,8 @@ public class DrawerAssignmentAction extends PosAction {
 
 		} catch (Exception e) {
 			POSMessageDialog.showError(Application.getPosWindow(), e.getMessage(), e);
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
 	}
 

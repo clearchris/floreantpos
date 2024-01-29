@@ -432,32 +432,37 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 	}
 
 	protected void doCloseOrder() {
-		Ticket ticket = getFirstSelectedTicket();
+		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
+			Ticket ticket = getFirstSelectedTicket();
 
-		if (ticket == null) {
-			return;
+			if (ticket == null) {
+				return;
+			}
+
+			ticket = TicketDAO.getInstance().loadFullTicket(ticket.getId());
+
+			int due = (int) POSUtil.getDouble(ticket.getDueAmount());
+			if (due != 0) {
+				POSMessageDialog.showError(this, Messages.getString("SwitchboardView.5")); //$NON-NLS-1$
+				return;
+			}
+
+			int option = JOptionPane.showOptionDialog(Application.getPosWindow(),
+					Messages.getString("SwitchboardView.6") + ticket.getId() + Messages.getString("SwitchboardView.7"), POSConstants.CONFIRM, //$NON-NLS-1$ //$NON-NLS-2$
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+
+			if (option != JOptionPane.OK_OPTION) {
+				return;
+			}
+
+			OrderController.closeOrder(ticket);
+
+			//tickteListViewObj.updateTicketList();
+			updateTicketList();
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
-
-		ticket = TicketDAO.getInstance().loadFullTicket(ticket.getId());
-
-		int due = (int) POSUtil.getDouble(ticket.getDueAmount());
-		if (due != 0) {
-			POSMessageDialog.showError(this, Messages.getString("SwitchboardView.5")); //$NON-NLS-1$
-			return;
-		}
-
-		int option = JOptionPane.showOptionDialog(Application.getPosWindow(),
-				Messages.getString("SwitchboardView.6") + ticket.getId() + Messages.getString("SwitchboardView.7"), POSConstants.CONFIRM, //$NON-NLS-1$ //$NON-NLS-2$
-				JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
-
-		if (option != JOptionPane.OK_OPTION) {
-			return;
-		}
-
-		OrderController.closeOrder(ticket);
-
-		//tickteListViewObj.updateTicketList();
-		updateTicketList();
 	}
 
 	protected void doAssignDriver() {
@@ -494,7 +499,7 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 
 	private void doReopenTicket() {
 		try {
-
+			Application.getPosWindow().setGlassPaneVisible(true);
 			int ticketId = NumberSelectionDialog2.takeIntInput(Messages.getString("SwitchboardView.10")); //$NON-NLS-1$
 
 			if (ticketId == -1) {
@@ -535,11 +540,14 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 			POSMessageDialog.showError(this, e.getLocalizedMessage());
 		} catch (Exception e) {
 			POSMessageDialog.showError(this, POSConstants.ERROR_MESSAGE, e);
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
 	}
 
 	private void doSettleTicket() {
 		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
 			if (!POSUtil.checkDrawerAssignment()) {
 				return;
 			}
@@ -568,6 +576,8 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 		} catch (Exception e) {
 			PosLog.error(getClass(), e);
 			POSMessageDialog.showError(this, POSConstants.ERROR_MESSAGE, e);
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
 	}
 
@@ -577,7 +587,7 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 
 	private void doShowOrderInfo(List<Ticket> tickets) {
 		try {
-
+			Application.getPosWindow().setGlassPaneVisible(true);
 			if (tickets.size() == 0) {
 				if (ticketList.getOrderFiltersPanel().isMenugreatOrderFilterSelected()
 						|| ticketList.getOrderFiltersPanel().isWoocommerceOrderFilterSelected()) {
@@ -613,11 +623,14 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 			POSMessageDialog.showError(this, e.getMessage());
 		} catch (Exception e) {
 			POSMessageDialog.showError(this, POSConstants.ERROR_MESSAGE, e);
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
 	}
 
 	private void doSplitTicket() {
 		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
 			Ticket selectedTicket = getFirstSelectedTicket();
 
 			if (selectedTicket == null) {
@@ -634,11 +647,14 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 			updateView();
 		} catch (Exception e) {
 			POSMessageDialog.showError(this, POSConstants.ERROR_MESSAGE, e);
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
 	}
 
 	private void doEditTicket() {
 		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
 			Ticket ticket = null;
 
 			List<Ticket> selectedTickets = ticketList.getSelectedTickets();
@@ -659,6 +675,8 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 			POSMessageDialog.showError(this, e.getMessage());
 		} catch (Exception e) {
 			POSMessageDialog.showError(this, e.getMessage(), e);
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
 	}
 
@@ -713,11 +731,16 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 	}
 
 	private void doGroupSettle() {
-		GroupSettleTicketAction action = new GroupSettleTicketAction();
-		if (!action.execute())
-			return;
-		//tickteListViewObj.updateTicketList();
-		updateTicketList();
+		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
+			GroupSettleTicketAction action = new GroupSettleTicketAction();
+			if (!action.execute())
+				return;
+			//tickteListViewObj.updateTicketList();
+			updateTicketList();
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
+		}
 	}
 
 	public void updateView() {

@@ -35,6 +35,7 @@ public class DrawerPullAction extends PosAction {
 	@Override
 	public void execute() {
 		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
 			DrawerPullReportDialog dialog = new DrawerPullReportDialog();
 			dialog.setTitle(com.floreantpos.POSConstants.DRAWER_PULL_BUTTON_TEXT);
 			dialog.initialize();
@@ -44,6 +45,8 @@ public class DrawerPullAction extends PosAction {
 			dialog.open();
 		} catch (Exception e) {
 			POSMessageDialog.showError(Application.getPosWindow(), e.getMessage(), e);
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
 	}
 

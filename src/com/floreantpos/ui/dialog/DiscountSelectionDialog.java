@@ -145,7 +145,12 @@ public class DiscountSelectionDialog extends OkCancelOptionDialog implements Act
 				ItemSearchDialog dialog = new ItemSearchDialog(Application.getPosWindow());
 				dialog.setTitle("Search Coupon");
 				dialog.pack();
-				dialog.open();
+				setGlassPaneVisible(true);
+				try {
+					dialog.open();
+				} finally {
+					setGlassPaneVisible(false);
+				}
 				if (dialog.isCanceled()) {
 					return;
 				}
@@ -332,7 +337,13 @@ public class DiscountSelectionDialog extends OkCancelOptionDialog implements Act
 	}
 
 	private double getModifiedValue(Discount discount) {
-		Double newValue = NumberSelectionDialog2.takeDoubleInput("Enter Amount", "Enter Amount", discount.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
+		setGlassPaneVisible(true);
+		Double newValue;
+		try {
+			newValue = NumberSelectionDialog2.takeDoubleInput("Enter Amount", "Enter Amount", discount.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
+		} finally {
+			setGlassPaneVisible(false);
+		}
 		if (newValue > 0) {
 			return newValue;
 		}
@@ -392,7 +403,7 @@ public class DiscountSelectionDialog extends OkCancelOptionDialog implements Act
 
 	private void applyDiscountToTicketItems(DiscountButton discountButton) {
 		try {
-			//TODO CHRIS setGlassPaneVisible(true);
+			setGlassPaneVisible(true);
 			TicketItemDiscountSelectionDialog dialog =
 					new TicketItemDiscountSelectionDialog(ticket, discountButton.discount, new ArrayList<TicketItem>(discountButton.ticketItems));
 			dialog.open();
@@ -405,7 +416,7 @@ public class DiscountSelectionDialog extends OkCancelOptionDialog implements Act
 			else discountButton.setSelected(false);
 			updateDiscounts();
 		} finally {
-			//TODO CHRIS setGlassPaneVisible(false);
+			setGlassPaneVisible(false);
 		}
 	}
 }

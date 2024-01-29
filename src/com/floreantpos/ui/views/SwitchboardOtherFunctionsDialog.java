@@ -149,8 +149,13 @@ public class SwitchboardOtherFunctionsDialog extends POSDialog implements Action
 	}
 	
 	private void doPayout() {
-		PayoutDialog dialog = new PayoutDialog();
-		dialog.open();
+		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
+			PayoutDialog dialog = new PayoutDialog();
+			dialog.open();
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
+		}
 	}
 
 	@Override

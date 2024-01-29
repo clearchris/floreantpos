@@ -429,7 +429,12 @@ public class Application {
 		int y = dialog.getLocation().y;
 		//PosLog.debug(getClass(),y);
 		dialog.setLocation(dialog.getLocation().x, y + 60);
-		dialog.setVisible(true);
+		getPosWindow().setGlassPaneVisible(true);
+		try {
+			dialog.setVisible(true);
+		} finally {
+			getPosWindow().setGlassPaneVisible(false);
+		}
 		Object selectedValue = (String) optionPane.getValue();
 		if (selectedValue == null) return;  // closed window, no buttons pushed
 		if (selectedValue.equals(Messages.getString("Application.3"))) { //$NON-NLS-1$

@@ -73,21 +73,21 @@ public class CashierModeNextActionDialog extends POSDialog implements ActionList
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		if(e.getSource() == btnNew) {
-			//FIXME: ORDER TYPE
-			//OrderUtil.createNewTakeOutOrder(new OrderType(1, "TAKE OUT"));
+		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
+			if (e.getSource() == btnNew) {
+				//FIXME: ORDER TYPE
+				//OrderUtil.createNewTakeOutOrder(new OrderType(1, "TAKE OUT"));
+			} else if (e.getSource() == btnLogout) {
+				Application.getInstance().doLogout();
+			} else if (e.getSource() == btnOpen) {
+				OpenTicketsListDialog dialog = new OpenTicketsListDialog();
+				dialog.open();
+			}
+			dispose();
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
-		else if(e.getSource() == btnLogout) {
-			Application.getInstance().doLogout();
-		}
-		else if(e.getSource() == btnOpen) {
-			OpenTicketsListDialog dialog = new OpenTicketsListDialog();
-			dialog.open();
-		}
-		
-		Application.getPosWindow().setGlassPaneVisible(false);
-		dispose();
 	}
 
 }

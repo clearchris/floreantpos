@@ -31,11 +31,14 @@ public class DrawerBleedAction extends PosAction {
 	@Override
 	public void execute() {
 		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
 			CashDropDialog dialog = new CashDropDialog();
 			dialog.initDate();
 			dialog.open();
 		} catch (Exception e) {
 			POSMessageDialog.showError(Application.getPosWindow(),e.getMessage(), e);
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
 	}
 

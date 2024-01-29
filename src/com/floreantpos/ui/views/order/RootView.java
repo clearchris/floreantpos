@@ -104,6 +104,7 @@ public class RootView extends com.floreantpos.swing.TransparentPanel {
 
 		headerPanel.updateOthersFunctionsView(!currentViewName.equals(SwitchboardOtherFunctionsView.VIEW_NAME));
 		headerPanel.updateSwitchBoardView(!currentViewName.equals(SwitchboardView.VIEW_NAME));
+		Application.getPosWindow().setGlassPaneVisible(false);
 	}
 
 	public void showView(IView view) {

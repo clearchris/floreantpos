@@ -197,6 +197,7 @@ public class SettleTicketProcessor implements CardInputListener {
 			if (ticket == null) {
 				return;
 			}
+			Application.getPosWindow().setGlassPaneVisible(true);
 			if (ticket.getId() == null) {
 				OrderController.saveOrder(ticket);
 			}
@@ -218,6 +219,8 @@ public class SettleTicketProcessor implements CardInputListener {
 				OrderView.getInstance().setCurrentTicket(ticket);
 		} catch (Exception e) {
 			POSMessageDialog.showError(POSUtil.getFocusedWindow(), com.floreantpos.POSConstants.ERROR_MESSAGE, e);
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
 	}
 
@@ -258,24 +261,27 @@ public class SettleTicketProcessor implements CardInputListener {
 	}
 
 	public static void showTransactionCompleteMsg(final double dueAmount, final double tenderedAmount, Ticket ticket, PosTransaction transaction) {
-		TransactionCompletionDialog dialog = new TransactionCompletionDialog(transaction);
-		dialog.setCompletedTransaction(transaction);
-		dialog.setTenderedAmount(tenderedAmount);
-		dialog.setTotalAmount(dueAmount);
-		dialog.setPaidAmount(transaction.getAmount());
-		dialog.setDueAmount(ticket.getDueAmount());
-		dialog.setGratuityAmount(transaction.getTipsAmount());
-		dialog.setFeeAmount(ticket.getAdjustmentAmount());
-		if (tenderedAmount > transaction.getAmount()) {
-			dialog.setChangeAmount(tenderedAmount - transaction.getAmount());
+		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
+			TransactionCompletionDialog dialog = new TransactionCompletionDialog(transaction);
+			dialog.setCompletedTransaction(transaction);
+			dialog.setTenderedAmount(tenderedAmount);
+			dialog.setTotalAmount(dueAmount);
+			dialog.setPaidAmount(transaction.getAmount());
+			dialog.setDueAmount(ticket.getDueAmount());
+			dialog.setGratuityAmount(transaction.getTipsAmount());
+			dialog.setFeeAmount(ticket.getAdjustmentAmount());
+			if (tenderedAmount > transaction.getAmount()) {
+				dialog.setChangeAmount(tenderedAmount - transaction.getAmount());
+			} else {
+				dialog.setChangeAmount(0);
+			}
+			dialog.updateView();
+			dialog.pack();
+			dialog.open();
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
-		else {
-			dialog.setChangeAmount(0);
-		}
-
-		dialog.updateView();
-		dialog.pack();
-		dialog.open();
 	}
 
 	public static void printTicket(Ticket ticket, PosTransaction transaction) {
@@ -364,6 +370,7 @@ public class SettleTicketProcessor implements CardInputListener {
 
 	public void settleTicket(PosTransaction transaction) {
 		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
 			final double dueAmount = ticket.getDueAmount();
 
 			if (ticket.getOrderType().isBarTab()) {
@@ -382,6 +389,8 @@ public class SettleTicketProcessor implements CardInputListener {
 			POSMessageDialog.showError(Application.getPosWindow(), Messages.getString("SettleTicketDialog.12")); //$NON-NLS-1$
 		} catch (Exception e) {
 			POSMessageDialog.showError(POSUtil.getFocusedWindow(), POSConstants.ERROR_MESSAGE, e);
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
 	}
 

@@ -34,12 +34,7 @@ import javax.swing.Timer;
 
 import com.floreantpos.IconFactory;
 import com.floreantpos.Messages;
-import com.floreantpos.actions.ClockInOutAction;
-import com.floreantpos.actions.HomeScreenViewAction;
-import com.floreantpos.actions.LogoutAction;
-import com.floreantpos.actions.ShowOtherFunctionsAction;
-import com.floreantpos.actions.ShutDownAction;
-import com.floreantpos.actions.SwithboardViewAction;
+import com.floreantpos.actions.*;
 import com.floreantpos.bo.ui.explorer.QuickMaintenanceExplorer;
 import com.floreantpos.config.TerminalConfig;
 import com.floreantpos.main.Application;
@@ -140,7 +135,7 @@ public class HeaderPanel extends JPanel {
 		btnOthers = new PosButton(new ShowOtherFunctionsAction(false, true));
 		buttonPanel.add(btnOthers, "w " + btnSize + "!, h " + btnSize + "!"); //$NON-NLS-1$
 
-		btnClockOUt = new PosButton(new ClockInOutAction(false, true));
+		btnClockOUt = new PosButton(new GlassWrapperAction(new ClockInOutAction(false, true)));
 		buttonPanel.add(btnClockOUt, "w " + btnSize + "!, h " + btnSize + "!"); //$NON-NLS-1$
 
 		btnLogout = new PosButton(new LogoutAction(false, true));

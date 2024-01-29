@@ -24,6 +24,7 @@ public class RefundAction extends PosAction {
 	@Override
 	public void execute() {
 		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
 			Ticket ticket = ticketList.getSelectedTicket();
 
 			if (ticket == null) {
@@ -76,6 +77,8 @@ public class RefundAction extends PosAction {
 			
 		} catch (Exception e) {
 			POSMessageDialog.showError(Application.getPosWindow(), e.getMessage(), e);
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
 	}
 

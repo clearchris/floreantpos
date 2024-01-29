@@ -49,6 +49,7 @@ public class ServerTipsAction extends PosAction {
 	@Override
 	public void execute() {
 		try {
+			Application.getPosWindow().setGlassPaneVisible(true);
 			JPanel panel = new JPanel(new MigLayout());
 			List<User> users = UserDAO.getInstance().findAll();
 
@@ -77,6 +78,8 @@ public class ServerTipsAction extends PosAction {
 			dialog.open();
 		} catch (Exception e) {
 			POSMessageDialog.showError(Application.getPosWindow(), e.getMessage(), e);
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
 	}
 

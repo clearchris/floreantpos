@@ -37,6 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
+import com.floreantpos.actions.GlassWrapperAction;
 import org.apache.commons.logging.LogFactory;
 
 import com.floreantpos.IconFactory;
@@ -134,7 +135,7 @@ public class LoginView extends ViewPanel {
 		btnBackOffice = new PosButton(POSConstants.BACK_OFFICE_BUTTON_TEXT);
 
 		btnShutdown = new PosButton(POSConstants.SHUTDOWN);
-		btnClockOUt = new PosButton(new ClockInOutAction(false, true));
+		btnClockOUt = new PosButton(new GlassWrapperAction(new ClockInOutAction(false, true)));
 
 		btnBackOffice.setVisible(false);
 		btnSwitchBoard.setVisible(false);
@@ -226,7 +227,12 @@ public class LoginView extends ViewPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				DatabaseConfigurationDialog.show(Application.getPosWindow());
+				try{
+					Application.getPosWindow().setGlassPaneVisible(true);
+					DatabaseConfigurationDialog.show(Application.getPosWindow());
+				} finally {
+					Application.getPosWindow().setGlassPaneVisible(false);
+				}
 			}
 		});
 
@@ -285,6 +291,7 @@ public class LoginView extends ViewPanel {
 	public synchronized void doLogin(boolean isBackOffice) {
 		try {
 			Application application = Application.getInstance();
+			Application.getPosWindow().setGlassPaneVisible(true);
 			Terminal terminal = application.refreshAndGetTerminal();
 			boolean isAutoLoginEnable = terminal.hasProperty(Terminal.PROP_AUTO_LOGIN_ENABLE) && Boolean.parseBoolean(terminal.getProperty(Terminal.PROP_AUTO_LOGIN_ENABLE));
 			User user = null;
@@ -317,6 +324,8 @@ public class LoginView extends ViewPanel {
 			else {
 				MessageDialog.showError(Messages.getString("LoginView.5"), e1); //$NON-NLS-1$
 			}
+		} finally {
+			Application.getPosWindow().setGlassPaneVisible(false);
 		}
 	}
 
