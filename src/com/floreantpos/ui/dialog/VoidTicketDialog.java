@@ -319,7 +319,7 @@ public class VoidTicketDialog extends POSDialog {
 					Application.getCurrentUser(),
 					ActionHistory.VOID_CHECK,
 					com.floreantpos.POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL
-							+ ":" + ticket.getId() + "; Total" + ": " + NumberUtil.formatNumber(ticket.getTotalAmount())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							+ ":" + ticket.getId() + "; Total" + ": " + NumberUtil.formatNumber(ticket.getTotalAmount()), ticket.getId()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 			dispose();
 		} catch (Exception e) {

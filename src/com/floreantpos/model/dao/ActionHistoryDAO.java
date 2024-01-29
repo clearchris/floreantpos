@@ -45,4 +45,20 @@ public class ActionHistoryDAO extends BaseActionHistoryDAO {
 			LogFactory.getLog(ActionHistoryDAO.class).error(Messages.getString("ActionHistoryDAO.0"), e); //$NON-NLS-1$
 		}
 	}
+
+	public void saveHistory(User performer, String actionName, String description, Integer ticketId) {
+		try {
+			ActionHistory history = new ActionHistory();
+			history.setActionName(actionName);
+			history.setDescription(description);
+			history.setPerformer(performer);
+			history.setActionTime(new Date());
+			history.setTicketId(ticketId);
+			save(history);
+		} catch (Exception e) {
+			LogFactory.getLog(ActionHistoryDAO.class).error(Messages.getString("ActionHistoryDAO.0"), e); //$NON-NLS-1$
+		}
+	}
+
+
 }

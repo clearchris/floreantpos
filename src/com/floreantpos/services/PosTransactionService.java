@@ -121,7 +121,7 @@ public class PosTransactionService {
 		//			SETTLE ACTION
 		String actionMessage = com.floreantpos.POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL + ":" + ticket.getId(); //$NON-NLS-1$
 		actionMessage += ";" + com.floreantpos.POSConstants.TOTAL + ":" + NumberUtil.formatNumber(ticket.getTotalAmount()); //$NON-NLS-1$ //$NON-NLS-2$
-		ActionHistoryDAO.getInstance().saveHistory(Application.getCurrentUser(), ActionHistory.SETTLE_CHECK, actionMessage);
+		ActionHistoryDAO.getInstance().saveHistory(Application.getCurrentUser(), ActionHistory.SETTLE_CHECK, actionMessage, ticket.getId());
 	}
 
 	private void createGiftCertificate (Session session, Ticket ticket) throws Exception {
@@ -200,7 +200,7 @@ public class PosTransactionService {
 
 		String actionMessage = com.floreantpos.POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL + ":" + ticket.getId(); //$NON-NLS-1$
 		actionMessage += ";" + com.floreantpos.POSConstants.TOTAL + ":" + NumberUtil.formatNumber(ticket.getTotalAmount()); //$NON-NLS-1$ //$NON-NLS-2$
-		ActionHistoryDAO.getInstance().saveHistory(Application.getCurrentUser(), ActionHistory.SETTLE_CHECK, actionMessage);
+		ActionHistoryDAO.getInstance().saveHistory(Application.getCurrentUser(), ActionHistory.SETTLE_CHECK, actionMessage, ticket.getId());
 	}
 
 	public static void adjustTerminalBalance(PosTransaction transaction) {

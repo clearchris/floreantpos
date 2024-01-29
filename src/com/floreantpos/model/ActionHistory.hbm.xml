@@ -8,6 +8,7 @@
     <property column="ACTION_TIME" name="actionTime" type="java.util.Date"/>
     <property column="ACTION_NAME" name="actionName" type="string"/>
     <property column="DESCRIPTION" name="description" type="string"/>
+    <property column="TICKET_ID" name="ticketId" type="java.lang.Integer"/>
     <!-- Associations -->
     <many-to-one class="User" column="USER_ID" name="performer">
 		

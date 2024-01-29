@@ -37,7 +37,7 @@ public abstract class BaseActionHistory  implements Comparable, Serializable {
 	public static String PROP_ACTION_NAME = "actionName"; //$NON-NLS-1$
 	public static String PROP_ACTION_TIME = "actionTime"; //$NON-NLS-1$
 	public static String PROP_ID = "id"; //$NON-NLS-1$
-
+	public static String PROP_TICKET_ID = "ticketId";
 
 	// constructors
 	public BaseActionHistory () {
@@ -68,7 +68,7 @@ public abstract class BaseActionHistory  implements Comparable, Serializable {
 
 	// many to one
 	private com.floreantpos.model.User performer;
-
+	private java.lang.Integer ticketId;
 
 
 	/**
@@ -162,7 +162,6 @@ public abstract class BaseActionHistory  implements Comparable, Serializable {
 
 
 
-
 	public boolean equals (Object obj) {
 		if (null == obj) return false;
 		if (!(obj instanceof com.floreantpos.model.ActionHistory)) return false;
@@ -194,5 +193,11 @@ public abstract class BaseActionHistory  implements Comparable, Serializable {
 		return super.toString();
 	}
 
+	public java.lang.Integer getTicketId() {
+		return ticketId;
+	}
 
+	public void setTicketId(java.lang.Integer ticketId) {
+		this.ticketId = ticketId;
+	}
 }

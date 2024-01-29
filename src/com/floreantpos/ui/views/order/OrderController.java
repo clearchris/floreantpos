@@ -249,10 +249,10 @@ public class OrderController implements OrderListener, CategorySelectionListener
 		if (newTicket) {
 			ShopTableDAO.getInstance().occupyTables(ticket);
 
-			actionHistoryDAO.saveHistory(user, ActionHistory.NEW_CHECK, POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL + ":" + ticket.getId()); //$NON-NLS-1$
+			actionHistoryDAO.saveHistory(user, ActionHistory.NEW_CHECK, POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL + ":" + ticket.getId(), ticket.getId()); //$NON-NLS-1$
 		}
 		else {
-			actionHistoryDAO.saveHistory(user, ActionHistory.EDIT_CHECK, POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL + ":" + ticket.getId()); //$NON-NLS-1$
+			actionHistoryDAO.saveHistory(user, ActionHistory.EDIT_CHECK, POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL + ":" + ticket.getId(), ticket.getId()); //$NON-NLS-1$
 		}
 	}
 
