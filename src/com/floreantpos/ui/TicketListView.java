@@ -96,7 +96,8 @@ public class TicketListView extends JPanel implements ITicketList {
 		createTicketTable();
 		updateTicketList();
 		updateButtonStatus();
-
+		btnOrderFilters.setSelected(true);
+		orderFiltersPanel.setCollapsed(false);
 	}
 
 	public OrderFilterPanel getOrderFiltersPanel() {
