@@ -24,8 +24,8 @@ import javax.swing.UIManager;
 import com.floreantpos.swing.PosUIManager;
 
 public class UIConfig {
-	public final static Font buttonFont = UIManager.getFont("Button.font").deriveFont(Font.BOLD, PosUIManager.getDefaultFontSize()); //$NON-NLS-1$
-	public final static Font largeFont = UIManager.getFont("Button.font").deriveFont(Font.BOLD, PosUIManager.getLargeFontSize()); //$NON-NLS-1$
+	public final static Font buttonFont = UIManager.getFont("Button.font").deriveFont(Font.PLAIN, PosUIManager.getDefaultFontSize()); //$NON-NLS-1$
+	public final static Font largeFont = UIManager.getFont("Button.font").deriveFont(Font.PLAIN, PosUIManager.getLargeFontSize()); //$NON-NLS-1$
 	
 	public UIConfig() {
 		super();

@@ -146,6 +146,22 @@ public class NumberSelectionDialog2 extends OkCancelOptionDialog {
 		return (int) dialog.getValue();
 	}
 
+	public static double takeDoubleInput(String title, String dialogTitle) {
+		NumberSelectionDialog2 dialog = new NumberSelectionDialog2();
+		dialog.setFloatingPoint(true);
+		//dialog.setValue(initialAmount);
+		dialog.setTitle(title);
+		dialog.setDialogTitle(dialogTitle);
+		dialog.pack();
+		dialog.open();
+
+		if (dialog.isCanceled()) {
+			return Double.NaN;
+		}
+
+		return dialog.getValue();
+	}
+
 	public static double takeDoubleInput(String title, String dialogTitle, double initialAmount) {
 		NumberSelectionDialog2 dialog = new NumberSelectionDialog2();
 		dialog.setFloatingPoint(true);

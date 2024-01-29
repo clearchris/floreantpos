@@ -62,10 +62,10 @@ public class DrawerAssignmentAction extends PosAction {
 		User assignedUser = terminal.getAssignedUser();
 
 		if (assignedUser != null) {
-			putValue(Action.NAME, Messages.getString("DrawerAssignmentAction.1")); //$NON-NLS-1$
+			putValue(Action.NAME, "<html><center>"+Messages.getString("DrawerAssignmentAction.1")); //$NON-NLS-1$
 		}
 		else {
-			putValue(Action.NAME, Messages.getString("DrawerAssignmentAction.2")); //$NON-NLS-1$
+			putValue(Action.NAME, "<html><center>"+Messages.getString("DrawerAssignmentAction.2")); //$NON-NLS-1$
 		}
 	}
 
@@ -133,7 +133,7 @@ public class DrawerAssignmentAction extends PosAction {
 			}
 			else {
 				drawerBalance = NumberSelectionDialog2.takeDoubleInput(Messages.getString("DrawerAssignmentAction.6"), //$NON-NLS-1$
-						Messages.getString("DrawerAssignmentAction.7"), 500); //$NON-NLS-1$
+						Messages.getString("DrawerAssignmentAction.7") ); //$NON-NLS-1$
 			}
 			if (Double.isNaN(drawerBalance)) {
 				return;
@@ -162,7 +162,7 @@ public class DrawerAssignmentAction extends PosAction {
 
 			POSMessageDialog.showMessage(Messages.getString("DrawerAssignmentAction.8") + user.getFullName()); //$NON-NLS-1$
 
-			putValue(Action.NAME, Messages.getString("DrawerAssignmentAction.9")); //$NON-NLS-1$
+			putValue(Action.NAME, "<html><center>"+Messages.getString("DrawerAssignmentAction.9")); //$NON-NLS-1$
 
 		} catch (Exception e) {
 			if (tx != null) {
@@ -223,7 +223,7 @@ public class DrawerAssignmentAction extends PosAction {
 
 			POSMessageDialog.showMessage(Messages.getString("DrawerAssignmentAction.10")); //$NON-NLS-1$
 
-			putValue(Action.NAME, Messages.getString("DrawerAssignmentAction.11")); //$NON-NLS-1$
+			putValue(Action.NAME, "<html><center>"+Messages.getString("DrawerAssignmentAction.11")); //$NON-NLS-1$
 
 		} catch (Exception e) {
 			throw e;

@@ -23,14 +23,11 @@
 
 package com.floreantpos.ui.dialog;
 
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.*;
+import javax.swing.*;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
+import com.floreantpos.config.UIConfig;
+import com.floreantpos.swing.PosUIManager;
 import org.apache.log4j.Logger;
 
 import com.floreantpos.POSConstants;
@@ -43,11 +40,14 @@ import com.floreantpos.ui.RefreshableView;
  * @author MShahriar
  */
 public class POSMessageDialog {
+	private static final float fontSize = PosUIManager.getSize(24);
 
 	private static Logger logger = Logger.getLogger(Application.class);
 	
 	private static void showDialog(Component parent, String message, int messageType, int optionType) {
-		JOptionPane optionPane = new JOptionPane(message, messageType, optionType);
+		JLabel label = new JLabel(message);
+		label.setFont(label.getFont().deriveFont(Font.PLAIN, fontSize));
+		JOptionPane optionPane = new JOptionPane(label, messageType, optionType);
 		Object[] options = optionPane.getComponents();
 		for (Object object : options) {
 			if(object instanceof JPanel) {
@@ -89,7 +89,9 @@ public class POSMessageDialog {
 	}
 	
 	public static int showYesNoQuestionDialog(Component parent, String message, String title) {
-		JOptionPane optionPane = new JOptionPane(message, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
+		JLabel label = new JLabel(message);
+		label.setFont(label.getFont().deriveFont(Font.PLAIN, fontSize));
+		JOptionPane optionPane = new JOptionPane(label, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
 		Object[] options = optionPane.getComponents();
 		for (Object object : options) {
 			if(object instanceof JPanel) {
@@ -135,15 +137,16 @@ public class POSMessageDialog {
 		String selectedValue = (String) optionPane.getValue();
 		if (selectedValue.equals(noButtonText))
 			return JOptionPane.CLOSED_OPTION;
-
 		return JOptionPane.YES_OPTION;
 	}
 	public static void showMessageDialogWithReloadButton(Component parent, RefreshableView refreshView) {
 		showMessageDialogWithReloadButton(parent, refreshView, "Data has been changed in other terminal. Please reload this window and try again.");
 	}
-	public static void showMessageDialogWithReloadButton(Component parent, RefreshableView refreshView, String msg) {
+	public static void showMessageDialogWithReloadButton(Component parent, RefreshableView refreshView, String message) {
 		// @formatter:off
-		JOptionPane reloadPane = new JOptionPane(msg, 
+		JLabel label = new JLabel(message);
+		label.setFont(label.getFont().deriveFont(Font.PLAIN, fontSize));
+		JOptionPane reloadPane = new JOptionPane(label,
 				JOptionPane.ERROR_MESSAGE, 
 				JOptionPane.YES_NO_OPTION, null, 
 				new String[] { "RELOAD", POSConstants.CANCEL.toUpperCase() });

@@ -17,8 +17,7 @@
  */
 package com.floreantpos.ui.ticket;
 
-import java.awt.Color;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,8 +73,8 @@ public class TicketViewerTable extends JTable {
 	private void resizeTableColumns() {
 		setAutoResizeMode(AUTO_RESIZE_ALL_COLUMNS);
 		//setColumnWidth(1, PosUIManager.getSize(50));
-		setColumnWidth(0, PosUIManager.getSize(50));
-		setColumnWidth(2, PosUIManager.getSize(60));
+		setColumnWidth(0, PosUIManager.getSize(50)); // number of units
+		setColumnWidth(2, PosUIManager.getSize(90)); // price
 	}
 
 	private void setColumnWidth(int columnNumber, int width) {

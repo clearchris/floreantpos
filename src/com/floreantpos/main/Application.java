@@ -29,12 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 
 import org.apache.commons.lang.StringUtils;
@@ -105,7 +100,7 @@ public class Application {
 
 	private static Application instance;
 
-	private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy"); //$NON-NLS-1$
+	private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy h:mm a"); //$NON-NLS-1$
 	private static ImageIcon applicationIcon;
 
 	private boolean systemInitialized;
@@ -406,7 +401,10 @@ public class Application {
 	//	}
 
 	public void shutdownPOS() {
-		JOptionPane optionPane = new JOptionPane(Messages.getString("Application.1"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION, //$NON-NLS-1$
+		float fontSize = PosUIManager.getSize(24);
+		JLabel label = new JLabel(Messages.getString("Application.1"));
+		label.setFont(label.getFont().deriveFont(Font.PLAIN, fontSize));
+		JOptionPane optionPane = new JOptionPane(label, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION, //$NON-NLS-1$
 				Application.getApplicationIcon(),
 				new String[] { /*Messages.getString("Application.3"), */Messages.getString("Application.5"), Messages.getString("Application.6") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
