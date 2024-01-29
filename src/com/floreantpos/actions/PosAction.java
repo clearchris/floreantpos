@@ -42,7 +42,7 @@ public abstract class PosAction extends AbstractAction {
 	}
 
 	public PosAction(String name) {
-		super(name);
+		super("<html><center>"+name);
 	}
 
 	public PosAction(Icon icon) {
@@ -50,11 +50,11 @@ public abstract class PosAction extends AbstractAction {
 	}
 
 	public PosAction(String name, Icon icon) {
-		super(name, icon);
+		super("<html><center>"+name, icon);
 	}
 
 	public PosAction(String name, UserPermission requiredPermission) {
-		super(name);
+		super("<html><center>"+name);
 
 		this.requiredPermission = requiredPermission;
 	}

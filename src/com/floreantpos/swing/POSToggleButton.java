@@ -23,6 +23,7 @@ import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
 import com.floreantpos.POSConstants;
+import com.floreantpos.config.UIConfig;
 
 
 public class POSToggleButton extends JToggleButton {
@@ -38,9 +39,11 @@ public class POSToggleButton extends JToggleButton {
 	}
 
 	public POSToggleButton(String text) {
-		super(text);
+		super(text==null?"":"<html><center>"+text);
+		if(text != null) setActionCommand(text);
 
 //		setFont(UIConfig.getButtonFont());
+		setFont(UIConfig.largeFont);
 		setFocusPainted(false);
 		setFocusable(false);
 		//setMargin(margin);

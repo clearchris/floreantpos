@@ -17,9 +17,7 @@
  */
 package com.floreantpos.swing;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionListener;
 
 import javax.swing.Action;
@@ -32,6 +30,7 @@ import javax.swing.border.LineBorder;
 import com.floreantpos.POSConstants;
 import com.floreantpos.actions.ActionCommand;
 import com.floreantpos.actions.PosAction;
+import com.floreantpos.config.UIConfig;
 
 public class PosButton extends JButton {
 	public static Border border = new LineBorder(Color.BLACK, 1);
@@ -48,7 +47,10 @@ public class PosButton extends JButton {
 	}
 
 	public PosButton(String text) {
-		super(text);
+		super(text==null?"":"<html><center>"+text);
+		if(text != null) setActionCommand(text);
+		//TODO CHRIS increase font size, make consistent throughout application
+		setFont(UIConfig.largeFont);
 		//setFont(UIConfig.getButtonFont());
 
 		setFocusable(false);
@@ -58,8 +60,9 @@ public class PosButton extends JButton {
 
 	public PosButton(String text, Action action) {
 		super(action);
-		setText(text);
-
+		setText("<html><center>"+text);
+		//originalText = text;
+		setFont(UIConfig.largeFont);
 		//setFont(UIConfig.getButtonFont());
 
 		setFocusable(false);
@@ -71,7 +74,7 @@ public class PosButton extends JButton {
 		super(a);
 
 		//setFont(UIConfig.getButtonFont());
-
+		setFont(UIConfig.largeFont);
 		setFocusable(false);
 		setFocusPainted(false);
 		setMargin(margin);

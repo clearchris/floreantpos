@@ -71,27 +71,25 @@ public class QwertyKeyPad extends JXCollapsiblePane implements ActionListener, C
 		add(centerPanel, BorderLayout.CENTER);
 
 		JPanel eastPanel = new JPanel(new GridLayout(0, 1, 2, 2));
-		PosButton button = new PosButton();
+		PosButton button = new PosButton(Messages.getString("QwertyKeyPad.1"));
 		button.setText(Messages.getString("QwertyKeyPad.1")); //$NON-NLS-1$
 		button.setFocusable(false);
 		button.addActionListener(this);
 		eastPanel.add(button);
 
-		POSToggleButton toggleButton = new POSToggleButton();
+		POSToggleButton toggleButton = new POSToggleButton(Messages.getString("QwertyKeyPad.2"));
 		toggleButton.setText(Messages.getString("QwertyKeyPad.2")); //$NON-NLS-1$
 		toggleButton.setFocusable(false);
 		toggleButton.addChangeListener(this);
 		eastPanel.add(toggleButton);
 
-		button = new PosButton();
-		button.setText(com.floreantpos.POSConstants.CLEAR);
+		button = new PosButton(com.floreantpos.POSConstants.CLEAR);
 		button.setFocusable(false);
 		button.addActionListener(this);
 		eastPanel.add(button);
 
-		button = new PosButton();
+		button = new PosButton(com.floreantpos.POSConstants.CLEAR_ALL);
 		button.setFocusable(false);
-		button.setText(com.floreantpos.POSConstants.CLEAR_ALL);
 		button.addActionListener(this);
 		eastPanel.add(button);
 
@@ -103,8 +101,7 @@ public class QwertyKeyPad extends JXCollapsiblePane implements ActionListener, C
 		TransparentPanel panel = new TransparentPanel(new GridLayout(0, s1.length, 2, 2));
 		for (int i = 0; i < buttonText.length; i++) {
 			String s = buttonText[i];
-			PosButton button = new PosButton();
-			button.setText(s);
+			PosButton button = new PosButton(s);
 			button.setMinimumSize(size);
 			button.addActionListener(this);
 			button.setFont(buttonFont);
@@ -158,12 +155,14 @@ public class QwertyKeyPad extends JXCollapsiblePane implements ActionListener, C
 
 		if (b.isSelected()) {
 			for (PosButton button : buttons) {
-				button.setText(button.getText().toUpperCase());
+				button.setText(button.getActionCommand().toUpperCase());
+				button.setActionCommand(button.getText());
 			}
 		}
 		else {
 			for (PosButton button : buttons) {
-				button.setText(button.getText().toLowerCase());
+				button.setText(button.getActionCommand().toLowerCase());
+				button.setActionCommand(button.getText());
 			}
 		}
 	}
