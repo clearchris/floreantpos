@@ -166,7 +166,7 @@ public class OrderController implements OrderListener, CategorySelectionListener
 		// dialog.open();
 		// }
 		// else {
-		RootView.getInstance().showDefaultView();
+		//RootView.getInstance().showDefaultView();
 		// }
 	}
 
