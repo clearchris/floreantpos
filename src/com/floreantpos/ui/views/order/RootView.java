@@ -86,14 +86,18 @@ public class RootView extends com.floreantpos.swing.TransparentPanel {
 	}
 
 	public void showView(String viewName) {
-		if (LoginView.VIEW_NAME.equals(viewName)) {
+		if (LoginView.VIEW_NAME.equals(viewName) || SettleTicketDialog.VIEW_NAME.equals(viewName)) {
 			headerPanel.setVisible(false);
+			contentPanel.setSize(getSize());
+			contentPanel.revalidate();
 		}
 		else {
 			headerPanel.setVisible(true);
 		}
 
 		currentViewName = viewName;
+		getCurrentView().getViewComponent().revalidate();
+		getCurrentView().getViewComponent().doLayout();
 		cards.show(contentPanel, viewName);
 
 		headerPanel.updateHomeView(!homeView.getViewName().equals(currentViewName));
@@ -150,6 +154,8 @@ public class RootView extends com.floreantpos.swing.TransparentPanel {
 	}
 
 	public SettleTicketDialog getPaymentView() {
+		if(paymentView==null)
+			return paymentView = new SettleTicketDialog();
 		return paymentView;
 	}
 

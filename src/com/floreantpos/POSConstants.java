@@ -318,6 +318,7 @@ public class POSConstants {
 	public static final String TABLES = Messages.getString("PosMessage.215"); //$NON-NLS-1$
 	//public static final String SWITCHBOARD = Messages.getString("PosMessage.216"); //$NON-NLS-1$
 	public static final String ORDERS = Messages.getString("POSConstants.2"); //$NON-NLS-1$
+	public static final String SETTLE_TICKET = "Settle Ticket";
 	public static final String FOOD_GROUP = Messages.getString("PosMessage.217"); //$NON-NLS-1$
 	public static final String NUMBER_OF_GUESTS = Messages.getString("PosMessage.218"); //$NON-NLS-1$
 	public static final String PERFORMING_AUTO_DRAWER_PULL = Messages.getString("PosMessage.219"); //$NON-NLS-1$
@@ -491,6 +492,7 @@ public class POSConstants {
 	public static final String RECEIPT_REPORT_PAIDAMOUNT_LABEL = Messages.getString("RECEIPT_REPORT_PAIDAMOUNT_LABEL"); //$NON-NLS-1$
 	public static final String RECEIPT_REPORT_DUEAMOUNT_LABEL = Messages.getString("RECEIPT_REPORT_DUEAMOUNT_LABEL"); //$NON-NLS-1$
 	public static final String RECEIPT_REPORT_CHANGEAMOUNT_LABEL = Messages.getString("RECEIPT_REPORT_CHANGEAMOUNT_LABEL"); //$NON-NLS-1$
+	public static final String RECEIPT_REPORT_REFUNDAMOUNT_LABEL = Messages.getString("RECEIPT_REPORT_REFUNDAMOUNT_LABEL"); //$NON-NLS-1$
 	public static final String PIN = "PIN";
 	public static final String FACE_VALUE = "Face Value";
 	public static final String CURRENT_BALANCE = "Current Balance";

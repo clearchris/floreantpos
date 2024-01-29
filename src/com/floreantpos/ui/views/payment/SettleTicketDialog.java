@@ -17,8 +17,7 @@
  */
 package com.floreantpos.ui.views.payment;
 
-import java.awt.BorderLayout;
-import java.awt.Font;
+import java.awt.*;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +29,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import com.floreantpos.ui.views.order.RootView;
+import com.floreantpos.ui.views.order.ViewPanel;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -46,7 +47,6 @@ import com.floreantpos.swing.PosScrollPane;
 import com.floreantpos.swing.PosUIManager;
 import com.floreantpos.ui.RefreshableView;
 import com.floreantpos.ui.dialog.NumberSelectionDialog2;
-import com.floreantpos.ui.dialog.POSDialog;
 import com.floreantpos.ui.dialog.POSMessageDialog;
 import com.floreantpos.ui.ticket.TicketViewerTable;
 import com.floreantpos.ui.ticket.TicketViewerTableChangeListener;
@@ -58,13 +58,17 @@ import com.floreantpos.util.POSUtil;
 
 import net.miginfocom.swing.MigLayout;
 
-//TODO: REVISE CODE
-public class SettleTicketDialog extends POSDialog implements PaymentListener, TicketViewerTableChangeListener, RefreshableView {
+//TODO: CHRIS REFACTOR TO VIEW
+public class SettleTicketDialog extends ViewPanel implements PaymentListener, TicketViewerTableChangeListener, RefreshableView {
 	public static final String LOYALTY_DISCOUNT_PERCENTAGE = "loyalty_discount_percentage"; //$NON-NLS-1$
 	public static final String LOYALTY_POINT = "loyalty_point"; //$NON-NLS-1$
 	public static final String LOYALTY_COUPON = "loyalty_coupon"; //$NON-NLS-1$
 	public static final String LOYALTY_DISCOUNT = "loyalty_discount"; //$NON-NLS-1$
 	public static final String LOYALTY_ID = "loyalty_id"; //$NON-NLS-1$
+
+	public final static String VIEW_NAME = com.floreantpos.POSConstants.SETTLE_TICKET;
+
+	private static SettleTicketDialog instance;
 
 	private PaymentView paymentView;
 	private TicketViewerTable ticketViewerTable;
@@ -77,21 +81,23 @@ public class SettleTicketDialog extends POSDialog implements PaymentListener, Ti
 	private JTextField tfTotal;
 	private JTextField tfGratuity;
 	private SettleTicketProcessor ticketProcessor = null;
+	private boolean canceled = false;
 
-	public SettleTicketDialog(Ticket ticket) {
-		this(ticket, Application.getCurrentUser());
+	public SettleTicketDialog() {
+		super();
 	}
 
-	public SettleTicketDialog(Ticket ticket, User currentUser) {
-		super();
+	public void setTicket(Ticket ticket){
+		canceled = false;
+		User currentUser = Application.getCurrentUser();
 		this.ticket = ticket;
 		ticketProcessor = new SettleTicketProcessor(currentUser, this);
 		if (ticket.getOrderType().isConsolidateItemsInReceipt()) {
 			ticket.consolidateTicketItems();
 		}
-
-		setTitle(Messages.getString("SettleTicketDialog.6")); //$NON-NLS-1$
-		getContentPane().setLayout(new BorderLayout());
+		this.ticketProcessor.addPaymentListener(this);
+		setOpaque(false);
+		setLayout(new java.awt.BorderLayout(2, 1));
 
 		JPanel centerPanel = new JPanel(new BorderLayout(5, 5));
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 0));
@@ -106,16 +112,26 @@ public class SettleTicketDialog extends POSDialog implements PaymentListener, Ti
 		paymentView = new PaymentView(ticketProcessor, this);
 		paymentView.setBorder(BorderFactory.createEmptyBorder(20, 5, 20, 20));
 
-		getContentPane().add(centerPanel, BorderLayout.CENTER);
-		getContentPane().add(paymentView, BorderLayout.EAST);
+		Component[] componentList = getComponents();
+		for(Component c : componentList){
+			remove(c);
+		}
 
-		this.ticketProcessor.addPaymentListener(this);
+		add(centerPanel, BorderLayout.CENTER);
+		add(paymentView, BorderLayout.EAST);
 
 		paymentView.setTicket(ticket);
 		ticketProcessor.setTicket(ticket);
 		paymentView.updateView();
 		paymentView.setDefaultFocus();
 		updateView();
+		revalidate();
+		repaint();
+	}
+
+	@Override
+	public String getViewName() {
+		return VIEW_NAME;
 	}
 
 	public void updateView() {
@@ -145,6 +161,12 @@ public class SettleTicketDialog extends POSDialog implements PaymentListener, Ti
 			tfGratuity.setText("0.00"); //$NON-NLS-1$
 		}
 		tfTotal.setText(NumberUtil.formatNumber(ticket.getTotalAmount()));
+	}
+
+	public synchronized static SettleTicketDialog getInstance() {
+		if (instance == null)
+			instance = new SettleTicketDialog();
+		return instance;
 	}
 
 	private JPanel createTicketInfoPanel() {
@@ -271,45 +293,53 @@ public class SettleTicketDialog extends POSDialog implements PaymentListener, Ti
 	private JPanel createTotalViewerPanel() {
 
 		JLabel lblSubtotal = new javax.swing.JLabel();
+		lblSubtotal.setFont(lblSubtotal.getFont().deriveFont(Font.PLAIN, PosUIManager.getFontSize(16)));
 		lblSubtotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 		lblSubtotal.setText(com.floreantpos.POSConstants.SUBTOTAL + ":" + " " + CurrencyUtil.getCurrencySymbol()); //$NON-NLS-1$ //$NON-NLS-2$
 
 		tfSubtotal = new javax.swing.JTextField(10);
+		tfSubtotal.setFont(tfSubtotal.getFont().deriveFont(Font.PLAIN, PosUIManager.getFontSize(16)));
 		tfSubtotal.setHorizontalAlignment(SwingConstants.TRAILING);
 		tfSubtotal.setEditable(false);
 
 		JLabel lblDiscount = new javax.swing.JLabel();
+		lblDiscount.setFont(lblDiscount.getFont().deriveFont(Font.PLAIN, PosUIManager.getFontSize(16)));
 		lblDiscount.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 		lblDiscount.setText(Messages.getString("TicketView.9") + " " + CurrencyUtil.getCurrencySymbol()); //$NON-NLS-1$ //$NON-NLS-2$
 
 		tfDiscount = new javax.swing.JTextField(10);
-		// tfDiscount.setFont(tfDiscount.getFont().deriveFont(Font.PLAIN, 16));
+		tfDiscount.setFont(tfDiscount.getFont().deriveFont(Font.PLAIN, PosUIManager.getFontSize(16)));
 		tfDiscount.setHorizontalAlignment(SwingConstants.TRAILING);
 		tfDiscount.setEditable(false);
 		tfDiscount.setText(ticket.getDiscountAmount().toString());
 
 		JLabel lblDeliveryCharge = new javax.swing.JLabel();
+		lblDeliveryCharge.setFont(lblDeliveryCharge.getFont().deriveFont(Font.PLAIN, PosUIManager.getFontSize(16)));
 		lblDeliveryCharge.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 		lblDeliveryCharge.setText("Delivery Charge:" + " " + CurrencyUtil.getCurrencySymbol()); //$NON-NLS-1$ //$NON-NLS-2$
 
 		tfDeliveryCharge = new javax.swing.JTextField(10);
+		tfDeliveryCharge.setFont(tfDeliveryCharge.getFont().deriveFont(Font.PLAIN, PosUIManager.getFontSize(16)));
 		tfDeliveryCharge.setHorizontalAlignment(SwingConstants.TRAILING);
 		tfDeliveryCharge.setEditable(false);
 
 		JLabel lblTax = new javax.swing.JLabel();
+		lblTax.setFont(lblTax.getFont().deriveFont(Font.PLAIN, PosUIManager.getFontSize(16)));
 		lblTax.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 		lblTax.setText(com.floreantpos.POSConstants.TAX + ":" + " " + CurrencyUtil.getCurrencySymbol()); //$NON-NLS-1$ //$NON-NLS-2$
 
 		tfTax = new javax.swing.JTextField(10);
-		// tfTax.setFont(tfTax.getFont().deriveFont(Font.PLAIN, 16));
+		tfTax.setFont(tfTax.getFont().deriveFont(Font.PLAIN, PosUIManager.getFontSize(16)));
 		tfTax.setEditable(false);
 		tfTax.setHorizontalAlignment(SwingConstants.TRAILING);
 
 		JLabel lblGratuity = new javax.swing.JLabel();
+		lblGratuity.setFont(lblGratuity.getFont().deriveFont(Font.PLAIN, PosUIManager.getFontSize(16)));
 		lblGratuity.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 		lblGratuity.setText(Messages.getString("SettleTicketDialog.5") + ":" + " " + CurrencyUtil.getCurrencySymbol()); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 
 		tfGratuity = new javax.swing.JTextField(10);
+		tfGratuity.setFont(tfGratuity.getFont().deriveFont(Font.PLAIN, PosUIManager.getFontSize(16)));
 		tfGratuity.setEditable(false);
 		tfGratuity.setHorizontalAlignment(SwingConstants.TRAILING);
 
@@ -343,32 +373,22 @@ public class SettleTicketDialog extends POSDialog implements PaymentListener, Ti
 		return ticketAmountPanel;
 	}
 
-	@Override
-	public void open() {
-		super.open();
-	}
-
 	public Ticket getTicket() {
 		return ticket;
-	}
-
-	public void setTicket(Ticket ticket) {
-		this.ticket = ticket;
-		ticketProcessor.setTicket(ticket);
-		paymentView.setTicket(ticket);
-		paymentView.updateView();
 	}
 
 	@Override
 	public void paymentCanceled() {
 		setCanceled(true);
-		dispose();
+		OrderView.getInstance().setCurrentTicket(ticket);
+		RootView.getInstance().showView(OrderView.VIEW_NAME);
+		OrderView.getInstance().getTicketView().getTxtSearchItem().requestFocus();
 	}
 
 	@Override
 	public void paymentDone() {
 		setCanceled(false);
-		dispose();
+		RootView.getInstance().showDefaultView();
 	}
 
 	@Override
@@ -420,8 +440,6 @@ public class SettleTicketDialog extends POSDialog implements PaymentListener, Ti
 		int option2 = POSMessageDialog.showYesNoQuestionDialog(this, "This will void Pre-Authorized amount in Tab", "Warning", "Void", "Cancel");
 		if (option2 != JOptionPane.YES_OPTION) {
 			POSMessageDialog.showMessage("Payment canceled");
-			setCanceled(true);
-			dispose();
 			return;
 		}
 		ticketProcessor.doVoidBartab(bartabTransaction);
@@ -479,5 +497,13 @@ public class SettleTicketDialog extends POSDialog implements PaymentListener, Ti
 		} finally {
 			TicketDAO.getInstance().closeSession(session);
 		}
+	}
+
+	public boolean isCanceled() {
+		return canceled;
+	}
+
+	public void setCanceled(boolean canceled) {
+		this.canceled = canceled;
 	}
 }
