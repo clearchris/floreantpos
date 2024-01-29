@@ -18,6 +18,7 @@
 package com.floreantpos.ui.dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -94,10 +95,9 @@ public abstract class OkCancelOptionDialog extends POSDialog {
 
 		buttonPanel.setLayout(new FlowLayout());
 
-		Dimension btnSize = PosUIManager.getSize(80, 50);
-
-		btnOk.setPreferredSize(btnSize);
 		btnOk.setText(com.floreantpos.POSConstants.OK.toUpperCase());
+		btnOk.setBackground(Color.green);
+		setButtonSize(btnOk, 50);
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				doOk();
@@ -106,8 +106,9 @@ public abstract class OkCancelOptionDialog extends POSDialog {
 
 		buttonPanel.add(btnOk);
 
-		btnCancel.setPreferredSize(btnSize);
 		btnCancel.setText(POSConstants.CANCEL.toUpperCase());
+		btnCancel.setBackground(Color.red);
+		setButtonSize(btnCancel, 50);
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				doCancel();
@@ -142,4 +143,12 @@ public abstract class OkCancelOptionDialog extends POSDialog {
 		setCanceled(true);
 		dispose();
 	}
+
+	//TODO CHRIS:  This should be in PosButton class.
+	private void setButtonSize(PosButton posButton, int height){
+		Dimension dimension = posButton.getPreferredSize();
+		posButton.setPreferredSize(PosUIManager.getSize(
+				dimension.getWidth()>80?(int)dimension.getWidth():80, height));
+	}
+
 }
