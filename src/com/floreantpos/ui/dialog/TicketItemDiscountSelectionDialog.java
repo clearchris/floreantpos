@@ -35,10 +35,7 @@ import javax.swing.BorderFactory;
 
 import com.floreantpos.POSConstants;
 import com.floreantpos.PosException;
-import com.floreantpos.model.Discount;
-import com.floreantpos.model.MenuItem;
-import com.floreantpos.model.Ticket;
-import com.floreantpos.model.TicketItem;
+import com.floreantpos.model.*;
 import com.floreantpos.model.dao.MenuItemDAO;
 import com.floreantpos.swing.POSToggleButton;
 import com.floreantpos.swing.PosScrollPane;
@@ -58,11 +55,12 @@ public class TicketItemDiscountSelectionDialog extends OkCancelOptionDialog {
 
 	private List<TicketItem> addedTicketItems = new ArrayList<TicketItem>();
 
-	public TicketItemDiscountSelectionDialog(Ticket ticket, Discount discount) {
+	public TicketItemDiscountSelectionDialog(Ticket ticket, Discount discount, List<TicketItem> addedTicketItems) {
 		super(POSUtil.getFocusedWindow(), POSConstants.SELECT_ITEMS);
 		this.ticket = ticket;
 		this.discount = discount;
 		initComponent();
+		setSelectedTicketItems(addedTicketItems);
 		rendererTicketItems();
 	}
 
@@ -95,6 +93,14 @@ public class TicketItemDiscountSelectionDialog extends OkCancelOptionDialog {
 						TicketItemButton ticketItemButton = new TicketItemButton(ticketItem);
 						ticketItemButton.setPreferredSize(size);
 						buttonsPanel.add(ticketItemButton);
+						List<TicketItemDiscount> listTicketItemDiscount = ticketItem.getDiscounts();
+						if (listTicketItemDiscount!=null && !listTicketItemDiscount.isEmpty())
+							for (TicketItemDiscount ticketItemDiscount : listTicketItemDiscount){
+								if (!ticketItemDiscount.getDiscountId().equals(discount.getId())) ticketItemButton.setEnabled(false);
+							}
+						if (addedTicketItems != null)
+							if (addedTicketItems.contains(ticketItem))
+								ticketItemButton.setSelected(true);
 					}
 				}
 			}
@@ -108,16 +114,11 @@ public class TicketItemDiscountSelectionDialog extends OkCancelOptionDialog {
 
 	@Override
 	public void doOk() {
-		if (addedTicketItems.isEmpty()) {
-			POSMessageDialog.showMessage("Please select one or more item.");
-			return;
-		}
 		setCanceled(false);
 		dispose();
 	}
 
 	public void doCancel() {
-		addedTicketItems.clear();
 		setCanceled(true);
 		dispose();
 	}
@@ -126,18 +127,24 @@ public class TicketItemDiscountSelectionDialog extends OkCancelOptionDialog {
 		return addedTicketItems;
 	}
 
+	public void setSelectedTicketItems(List<TicketItem> addedTicketItems) {
+		if(addedTicketItems!=null)
+			this.addedTicketItems = addedTicketItems;
+	}
+
 	private class TicketItemButton extends POSToggleButton implements ActionListener {
 		TicketItem ticketItem;
 
 		TicketItemButton(TicketItem ticketItem) {
 			this.ticketItem = ticketItem;
-			setText("<html><body><center>" + ticketItem.getName() + "</center></body></html>"); //$NON-NLS-1$ //$NON-NLS-2$ 
+			setText("<html><body><center>" + ticketItem.getName() + " (" + ticketItem.getItemCount() + ")</center></body></html>"); //$NON-NLS-1$ //$NON-NLS-2$
 			addActionListener(this);
 		}
 
 		public void actionPerformed(ActionEvent e) {
 			if (isSelected()) {
-				addedTicketItems.add(ticketItem);
+				if (addedTicketItems.contains((ticketItem))) return;
+				else addedTicketItems.add(ticketItem);
 			}
 			else {
 				addedTicketItems.remove(ticketItem);

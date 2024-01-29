@@ -970,6 +970,14 @@ public class TicketItem extends BaseTicketItem implements ITicketItem {
 		return super.getDiscounts();
 	}
 
+	@Override
+	public void addTodiscounts (com.floreantpos.model.TicketItemDiscount ticketItemDiscount) {
+		if (getDiscounts()!=null)
+			for (TicketItemDiscount existingDiscount : getDiscounts())
+				if (existingDiscount.getDiscountId().equals(ticketItemDiscount.getDiscountId())) return;
+		super.addTodiscounts(ticketItemDiscount);
+	}
+
 	public String getMenuItemId() {
 		if (menuItemId == null) {
 			return getItemCode();

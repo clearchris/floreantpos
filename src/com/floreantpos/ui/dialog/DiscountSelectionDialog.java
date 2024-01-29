@@ -27,14 +27,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -43,6 +41,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import com.floreantpos.swing.*;
 import org.apache.commons.collections.CollectionUtils;
 
 import com.floreantpos.Messages;
@@ -55,11 +54,6 @@ import com.floreantpos.model.TicketDiscount;
 import com.floreantpos.model.TicketItem;
 import com.floreantpos.model.TicketItemDiscount;
 import com.floreantpos.model.dao.DiscountDAO;
-import com.floreantpos.swing.POSToggleButton;
-import com.floreantpos.swing.PosButton;
-import com.floreantpos.swing.PosScrollPane;
-import com.floreantpos.swing.PosUIManager;
-import com.floreantpos.swing.ScrollableFlowPanel;
 import com.floreantpos.util.POSUtil;
 
 /**
@@ -247,6 +241,7 @@ public class DiscountSelectionDialog extends OkCancelOptionDialog implements Act
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		updateDiscounts();
 		rendererDiscounts();
 	}
 
@@ -286,6 +281,7 @@ public class DiscountSelectionDialog extends OkCancelOptionDialog implements Act
 				DiscountButton ticketDiscountButton = buttonMap.get(ticketItemDiscount.getDiscountId());
 				if (ticketDiscountButton != null) {
 					ticketDiscountButton.setSelected(true);
+					ticketDiscountButton.addDiscountedTicketItem(ticketItem);
 				}
 			}
 		}
@@ -296,39 +292,7 @@ public class DiscountSelectionDialog extends OkCancelOptionDialog implements Act
 
 	@Override
 	public void doOk() {
-		List<TicketDiscount> couponAndDiscounts = ticket.getDiscounts();
-		if (couponAndDiscounts == null)
-			couponAndDiscounts = new ArrayList<TicketDiscount>();
-		if (!CollectionUtils.isEqualCollection(couponAndDiscounts, addedTicketDiscounts.values())) {
-			couponAndDiscounts.clear();
-
-			for (TicketDiscount ticketDiscount : addedTicketDiscounts.values()) {
-				ticket.addTodiscounts(ticketDiscount);
-			}
-		}
-
-		for (Iterator iterator = ticket.getTicketItems().iterator(); iterator.hasNext();) {
-			TicketItem ticketItem = (TicketItem) iterator.next();
-			if (ticketItem.getDiscounts() == null) {
-				continue;
-			}
-			for (Iterator iterator2 = ticketItem.getDiscounts().iterator(); iterator2.hasNext();) {
-				TicketItemDiscount ticketItemDiscount = (TicketItemDiscount) iterator2.next();
-				if (clearTicketItemDiscounts.contains((Integer) ticketItemDiscount.getDiscountId())) {
-					iterator2.remove();
-				}
-
-			}
-		}
-
-		for (TicketItem ticketItem : ticket.getTicketItems()) {
-			for (DiscountButton discountButton : buttonMap.values()) {
-				if (discountButton.ticketItems.contains(ticketItem)) {
-					ticketItem.getDiscounts().add(MenuItem.convertToTicketItemDiscount(discountButton.discount, ticketItem));
-				}
-			}
-		}
-
+		updateDiscounts();
 		setCanceled(false);
 		dispose();
 	}
@@ -338,6 +302,33 @@ public class DiscountSelectionDialog extends OkCancelOptionDialog implements Act
 		buttonMap.clear();
 		setCanceled(true);
 		dispose();
+	}
+
+	private void updateDiscounts() {
+		List<TicketDiscount> ticketDiscounts = ticket.getDiscounts();
+		if (ticketDiscounts == null)
+			ticketDiscounts = new ArrayList<TicketDiscount>();
+		if (!CollectionUtils.isEqualCollection(ticketDiscounts, addedTicketDiscounts.values())) {
+			ticketDiscounts.clear();
+
+			for (TicketDiscount ticketDiscount : addedTicketDiscounts.values()) {
+				ticket.addTodiscounts(ticketDiscount);
+			}
+		}
+
+		for (TicketItem ticketItem : ticket.getTicketItems()) {
+			if (ticketItem.getDiscounts() == null) {
+				continue;
+			}
+			ticketItem.getDiscounts().clear();
+
+			for (DiscountButton discountButton : buttonMap.values()) {
+				if (discountButton.ticketItems.contains(ticketItem)) {
+					TicketItemDiscount ticketItemDiscount = MenuItem.convertToTicketItemDiscount(discountButton.discount, ticketItem);
+					ticketItem.addTodiscounts(ticketItemDiscount);
+				}
+			}
+		}
 	}
 
 	private double getModifiedValue(Discount discount) {
@@ -367,6 +358,11 @@ public class DiscountSelectionDialog extends OkCancelOptionDialog implements Act
 			addActionListener(this);
 		}
 
+		public void addDiscountedTicketItem(TicketItem ticketItem){
+			if(ticketItems==null) ticketItems = new ArrayList<>();
+			if(!ticketItems.contains(ticketItem)) ticketItems.add(ticketItem);
+		}
+
 		public void actionPerformed(ActionEvent e) {
 			if (isSelected()) {
 				if (discount.getQualificationType() == Discount.QUALIFICATION_TYPE_ITEM) {
@@ -385,7 +381,7 @@ public class DiscountSelectionDialog extends OkCancelOptionDialog implements Act
 			}
 			else {
 				if (discount.getQualificationType() == Discount.QUALIFICATION_TYPE_ITEM) {
-					clearTicketItemDiscounts.add(discount.getId());
+					applyDiscountToTicketItems(this);
 				}
 				else {
 					addedTicketDiscounts.remove(discount.getId());
@@ -395,14 +391,21 @@ public class DiscountSelectionDialog extends OkCancelOptionDialog implements Act
 	}
 
 	private void applyDiscountToTicketItems(DiscountButton discountButton) {
-		TicketItemDiscountSelectionDialog dialog = new TicketItemDiscountSelectionDialog(ticket, discountButton.discount);
-		dialog.open();
-		if (!dialog.isCanceled()) {
-			discountButton.ticketItems = dialog.getSelectedTicketItems();
-			discountButton.setSelected(true);
-		}
-		else {
-			discountButton.setSelected(false);
+		try {
+			//TODO CHRIS setGlassPaneVisible(true);
+			TicketItemDiscountSelectionDialog dialog =
+					new TicketItemDiscountSelectionDialog(ticket, discountButton.discount, new ArrayList<TicketItem>(discountButton.ticketItems));
+			dialog.open();
+			if (!dialog.isCanceled()) {
+				// remove all first?
+				discountButton.ticketItems = dialog.getSelectedTicketItems();
+			}
+			if (discountButton.ticketItems != null && !discountButton.ticketItems.isEmpty())
+				discountButton.setSelected(true);
+			else discountButton.setSelected(false);
+			updateDiscounts();
+		} finally {
+			//TODO CHRIS setGlassPaneVisible(false);
 		}
 	}
 }

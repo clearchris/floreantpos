@@ -974,5 +974,11 @@ public class Ticket extends BaseTicket {
 	public String getUniqueId() {
 		return (isSourceOnline() || isSourceWoocomerce()) ? getGlobalId() : String.valueOf(getId());
 	}
+	@Override
+	public void addTodiscounts (com.floreantpos.model.TicketDiscount ticketDiscount) {
+		if(getDiscounts()!=null && getDiscounts().contains(ticketDiscount)) return;
+		super.addTodiscounts(ticketDiscount);
+	}
+
 
 }
