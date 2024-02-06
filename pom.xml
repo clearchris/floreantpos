@@ -99,7 +99,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.10.0</version>
 				<configuration>
-                                        <forceJavacCompilerUse>true</forceJavacCompilerUse>
+					<forceJavacCompilerUse>true</forceJavacCompilerUse>
 					<source>1.8</source>
 					<target>1.8</target>
 					<encoding>UTF-8</encoding>
@@ -345,7 +345,7 @@
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
-			<version>4.0.1</version>
+			<version>5.6.0</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>itext</artifactId>
@@ -576,8 +576,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.13.3</version>
+			<artifactId>jackson-core</artifactId>
+			<version>2.16.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -592,6 +592,10 @@
 	</dependencies>
 
 	<repositories>
+		<repository>
+			<id>jaspersoft-third-party</id>
+        	<url>https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/</url>
+		</repository>
 		<repository>
 			<id>orodev.net</id>
 			<url>http://orodev.net:8081/nexus/content/groups/public/</url>

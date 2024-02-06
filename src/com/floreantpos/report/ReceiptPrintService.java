@@ -126,7 +126,7 @@ public class ReceiptPrintService {
 		printQuitely(jasperPrint);
 	}
 
-	public static JasperPrint createJasperPrint(JasperReport report, Map<String, String> properties, JRDataSource dataSource) throws Exception {
+	public static JasperPrint createJasperPrint(JasperReport report, Map properties, JRDataSource dataSource) throws Exception {
 		JasperPrint jasperPrint = JasperFillManager.fillReport(report, properties, dataSource);
 		return jasperPrint;
 	}

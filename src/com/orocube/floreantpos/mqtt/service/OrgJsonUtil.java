@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -108,7 +110,8 @@ public class OrgJsonUtil {
 	public static ObjectMapper getObjectMapper() {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		mapper.setVisibility(VisibilityChecker.Std.defaultInstance());
+		// setVisibility change untested, lib bumped version because of iReports, the json serialiazation code seems to be used by woocommerce and other mqtt service
+		mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
 		mapper.setDateFormat(new SimpleDateFormat("MMM dd, yyyy HH:mm:ss.SSSZ")); //$NON-NLS-1$
 		mapper.registerModule(
 				new SimpleModule().addDeserializer(String.class, new ForceStringDeserializer()).addDeserializer(Integer.class, new ForceIntDeserializer()));
