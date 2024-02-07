@@ -141,6 +141,7 @@ public class Application {
 		try {
 			PlasticXPLookAndFeel.setPlasticTheme(new ExperienceBlue());
 			UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
+			UIManager.put("ScrollBar.width", 40);
 			initializeFont();
 		} catch (Exception ignored) {
 		}
