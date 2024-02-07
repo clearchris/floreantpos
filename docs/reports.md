@@ -22,7 +22,7 @@ Download both and extract to two directories.
 cd iReport-5.6.0/bin
 ./ireport --jdkhome <your jdk dir here>
 
-Open the .jrxml file within iRD.  Edit until content.  Compile the file to .jasper form, it will be saved to the current directory.  If you update only the .jrxml file within the templates directory, the changes will not be reflected in floreant, you must also save the .jasper file.
+Open the .jrxml file within iRD.  Edit until content.  Compile the file to .jasper form, it will be saved to the current directory.  If you update only the .jrxml file within the templates directory, the changes will not be reflected in floreant, you must also compile to the .jasper file within iReports.
 	
 To try out your new reports run "mvn clean" or delete the contents of two directories and build again.
 	
