@@ -26,6 +26,8 @@ import com.floreantpos.swing.PosUIManager;
 import com.floreantpos.ui.dialog.DrawerPullReportDialog;
 import com.floreantpos.ui.dialog.POSMessageDialog;
 
+import java.awt.*;
+
 public class DrawerPullAction extends PosAction {
 
 	public DrawerPullAction() {
@@ -39,7 +41,8 @@ public class DrawerPullAction extends PosAction {
 			DrawerPullReportDialog dialog = new DrawerPullReportDialog();
 			dialog.setTitle(com.floreantpos.POSConstants.DRAWER_PULL_BUTTON_TEXT);
 			dialog.initialize();
-			dialog.setSize(PosUIManager.getSize(470, 500));
+			Dimension dimension = Application.getPosWindow().getSize();
+			dialog.setSize(PosUIManager.getSize(470), (int)dimension.getHeight()-100);
 			//dialog.setResizable(false);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.open();

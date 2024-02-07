@@ -615,7 +615,8 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 
 			OrderInfoView view = new OrderInfoView(ticketsToShow);
 			OrderInfoDialog dialog = new OrderInfoDialog(view, ticketList);
-			dialog.setSize(PosUIManager.getSize(400), PosUIManager.getSize(600));
+			Dimension dimension = Application.getPosWindow().getSize();
+			dialog.setSize(PosUIManager.getSize(400), (int)dimension.getHeight()-100);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setLocationRelativeTo(Application.getPosWindow());
 			dialog.setVisible(true);
