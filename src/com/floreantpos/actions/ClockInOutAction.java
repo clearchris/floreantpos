@@ -17,8 +17,7 @@
  */
 package com.floreantpos.actions;
 
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
@@ -74,6 +73,7 @@ public class ClockInOutAction extends PosAction {
 		dialog.setTitle(Messages.getString("ClockInOutAction.4")); //$NON-NLS-1$
 
 		PosButton btnClockIn = new PosButton(Messages.getString("ClockInOutAction.5")); //$NON-NLS-1$
+		btnClockIn.setBackground(Color.GREEN);
 		btnClockIn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -83,6 +83,7 @@ public class ClockInOutAction extends PosAction {
 		});
 
 		PosButton btnClockOut = new PosButton(Messages.getString("ClockInOutAction.6")); //$NON-NLS-1$
+		btnClockOut.setBackground(Color.RED);
 		btnClockOut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
