@@ -173,16 +173,6 @@ public class GiftCertificateExplorer extends TransparentPanel {
 			return columnNames[column];
 		}
 
-		// controls table sorting algo
-		@Override
-		public Class<?> getColumnClass(int columnIndex) {
-			if (columnNames.length <= columnIndex || columnIndex < 0 || tableModel.getRows() == null || tableModel.getRowCount() < 1) {
-				return Object.class;
-			}
-			if (getValueAt(0, columnIndex) == null ) return Object.class;
-			return getValueAt(0, columnIndex).getClass();
-		}
-
 		public Object getValueAt(int rowIndex, int columnIndex) {
 
 			GiftCertificate giftCertificate = (GiftCertificate) rows.get(rowIndex);

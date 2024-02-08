@@ -70,7 +70,18 @@ public abstract class ListTableModel<E> extends AbstractTableModel {
 	public String getColumnName(int column) {
 		return columnNames[column];
 	}
-	
+
+	// controls table sorting
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+		if (columnNames == null || columnNames.length <= columnIndex || columnIndex < 0 ||
+				rows == null || rows.isEmpty() ) {
+			return Object.class;
+		}
+		if (getValueAt(0, columnIndex) == null ) return Object.class;
+		return getValueAt(0, columnIndex).getClass();
+	}
+
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		return false;
