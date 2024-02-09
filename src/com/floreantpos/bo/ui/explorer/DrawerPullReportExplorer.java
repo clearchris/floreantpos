@@ -91,10 +91,10 @@ public class DrawerPullReportExplorer extends TransparentPanel {
 		JPanel topPanel = new JPanel(new MigLayout());
 
 		topPanel.add(new JLabel(com.floreantpos.POSConstants.FROM), "grow"); //$NON-NLS-1$
-		topPanel.add(fromDatePicker, "wrap"); //$NON-NLS-1$
+		topPanel.add(fromDatePicker, "gapright 10"); //$NON-NLS-1$
 		topPanel.add(new JLabel(com.floreantpos.POSConstants.TO), "grow"); //$NON-NLS-1$
-		topPanel.add(toDatePicker, "wrap"); //$NON-NLS-1$
-		topPanel.add(btnGo, "skip 1, al right"); //$NON-NLS-1$
+		topPanel.add(toDatePicker); //$NON-NLS-1$
+		topPanel.add(btnGo, "width 60!"); //$NON-NLS-1$
 		add(topPanel, BorderLayout.NORTH);
 
 		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
