@@ -24,7 +24,6 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 import com.floreantpos.bo.ui.BOMessageDialog;
 import com.floreantpos.model.Customer;
@@ -37,11 +36,12 @@ import com.floreantpos.ui.dialog.ConfirmDeleteDialog;
 import com.floreantpos.ui.forms.CustomerForm;
 import com.floreantpos.util.POSUtil;
 import com.floreantpos.util.PosGuiUtil;
+import org.jdesktop.swingx.JXTable;
 
 public class CustomerExplorer extends TransparentPanel {
 	private List<Customer> customerList;
 
-	private JTable table;
+	private JXTable table;
 
 	private BeanTableModel<Customer> tableModel;
 
@@ -67,7 +67,7 @@ public class CustomerExplorer extends TransparentPanel {
 		tableModel.addColumn("NOTE", "note"); //$NON-NLS-1$ //$NON-NLS-2$
 		tableModel.addRows(customerList);
 
-		table = new JTable(tableModel);
+		table = new JXTable(tableModel);
 		//table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.setDefaultRenderer(Object.class, new PosTableRenderer());
 		PosGuiUtil.setColumnWidth(table, 0, 40);
