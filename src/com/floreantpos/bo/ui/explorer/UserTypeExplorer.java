@@ -22,9 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 import com.floreantpos.bo.ui.BOMessageDialog;
@@ -51,6 +49,7 @@ public class UserTypeExplorer extends TransparentPanel {
 
 		tableModel = new UserTypeExplorerTableModel();
 		table = new JTable(tableModel);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setRowHeight(PosUIManager.getSize(20));
 		table.setDefaultRenderer(Object.class, new PosTableRenderer());
 

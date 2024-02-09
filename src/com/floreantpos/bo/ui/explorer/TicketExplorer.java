@@ -25,12 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -70,6 +65,7 @@ public class TicketExplorer extends TransparentPanel {
 		table.setModel(tableModel);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.setRowHeight(25);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		addTopPanel();
 		add(new JScrollPane(table), BorderLayout.CENTER);

@@ -22,8 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 
 import com.floreantpos.bo.ui.BOMessageDialog;
 import com.floreantpos.model.Customer;
@@ -68,6 +67,7 @@ public class CustomerExplorer extends TransparentPanel {
 		tableModel.addRows(customerList);
 
 		table = new JXTable(tableModel);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		//table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.setDefaultRenderer(Object.class, new PosTableRenderer());
 		PosGuiUtil.setColumnWidth(table, 0, 40);

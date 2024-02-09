@@ -24,8 +24,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 import org.jdesktop.swingx.JXTable;
@@ -53,6 +52,7 @@ public class ModifierGroupExplorer extends TransparentPanel {
 
 		tableModel = new ModifierGroupExplorerTableModel();
 		table = new JXTable(tableModel);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDefaultRenderer(Object.class, new PosTableRenderer());
 
 		setLayout(new BorderLayout(5, 5));

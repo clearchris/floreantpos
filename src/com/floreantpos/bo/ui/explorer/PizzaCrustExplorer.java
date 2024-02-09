@@ -22,8 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 
 import org.jdesktop.swingx.JXTable;
 
@@ -58,6 +57,7 @@ public class PizzaCrustExplorer extends TransparentPanel {
 		pizzaCrustList = PizzaCrustDAO.getInstance().findAll();
 		tableModel.addRows(pizzaCrustList);
 		table = new JXTable(tableModel);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDefaultRenderer(Object.class, new PosTableRenderer());
 
 		setLayout(new BorderLayout(5, 5));

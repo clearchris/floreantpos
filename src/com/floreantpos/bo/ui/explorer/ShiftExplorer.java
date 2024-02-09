@@ -22,9 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 
 import com.floreantpos.bo.ui.BOMessageDialog;
 import com.floreantpos.model.Shift;
@@ -48,6 +46,7 @@ public class ShiftExplorer extends TransparentPanel {
 		
 		tableModel = new ShiftTableModel(shifts);
 		table = new JTable(tableModel);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDefaultRenderer(Object.class, new PosTableRenderer());
 		
 		setLayout(new BorderLayout(5,5));

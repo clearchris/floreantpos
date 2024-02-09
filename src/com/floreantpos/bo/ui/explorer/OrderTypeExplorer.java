@@ -23,9 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 
 import org.jdesktop.swingx.JXTable;
 
@@ -60,6 +58,7 @@ public class OrderTypeExplorer extends TransparentPanel {
 		tableModel.addRows(OrderTypeDAO.getInstance().findAll());
 
 		table = new JXTable(tableModel);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDefaultRenderer(Object.class, new CustomCellRenderer());
 
 		table.addMouseListener(new MouseAdapter() {

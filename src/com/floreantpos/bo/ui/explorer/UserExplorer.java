@@ -22,9 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 
 import org.hibernate.exception.ConstraintViolationException;
 
@@ -50,6 +48,7 @@ public class UserExplorer extends TransparentPanel {
 
 		tableModel = new UserTableModel(users);
 		table = new JTable(tableModel);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDefaultRenderer(Object.class, new PosTableRenderer());
 
 		setLayout(new BorderLayout(5, 5));

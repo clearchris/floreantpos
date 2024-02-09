@@ -22,8 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 
 import org.jdesktop.swingx.JXTable;
 
@@ -57,6 +56,7 @@ public class CurrencyExplorer extends TransparentPanel {
 		tableModel.addRows(CurrencyDAO.getInstance().findAll());
 		table = new JXTable(tableModel);
 		table.setDefaultRenderer(Object.class, new PosTableRenderer());
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		setLayout(new BorderLayout(5, 5));
 		add(new JScrollPane(table));

@@ -22,10 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 import com.floreantpos.bo.ui.BOMessageDialog;
@@ -50,6 +47,7 @@ public class CookingInstructionExplorer extends TransparentPanel {
 		tableModel = new CookingInstructionTableModel();
 		table = new JTable(tableModel);
 		table.setDefaultRenderer(Object.class, new PosTableRenderer());
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		setLayout(new BorderLayout(5, 5));
 		add(new JScrollPane(table));

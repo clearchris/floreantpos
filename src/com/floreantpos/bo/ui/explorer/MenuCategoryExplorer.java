@@ -26,11 +26,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.jdesktop.swingx.JXTable;
@@ -69,6 +65,7 @@ public class MenuCategoryExplorer extends TransparentPanel {
 		tableModel.addRows(MenuCategoryDAO.getInstance().findAll());
 
 		table = new JXTable(tableModel);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDefaultRenderer(Object.class, new CustomCellRenderer());
 		table.getColumnModel().getColumn(7).setCellRenderer(new DefaultTableCellRenderer() {
 			@Override
