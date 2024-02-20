@@ -427,7 +427,7 @@ public class DrawerPullReportDialog extends POSDialog {
 
 	private void doPrintReport() {
 		try {
-			PosPrintService.printDrawerPullReport(drawerPullReport, terminal);
+			PosPrintService.printDrawerPullReport(drawerPullReport, terminal, false);
 		} catch (PosException exception) {
 			POSMessageDialog.showError(POSUtil.getFocusedWindow(), exception.getMessage());
 		} catch (Exception ex) {

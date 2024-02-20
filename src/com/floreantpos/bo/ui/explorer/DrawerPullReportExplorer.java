@@ -115,7 +115,7 @@ public class DrawerPullReportExplorer extends TransparentPanel {
 				DrawerPullExplorerTableModel model = (DrawerPullExplorerTableModel) table.getModel();
 				DrawerPullReport report = (DrawerPullReport) model.getRowData(selectedRow);
 
-				PosPrintService.printDrawerPullReport(report, report.getTerminal());
+				PosPrintService.printDrawerPullReport(report, report.getTerminal(), true);
 				}catch (PosException exception) {
 					POSMessageDialog.showError(POSUtil.getFocusedWindow(), exception.getMessage());
 				}

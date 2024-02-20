@@ -62,9 +62,15 @@ public class PosPrintService {
 			parameters.put("terminal", "Terminal # " + terminal.getId()); //$NON-NLS-1$ //$NON-NLS-2$
 			if (drawerPullReport.getAssignedUser() != null)
 				parameters.put("user", Messages.getString("PosPrintService.4") + drawerPullReport.getAssignedUser().getFullName()); //$NON-NLS-1$ //$NON-NLS-2$
-			parameters.put("date", new Date()); //$NON-NLS-1$
-			if (drawerClosed) parameters.put("reportName", Messages.getString("PosPrintService.6"));
-			else parameters.put("reportName", Messages.getString("PosPrintService.5"));
+
+			if (drawerClosed) {
+				parameters.put("reportName", Messages.getString("PosPrintService.6"));
+				parameters.put("date", drawerPullReport.getReportTime());
+			}
+			else {
+				parameters.put("reportName", Messages.getString("PosPrintService.5"));
+				parameters.put("date", new Date()); //$NON-NLS-1$
+			}
 
 			JasperReport subReportCurrencyBalance = ReportUtil.getReport("drawer-currency-balance"); //$NON-NLS-1$
 			JasperReport subReportVoid = ReportUtil.getReport("drawer-pull-void-report"); //$NON-NLS-1$
@@ -95,14 +101,14 @@ public class PosPrintService {
 		}
 		return null;
 	}
-	public static void printDrawerPullReport(DrawerPullReport drawerPullReport, Terminal terminal) {
+	public static void printDrawerPullReport(DrawerPullReport drawerPullReport, Terminal terminal, boolean drawerClosed) {
 
 		try {
 			String reportPrinter = Application.getPrinters().getReportPrinter();
 			if (reportPrinter == null || reportPrinter.isEmpty()) {
 				throw new PosException("No report printer is configured!");
 			}
-			JasperPrint jasperPrint = createDrawerPullReport(drawerPullReport, terminal, true);
+			JasperPrint jasperPrint = createDrawerPullReport(drawerPullReport, terminal, drawerClosed);
 
 			JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);

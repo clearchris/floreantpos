@@ -206,7 +206,7 @@ public class DrawerAssignmentAction extends PosAction {
 			}
 
 			try {
-				PosPrintService.printDrawerPullReport(report, terminal);
+				PosPrintService.printDrawerPullReport(report, terminal, true);
 			} catch (PosException exception) {
 				POSMessageDialog.showError(POSUtil.getFocusedWindow(), exception.getMessage());
 			}
