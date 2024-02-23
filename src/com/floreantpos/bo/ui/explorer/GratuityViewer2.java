@@ -50,6 +50,7 @@ import com.floreantpos.swing.TransparentPanel;
 import com.floreantpos.util.NumberUtil;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import org.jdesktop.swingx.JXTable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -64,7 +65,7 @@ public class GratuityViewer2 extends TransparentPanel implements ActionListener 
     private JLabel lblUserId;
     private JLabel lblUserName;
     private JLabel lblTotalGratuity;
-    private JTable tableGratuityViewer;
+    private JXTable tableGratuityViewer;
     private JButton btnPay;
     private JPanel contentPane;
 
@@ -138,7 +139,7 @@ public class GratuityViewer2 extends TransparentPanel implements ActionListener 
         contentPane.add(separator2, new GridConstraints(5, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JScrollPane scrollPane1 = new JScrollPane();
         contentPane.add(scrollPane1, new GridConstraints(6, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        tableGratuityViewer = new JTable();
+        tableGratuityViewer = new JXTable();
         scrollPane1.setViewportView(tableGratuityViewer);
         final JSeparator separator3 = new JSeparator();
         contentPane.add(separator3, new GridConstraints(7, 0, 1, 3, GridConstraints.ANCHOR_SOUTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));

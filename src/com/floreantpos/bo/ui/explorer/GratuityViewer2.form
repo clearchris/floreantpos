@@ -113,7 +113,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="2d34" class="javax.swing.JTable" binding="tableGratuityViewer">
+          <component id="2d34" class="javax.swing.JXTable" binding="tableGratuityViewer">
             <constraints/>
             <properties/>
           </component>
