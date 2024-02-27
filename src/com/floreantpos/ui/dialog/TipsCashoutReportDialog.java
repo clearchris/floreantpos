@@ -26,7 +26,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -40,6 +39,7 @@ import com.floreantpos.print.PosPrintService;
 import com.floreantpos.swing.PosButton;
 import com.floreantpos.util.NumberUtil;
 import com.floreantpos.util.POSUtil;
+import org.jdesktop.swingx.JXTable;
 
 public class TipsCashoutReportDialog extends POSDialog implements ActionListener {
 	private final TipsCashoutReport report;
@@ -71,7 +71,7 @@ public class TipsCashoutReportDialog extends POSDialog implements ActionListener
 		add(topPanel, BorderLayout.NORTH);
 
 		JPanel contentPanel = new JPanel(new MigLayout("fill"));
-		JTable table = new JTable(new TipsCashoutReportTableModel(report.getDatas()));
+		JXTable table = new JXTable(new TipsCashoutReportTableModel(report.getDatas()));
 		contentPanel.add(new JScrollPane(table));
 		add(contentPanel);
 
