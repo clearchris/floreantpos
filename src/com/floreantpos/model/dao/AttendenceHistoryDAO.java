@@ -157,7 +157,7 @@ public class AttendenceHistoryDAO extends BaseAttendenceHistoryDAO {
 			criteria.add(Restrictions.ge(AttendenceHistory.PROP_CLOCK_IN_TIME, from));
 			criteria.add(Restrictions.le(AttendenceHistory.PROP_CLOCK_OUT_TIME, to));
 			criteria.addOrder(Order.asc(AttendenceHistory.PROP_USER));
-                        criteria.addOrder(Order.asc(AttendenceHistory.PROP_CLOCK_IN_TIME));
+			criteria.addOrder(Order.asc(AttendenceHistory.PROP_CLOCK_IN_TIME));
 			List list2 = criteria.list();
 
 			for (Iterator iterator = list2.iterator(); iterator.hasNext();) {
@@ -246,4 +246,27 @@ public class AttendenceHistoryDAO extends BaseAttendenceHistoryDAO {
 			}
 		}
 	}
+
+	public List<AttendenceHistory> findClockedIn() {
+		Session session = null;
+
+		try {
+			session = getSession();
+			Criteria criteria = session.createCriteria(AttendenceHistory.class);
+			criteria.add(Restrictions.eq(AttendenceHistory.PROP_CLOCKED_OUT, false));
+			criteria.addOrder(Order.asc(AttendenceHistory.PROP_ID));
+
+			List list2 = criteria.list();
+
+			return list2;
+		} catch (Exception e) {
+			throw new PosException("Unable to find History", e); //$NON-NLS-1$
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+	}
+
+
 }

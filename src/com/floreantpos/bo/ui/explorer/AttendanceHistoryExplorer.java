@@ -22,7 +22,6 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -36,6 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
+import com.floreantpos.model.util.DateUtil;
 import net.miginfocom.swing.MigLayout;
 
 import org.jdesktop.swingx.JXDatePicker;
@@ -60,6 +60,7 @@ public class AttendanceHistoryExplorer extends TransparentPanel {
 	private JXDatePicker fromDatePicker = UiUtil.getCurrentMonthStart();
 	private JXDatePicker toDatePicker = UiUtil.getCurrentMonthEnd();
 	private JButton btnGo = new JButton(com.floreantpos.POSConstants.GO);
+	private JButton btnClockedIn = new JButton( Messages.getString("AttendanceHistoryExplorer.7") );
 	private JButton btnAdd = new JButton(Messages.getString("AttendanceHistoryExplorer.0")); //$NON-NLS-1$
 	private JButton btnEdit = new JButton(Messages.getString("AttendanceHistoryExplorer.1")); //$NON-NLS-1$
 	private JButton btnDelete = new JButton(Messages.getString("AttendanceHistoryExplorer.2")); //$NON-NLS-1$
@@ -69,7 +70,7 @@ public class AttendanceHistoryExplorer extends TransparentPanel {
 
 	public AttendanceHistoryExplorer() {
 		super(new BorderLayout());
-		add(new JScrollPane(table = new JXTable(new AttendenceHistoryTableModel(AttendenceHistoryDAO.getInstance().findAll()))));
+		add(new JScrollPane(table = new JXTable(new AttendenceHistoryTableModel(AttendenceHistoryDAO.getInstance().findClockedIn()))));
 		table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDefaultRenderer(Object.class, new PosTableRenderer());
 		JPanel topPanel = new JPanel(new MigLayout());
@@ -91,7 +92,8 @@ public class AttendanceHistoryExplorer extends TransparentPanel {
 		topPanel.add(toDatePicker); //$NON-NLS-1$
 		topPanel.add(new JLabel(POSConstants.USER + ":")); //$NON-NLS-1$
 		topPanel.add(cbUserType);
-		topPanel.add(btnGo, "skip 1, al right"); //$NON-NLS-1$
+		topPanel.add(btnGo); //$NON-NLS-1$
+		topPanel.add(btnClockedIn, "skip 1, al right"); //$NON-NLS-1$
 		add(topPanel, BorderLayout.NORTH);
 
 		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -129,6 +131,19 @@ public class AttendanceHistoryExplorer extends TransparentPanel {
 			}
 
 		});
+
+		btnClockedIn.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				try {
+					viewClockedIn();
+				} catch (Exception e1) {
+					BOMessageDialog.showError(AttendanceHistoryExplorer.this, POSConstants.ERROR_MESSAGE, e1);
+				}
+			}
+
+		});
+
 
 		btnEdit.addActionListener(new ActionListener() {
 
@@ -214,38 +229,14 @@ public class AttendanceHistoryExplorer extends TransparentPanel {
 
 	private void viewReport() {
 		try {
-			Date fromDate = fromDatePicker.getDate();
-			Date toDate = toDatePicker.getDate();
+			Date fromDate = DateUtil.startOfDay(fromDatePicker.getDate());
+			Date toDate = DateUtil.endOfDay(toDatePicker.getDate());
 
 			if (fromDate.after(toDate)) {
 				POSMessageDialog.showError(com.floreantpos.util.POSUtil.getFocusedWindow(),
 						com.floreantpos.POSConstants.FROM_DATE_CANNOT_BE_GREATER_THAN_TO_DATE_);
 				return;
 			}
-
-			Calendar calendar = Calendar.getInstance();
-			calendar.clear();
-
-			Calendar calendar2 = Calendar.getInstance();
-			calendar2.setTime(fromDate);
-
-			calendar.set(Calendar.YEAR, calendar2.get(Calendar.YEAR));
-			calendar.set(Calendar.MONTH, calendar2.get(Calendar.MONTH));
-			calendar.set(Calendar.DATE, calendar2.get(Calendar.DATE));
-			calendar.set(Calendar.HOUR, 0);
-			calendar.set(Calendar.MINUTE, 0);
-			calendar.set(Calendar.SECOND, 0);
-			fromDate = calendar.getTime();
-
-			calendar.clear();
-			calendar2.setTime(toDate);
-			calendar.set(Calendar.YEAR, calendar2.get(Calendar.YEAR));
-			calendar.set(Calendar.MONTH, calendar2.get(Calendar.MONTH));
-			calendar.set(Calendar.DATE, calendar2.get(Calendar.DATE));
-			calendar.set(Calendar.HOUR, 23);
-			calendar.set(Calendar.MINUTE, 59);
-			calendar.set(Calendar.SECOND, 59);
-			toDate = calendar.getTime();
 
 			User user = null;
 			if (!cbUserType.getSelectedItem().equals(POSConstants.ALL)) {
@@ -254,6 +245,17 @@ public class AttendanceHistoryExplorer extends TransparentPanel {
 
 			AttendenceHistoryDAO dao = new AttendenceHistoryDAO();
 			List<AttendenceHistory> historyList = dao.findHistory(fromDate, toDate, user);
+			AttendenceHistoryTableModel model = (AttendenceHistoryTableModel) table.getModel();
+			model.setRows(historyList);
+		} catch (Exception e) {
+			BOMessageDialog.showError(this, POSConstants.ERROR_MESSAGE, e);
+		}
+	}
+
+	private void viewClockedIn() {
+		try {
+			AttendenceHistoryDAO dao = new AttendenceHistoryDAO();
+			List<AttendenceHistory> historyList = dao.findClockedIn();
 			AttendenceHistoryTableModel model = (AttendenceHistoryTableModel) table.getModel();
 			model.setRows(historyList);
 		} catch (Exception e) {
