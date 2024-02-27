@@ -22,6 +22,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -451,6 +452,7 @@ public class TicketListView extends JPanel implements ITicketList {
 	}
 
 	private class TicketListTableModel extends PaginatedTableModel {
+		private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd MMM, yyyy h:mm");
 		public TicketListTableModel() {
 			super(new String[] { POSConstants.TICKET_LIST_COLUMN_ID, POSConstants.TICKET_LIST_COLUMN_TABLE, POSConstants.TICKET_LIST_COLUMN_SERVER,
 					POSConstants.TICKET_LIST_COLUMN_CREATE_DATE, POSConstants.TICKET_LIST_COLUMN_CUSTOMER, POSConstants.TICKET_LIST_COLUMN_DELIVERY_ADDRESS,
@@ -480,7 +482,7 @@ public class TicketListView extends JPanel implements ITicketList {
 					return owner.getFirstName();
 
 				case 3:
-					return ticket.getCreateDate();
+					return dateTimeFormatter.format(ticket.getCreateDate());
 
 				case 4:
 					String customerName = ticket.getProperty(Ticket.CUSTOMER_NAME);
