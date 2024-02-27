@@ -17,6 +17,7 @@
  */
 package com.floreantpos.actions;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -74,31 +75,31 @@ public abstract class PosAction extends AbstractAction {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent actionEvent) {
 		User user = Application.getCurrentUser();
 
 		if (requiredPermission == null) {
-			execute();
+			execute(actionEvent);
 			return;
 		}
 
 		if (!user.hasPermission(requiredPermission)) {
-			String password = PasswordEntryDialog.show(Application.getPosWindow(), Messages.getString("PosAction.0")); //$NON-NLS-1$
+			String password = PasswordEntryDialog.show((Component) actionEvent.getSource(), Messages.getString("PosAction.0")); //$NON-NLS-1$
 			if(StringUtils.isEmpty(password)) {
 				return;
 			}
 			
 			User user2 = UserDAO.getInstance().findUserBySecretKey(password);
 			if(user2 == null) {
-				POSMessageDialog.showError(Application.getPosWindow(), Messages.getString("PosAction.1")); //$NON-NLS-1$
+				POSMessageDialog.showError((Component) actionEvent.getSource(), Messages.getString("PosAction.1")); //$NON-NLS-1$
 			}
 			else {
 				setAuthorizedUser(user2);
 				if(!user2.hasPermission(requiredPermission)) {
-					POSMessageDialog.showError(Application.getPosWindow(), Messages.getString("PosAction.2")); //$NON-NLS-1$
+					POSMessageDialog.showError((Component) actionEvent.getSource(), Messages.getString("PosAction.2")); //$NON-NLS-1$
 				}
 				else {
-					execute();
+					execute(actionEvent);
 				}
 			}
 			
@@ -106,10 +107,18 @@ public abstract class PosAction extends AbstractAction {
 			return;
 		}
 		setAuthorizedUser(user);
-		execute();
+		execute(actionEvent);
 	}
 
 	public abstract void execute();
+
+	/* 	If an action is called from anywhere but the root window,
+		it's best to have the ActionEvent available so the parent can be set.
+	 */
+	// TODO: Test execute(ActionEvent) and consider moving all actions to this signature
+	public void execute(ActionEvent actionEvent){
+		execute();
+	}
 
 	public boolean isVisible() {
 		return visible;

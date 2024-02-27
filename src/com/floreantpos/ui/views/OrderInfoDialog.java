@@ -17,7 +17,7 @@
  */
 package com.floreantpos.ui.views;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -66,6 +66,13 @@ public class OrderInfoDialog extends POSDialog implements RefreshableView {
 		this.view = view;
 		setTitle(Messages.getString("OrderInfoDialog.0")); //$NON-NLS-1$
 
+		createUI(iTicketList);
+	}
+
+	public OrderInfoDialog(Frame owner, OrderInfoView view, ITicketList iTicketList){
+		super(owner, true);
+		this.view = view;
+		setTitle(Messages.getString("OrderInfoDialog.0")); //$NON-NLS-1$
 		createUI(iTicketList);
 	}
 

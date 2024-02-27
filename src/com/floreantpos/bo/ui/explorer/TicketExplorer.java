@@ -27,6 +27,8 @@ import java.util.List;
 
 import javax.swing.*;
 
+import com.floreantpos.actions.PosAction;
+import com.floreantpos.actions.ShowTicketAction;
 import net.miginfocom.swing.MigLayout;
 
 import org.jdesktop.swingx.JXDatePicker;
@@ -50,7 +52,7 @@ public class TicketExplorer extends TransparentPanel {
 	private JXDatePicker fromDatePicker = UiUtil.getCurrentMonthStart();
 	private JXDatePicker toDatePicker = UiUtil.getCurrentMonthEnd();
 	private JButton btnGo = new JButton(com.floreantpos.POSConstants.GO);
-
+	private JButton btnToday = new JButton(POSConstants.TODAYS_REPORT.toUpperCase());
 	private JXTable table;
 	private TicketExplorerTableModel tableModel;
 	private List<Ticket> tickets;
@@ -89,11 +91,24 @@ public class TicketExplorer extends TransparentPanel {
 
 		});
 
+		btnToday.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				try {
+					refresh(new Date(), new Date());
+				} catch (Exception e1) {
+					BOMessageDialog.showError(TicketExplorer.this, POSConstants.ERROR_MESSAGE, e1);
+				}
+			}
+		});
+
 		topPanel.add(new JLabel(com.floreantpos.POSConstants.FROM), "grow"); //$NON-NLS-1$
 		topPanel.add(fromDatePicker, "gapright 10"); //$NON-NLS-1$
 		topPanel.add(new JLabel(com.floreantpos.POSConstants.TO), "grow"); //$NON-NLS-1$
 		topPanel.add(toDatePicker);
 		topPanel.add(btnGo, "width 60!"); //$NON-NLS-1$
+		topPanel.add(btnToday);
+
 		add(topPanel, BorderLayout.NORTH);
 	}
 
@@ -152,9 +167,30 @@ public class TicketExplorer extends TransparentPanel {
 
 		});
 
+		JButton btnView = new JButton("View");
+		btnView.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					PosAction action;
+					int index = table.getSelectedRow();
+					if (index < 0) {
+
+					} else {
+						index = table.convertRowIndexToModel(index);
+						Ticket ticket = tableModel.getRows().get(index);
+						action = new ShowTicketAction(ticket.getId());
+						action.actionPerformed(e);
+					}
+				} catch (Exception x) {
+					BOMessageDialog.showError(POSConstants.ERROR_MESSAGE, x);
+				}
+			}
+		});
+
 		TransparentPanel panel = new TransparentPanel();
 		panel.add(btnVoid);
 		panel.add(btnVoidAll);
+		panel.add(btnView);
 		add(panel, BorderLayout.SOUTH);
 	}
 
@@ -223,13 +259,17 @@ public class TicketExplorer extends TransparentPanel {
 	}
 
 	private void refresh() {
-		if (tableModel.getRows() != null) {
-			tableModel.getRows().clear();
-		}
 
 		Date fromDate = fromDatePicker.getDate();
 		Date toDate = toDatePicker.getDate();
+		refresh(fromDate, toDate);
+	}
 
+	private void refresh(Date fromDate, Date toDate){
+
+		if (tableModel.getRows() != null) {
+			tableModel.getRows().clear();
+		}
 		fromDate = DateUtil.startOfDay(fromDate);
 		toDate = DateUtil.endOfDay(toDate);
 
