@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TipsReport" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="b221b9f8-a660-45d6-8239-53aa18c18549">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="3.0000000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="43"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="restaurantName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="addressLine1" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="addressLine2" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="addressLine3" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="phone" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="reportDate" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="fromDate" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="toDate" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="reportHeader" class="net.sf.jasperreports.engine.JasperReport"/>
+	<field name="ticketId" class="java.lang.Integer"/>
+	<field name="date" class="java.lang.String"/>
+	<field name="tip" class="java.lang.Double"/>
+	<field name="userID" class="java.lang.Integer"/>
+	<field name="userName" class="java.lang.String"/>
+	<variable name="totalTip" class="java.lang.Double" resetType="Group" resetGroup="userID" calculation="Sum">
+		<variableExpression><![CDATA[$F{tip}]]></variableExpression>
+	</variable>
+	<group name="userID">
+		<groupExpression><![CDATA[$F{userID}]]></groupExpression>
+		<groupHeader>
+			<band height="44" splitType="Stretch">
+				<staticText>
+					<reportElement key="staticText-2" mode="Opaque" x="309" y="5" width="73" height="15" backcolor="#CCCCCC" uuid="16eb877d-6ea6-443e-931c-6ff13ce18005"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="false" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[User ID:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement key="staticText-3" mode="Opaque" x="3" y="5" width="0" height="15" backcolor="#CCCCCC" uuid="e4fd1b09-9057-4239-879b-f53bd6c2da54"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[User Name:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement key="staticText-5" x="0" y="26" width="150" height="15" uuid="eac590a6-5847-4bf7-9e72-873316fdd22f"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Ticket ID]]></text>
+				</staticText>
+				<staticText>
+					<reportElement key="staticText-6" x="155" y="26" width="135" height="15" uuid="a43a8dd8-d047-436f-98c9-08a35c27b172"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement key="staticText-7" x="295" y="26" width="70" height="15" uuid="6f348275-8db0-430c-a7b6-dfcd73240310"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Amount]]></text>
+				</staticText>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" isPrintRepeatedValues="false" mode="Opaque" x="382" y="5" width="153" height="15" printWhenGroupChanges="userID" backcolor="#CCCCCC" uuid="29736b98-da40-4ddc-8948-932aca881283"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{userID}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" isPrintRepeatedValues="false" mode="Opaque" x="46" y="5" width="263" height="15" printWhenGroupChanges="userID" backcolor="#CCCCCC" uuid="3e30c6d5-0de1-437a-a3f8-43701968fc18"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{userName}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement key="line-1" x="0" y="41" width="535" height="1" forecolor="#CCCCCC" uuid="5cc32cbc-099f-44d0-9321-fc0e69075697"/>
+				</line>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="250" y="5" width="0" height="0" forecolor="#000000" uuid="77fcad11-df93-42b5-a0d8-6332088f14ca"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{userID}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement key="staticText-2" mode="Opaque" x="0" y="5" width="46" height="15" backcolor="#CCCCCC" uuid="3e473b54-a87a-4998-ae86-ba4cf291e020"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="false" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Name:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="26" splitType="Stretch">
+				<textField pattern="0.00" isBlankWhenNull="false">
+					<reportElement key="textField" x="295" y="5" width="70" height="15" isRemoveLineWhenBlank="true" printWhenGroupChanges="userID" uuid="7a478c2e-5628-4a6f-b812-678035fcdd6b"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{totalTip}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement key="staticText-13" x="255" y="5" width="35" height="15" printWhenGroupChanges="userID" uuid="7bc36c6a-7609-4fab-a59c-7f13a7c8a1c4"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Total:]]></text>
+				</staticText>
+				<line>
+					<reportElement key="line-2" x="250" y="2" width="285" height="1" forecolor="#666666" uuid="4a434210-5fad-4616-9611-d8dfc8877a6c"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="95" splitType="Stretch">
+			<subreport isUsingCache="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="535" height="28" uuid="6d8c020d-245a-406f-8e61-3e429fd4a906"/>
+				<subreportParameter name="restaurantName">
+					<subreportParameterExpression><![CDATA[$P{restaurantName}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="addressLine1">
+					<subreportParameterExpression><![CDATA[$P{addressLine1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="addressLine2">
+					<subreportParameterExpression><![CDATA[$P{addressLine2}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="addressLine3">
+					<subreportParameterExpression><![CDATA[$P{addressLine3}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="phone">
+					<subreportParameterExpression><![CDATA[$P{phone}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA[$P{reportHeader}]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement key="staticText-1" positionType="Float" x="1" y="29" width="533" height="25" uuid="f7db7f79-7f2b-4435-a92e-05f2e18d91cf"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Tips Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-10" positionType="Float" x="0" y="74" width="85" height="15" uuid="1fc54390-a5f1-4583-bc1d-c035598ce37e"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[From:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-11" positionType="Float" x="195" y="74" width="85" height="15" uuid="a1c6411c-97e8-4831-b40a-fb341c4d53fb"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[To:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-12" positionType="Float" x="0" y="59" width="85" height="15" uuid="7bc423bf-c5de-4c8a-88ba-e091003b893d"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Report date:]]></text>
+			</staticText>
+			<textField pattern="yyyy-MMM-dd" isBlankWhenNull="true">
+				<reportElement key="textField" positionType="Float" x="85" y="59" width="110" height="15" uuid="39e2a0da-5368-4ec6-a7d5-e80b32f3c474"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$P{reportDate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy-MMM-dd" isBlankWhenNull="true">
+				<reportElement key="textField" positionType="Float" x="85" y="74" width="110" height="15" uuid="994c0f62-b610-4464-8c4e-1d06d46a45f7"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fromDate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy-MMM-dd" isBlankWhenNull="true">
+				<reportElement key="textField" positionType="Float" x="280" y="74" width="110" height="15" uuid="86d91c20-90fb-4815-86bf-6f1419166312"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{toDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="0" y="0" width="150" height="15" uuid="5ed725a1-dff0-42cb-88a9-514562539f6e"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{ticketId}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement key="textField" x="155" y="0" width="164" height="15" isPrintWhenDetailOverflows="true" uuid="26691178-3a07-450d-857b-083bc459a116"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.00" isBlankWhenNull="true">
+				<reportElement key="textField" x="315" y="0" width="50" height="15" uuid="ca9522ab-b991-4460-9b7c-bcad9bbd1ed7"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{tip}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="90" y="14" width="350" height="16" uuid="421f042d-9902-4bc9-9473-38eb1c866320"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Generated by Floreant POS (www.floreant.org)]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement key="textField-10" x="440" y="14" width="93" height="16" uuid="9f0ec388-f749-453b-b0a6-a228e0a01305"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page: " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

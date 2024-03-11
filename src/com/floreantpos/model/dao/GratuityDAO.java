@@ -21,20 +21,17 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.floreantpos.model.*;
+import com.floreantpos.report.TipsReportData;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 
 import com.floreantpos.Messages;
 import com.floreantpos.PosException;
-import com.floreantpos.model.Gratuity;
-import com.floreantpos.model.Terminal;
-import com.floreantpos.model.Ticket;
-import com.floreantpos.model.TipsCashoutReport;
-import com.floreantpos.model.TipsCashoutReportData;
-import com.floreantpos.model.User;
 import com.floreantpos.model.util.DateUtil;
+import org.hibernate.transform.Transformers;
 
 public class GratuityDAO extends BaseGratuityDAO {
 
@@ -144,5 +141,50 @@ public class GratuityDAO extends BaseGratuityDAO {
 			closeSession(session);
 		}
 
+	}
+
+	public List<TipsReportData> createTipsReport(Date fromDate, Date toDate) {
+		return createTipsReport(fromDate, toDate, null);
+	}
+
+	//TODO:  CHRIS I have to think about this.  I do like pushing the bulk of the
+	// work to the database.  But I don't like that these  classes are created
+	// for both explorers and reports, when they could be shared and  reduce code.
+	public List<TipsReportData> createTipsReport(Date fromDate, Date toDate, User user) {
+		Session session = null;
+
+		try {
+			session = getSession();
+
+			fromDate = DateUtil.startOfDay(fromDate);
+			toDate = DateUtil.endOfDay(toDate);
+
+			Criteria criteria = session.createCriteria(Ticket.class);
+			if (user != null)
+				criteria.add(Restrictions.eq(Ticket.PROP_OWNER, user));
+			criteria.add(Restrictions.ge(Ticket.PROP_CREATE_DATE, fromDate));
+			criteria.add(Restrictions.le(Ticket.PROP_CREATE_DATE, toDate));
+			criteria.createAlias(Ticket.PROP_GRATUITY, "g");
+			criteria.add(Restrictions.isNotNull("g." + Gratuity.PROP_ID));
+			criteria.add(Restrictions.ne("g." + Gratuity.PROP_REFUNDED, Boolean.TRUE));
+			criteria.addOrder(Order.asc(Ticket.PROP_OWNER));
+			criteria.addOrder(Order.asc(Ticket.PROP_CREATE_DATE));
+
+			ProjectionList projections = Projections.projectionList();
+			projections.add(Projections.property(Ticket.PROP_ID), "ticketId");
+			projections.add(Projections.property(Ticket.PROP_CREATE_DATE), "date");
+			projections.add(Projections.property(Ticket.PROP_OWNER), "user");
+			projections.add(Projections.property(Ticket.PROP_GRATUITY), "gratuity");
+
+			criteria.setProjection(projections);
+			criteria.setResultTransformer(Transformers.aliasToBean(TipsReportData.class));
+
+			return criteria.list();
+
+		} catch (Exception e) {
+			throw new PosException(Messages.getString("GratuityDAO.4"), e);
+		} finally {
+			closeSession(session);
+		}
 	}
 }
