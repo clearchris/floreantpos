@@ -43,7 +43,7 @@ public class UiUtil {
 		return datePicker;
 	}
 	
-	public static JXDatePicker getDeafultDate() {
+	public static JXDatePicker getDefaultDate() {
 
 		JXDatePicker datePicker = new JXDatePicker();
 		

@@ -78,7 +78,7 @@ public class AttendanceReportView extends TransparentPanel {
 	private void createUI() {
 
 		fromDatePicker = UiUtil.getCurrentMonthStart();
-		toDatePicker = UiUtil.getDeafultDate();
+		toDatePicker = UiUtil.getDefaultDate();
 		toDatePicker.setDate(new Date());
 		
 		btnGo = new JButton();

@@ -72,8 +72,6 @@ public class TicketExplorer extends TransparentPanel {
 		addTopPanel();
 		add(new JScrollPane(table), BorderLayout.CENTER);
 		addButtonPanel();
-
-		refresh();
 	}
 
 	private void addTopPanel() {
