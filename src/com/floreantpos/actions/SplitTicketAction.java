@@ -1,10 +1,12 @@
 package com.floreantpos.actions;
 
+import com.floreantpos.Messages;
 import com.floreantpos.POSConstants;
 import com.floreantpos.PosLog;
 import com.floreantpos.main.Application;
 import com.floreantpos.model.Ticket;
 import com.floreantpos.model.dao.TicketDAO;
+import com.floreantpos.ui.dialog.POSMessageDialog;
 import com.floreantpos.ui.views.SplitTicketDialog;
 
 public class SplitTicketAction extends PosAction {
@@ -34,6 +36,10 @@ public class SplitTicketAction extends PosAction {
 		}
 
 		Ticket ticketToEdit = TicketDAO.getInstance().loadFullTicket(ticket.getId());
+		if(ticketToEdit.isClosed()) {
+			POSMessageDialog.showError(Application.getPosWindow(), Messages.getString("SplitTicketAction.0"));
+			return;
+		}
 
 		try {
 			SplitTicketDialog dialog = new SplitTicketDialog();
@@ -44,5 +50,4 @@ public class SplitTicketAction extends PosAction {
 			PosLog.error(getClass(), e);
 		}
 	}
-
 }

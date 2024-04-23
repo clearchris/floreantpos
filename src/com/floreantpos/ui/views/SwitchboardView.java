@@ -44,6 +44,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import com.floreantpos.actions.*;
 import org.apache.commons.logging.LogFactory;
 import org.jdesktop.swingx.JXCollapsiblePane;
 
@@ -52,11 +53,6 @@ import com.floreantpos.Messages;
 import com.floreantpos.POSConstants;
 import com.floreantpos.PosException;
 import com.floreantpos.PosLog;
-import com.floreantpos.actions.GroupSettleTicketAction;
-import com.floreantpos.actions.NewBarTabAction;
-import com.floreantpos.actions.RefundAction;
-import com.floreantpos.actions.SettleTicketAction;
-import com.floreantpos.actions.VoidTicketAction;
 import com.floreantpos.config.TerminalConfig;
 import com.floreantpos.extension.ExtensionManager;
 import com.floreantpos.extension.FloorLayoutPlugin;
@@ -641,9 +637,8 @@ public class SwitchboardView extends ViewPanel implements ActionListener, ITicke
 			// initialize the ticket.
 			Ticket ticket = TicketDAO.getInstance().loadFullTicket(selectedTicket.getId());
 
-			SplitTicketDialog dialog = new SplitTicketDialog();
-			dialog.setTicket(ticket);
-			dialog.open();
+			SplitTicketAction action = new SplitTicketAction(ticket);
+			action.execute();
 
 			updateView();
 		} catch (Exception e) {
