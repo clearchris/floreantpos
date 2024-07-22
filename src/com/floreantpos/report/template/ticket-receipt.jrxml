@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TicketReceiptReport" pageWidth="226" pageHeight="842" whenNoDataType="BlankPage" columnWidth="196" leftMargin="15" rightMargin="15" topMargin="5" bottomMargin="5" isFloatColumnFooter="true" isIgnorePagination="true">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TicketReceiptReport" pageWidth="226" pageHeight="855" whenNoDataType="BlankPage" columnWidth="196" leftMargin="15" rightMargin="15" topMargin="5" bottomMargin="5" isFloatColumnFooter="true" isIgnorePagination="true" uuid="04025e85-a8ba-4d8f-a228-3c9fbf2a0671">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.zoom" value="4.279675059165003"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="59"/>
+	<property name="ireport.y" value="890"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -74,7 +74,7 @@
 	<title>
 		<band height="170" splitType="Prevent">
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-2" x="-30" y="-227" width="595" height="25"/>
+				<reportElement key="textField-2" x="-30" y="-227" width="595" height="25" uuid="72be69f5-655a-4ee7-a6e1-b08d36d10b2d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -84,10 +84,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{headerLine1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{headerLine1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-3" x="-30" y="-202" width="595" height="20"/>
+				<reportElement key="textField-3" x="-30" y="-202" width="595" height="20" uuid="72bdfbf9-0958-438b-8f05-4843b83d595f"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -97,10 +97,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{headerLine2}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{headerLine2}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-4" x="-30" y="-182" width="595" height="20"/>
+				<reportElement key="textField-4" x="-30" y="-182" width="595" height="20" uuid="f15fc0f2-70ff-4986-965a-a932be5a8373"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -110,10 +110,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{headerLine3}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{headerLine3}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-5" x="-30" y="-162" width="595" height="20"/>
+				<reportElement key="textField-5" x="-30" y="-162" width="595" height="20" uuid="829843f8-07e1-4e88-be86-e17cb34fbba5"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -123,10 +123,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{headerLine4}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{headerLine4}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-6" x="-30" y="-142" width="595" height="20"/>
+				<reportElement key="textField-6" x="-30" y="-142" width="595" height="20" uuid="c5969e1c-7d2f-415a-bc18-f57421d994b7"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -136,10 +136,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{headerLine5}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{headerLine5}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-7" x="-30" y="-227" width="595" height="25"/>
+				<reportElement key="textField-7" x="-30" y="-227" width="595" height="25" uuid="2620826e-8239-40b4-b795-7d233537f130"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -149,10 +149,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{headerLine1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{headerLine1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-8" x="-30" y="-202" width="595" height="20"/>
+				<reportElement key="textField-8" x="-30" y="-202" width="595" height="20" uuid="24b98efb-9a60-4605-aa1d-1631cc0761bb"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -162,10 +162,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{headerLine2}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{headerLine2}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-9" x="-30" y="-182" width="595" height="20"/>
+				<reportElement key="textField-9" x="-30" y="-182" width="595" height="20" uuid="ae204a58-ba54-4ac8-8f90-b3d8f3e97dc7"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -175,10 +175,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{headerLine3}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{headerLine3}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-10" x="-30" y="-162" width="595" height="20"/>
+				<reportElement key="textField-10" x="-30" y="-162" width="595" height="20" uuid="51a1d959-9529-47a6-bdaf-d2e78ddc4d49"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -188,10 +188,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{headerLine4}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{headerLine4}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-11" x="-30" y="-142" width="595" height="20"/>
+				<reportElement key="textField-11" x="-30" y="-142" width="595" height="20" uuid="980fece6-81f7-497c-8146-fd0e38d13d67"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -201,10 +201,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{headerLine5}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{headerLine5}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField-12" x="0" y="0" width="196" height="18" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField-12" x="0" y="0" width="196" height="18" isRemoveLineWhenBlank="true" uuid="85f28c71-6768-45c3-b5ce-df680f0715b9"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -214,10 +214,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{headerLine1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{headerLine1}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField-13" x="0" y="18" width="196" height="14" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField-13" x="0" y="18" width="196" height="14" isRemoveLineWhenBlank="true" uuid="6c28ccee-a7de-4ce4-b609-c34f58342259"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -227,10 +227,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{headerLine2}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{headerLine2}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField-14" x="10" y="32" width="186" height="14" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField-14" x="10" y="32" width="186" height="14" isRemoveLineWhenBlank="true" uuid="a85c5e08-b3df-441f-9b31-1b73b36ee8c4"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -240,10 +240,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{headerLine3}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{headerLine3}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField-15" x="0" y="46" width="196" height="14" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField-15" x="0" y="46" width="196" height="14" isRemoveLineWhenBlank="true" uuid="57405c30-39ad-48b6-94f1-3b387ec346af"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -253,10 +253,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{headerLine4}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{headerLine4}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField-16" x="0" y="60" width="196" height="14" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField-16" x="0" y="60" width="196" height="14" isRemoveLineWhenBlank="true" uuid="8711cc21-e203-4ba6-9eed-7b4fa27f1ccf"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -266,10 +266,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{headerLine5}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{headerLine5}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField-16" x="0" y="82" width="196" height="14" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField-16" x="0" y="82" width="196" height="14" isRemoveLineWhenBlank="true" uuid="bcba6bf6-9340-4dc9-8861-efd803687b13"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -279,34 +279,34 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{receiptType}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{receiptType}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="0" y="105" width="196" height="12" isRemoveLineWhenBlank="true"/>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="105" width="196" height="12" isRemoveLineWhenBlank="true" uuid="ad5ac1db-f946-4871-8072-025da02a8c30"/>
 				<textElement textAlignment="Center" markup="html">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{reportDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{reportDate}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="0" y="132" width="196" height="15" isRemoveLineWhenBlank="true"/>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="132" width="196" height="15" isRemoveLineWhenBlank="true" uuid="9ba36df6-27c8-40d6-beaa-ef79eb4d16ca"/>
 				<textElement textAlignment="Left" markup="html">
 					<font fontName="Monospaced" size="12"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{ticketHeader}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{ticketHeader}]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement positionType="Float" x="0" y="147" width="196" height="20" isRemoveLineWhenBlank="true"/>
+				<reportElement positionType="Float" x="0" y="147" width="196" height="20" isRemoveLineWhenBlank="true" uuid="d9be6193-6712-41af-b2a1-27e03d5ec1df"/>
 				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false">
 					<jr:codeExpression><![CDATA[$P{barcode}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="0" y="117" width="196" height="15" isRemoveLineWhenBlank="true"/>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="117" width="196" height="15" isRemoveLineWhenBlank="true" uuid="1874a981-a35b-40d2-b4f1-4df19fb90692"/>
 				<textElement textAlignment="Center" markup="html">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{serverName}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{serverName}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -317,30 +317,30 @@
 		<band height="20" splitType="Prevent">
 			<printWhenExpression><![CDATA[Boolean.valueOf(String.valueOf($V{PAGE_NUMBER}).equals("1"))]]></printWhenExpression>
 			<textField>
-				<reportElement key="staticText-2" positionType="Float" x="0" y="5" width="124" height="15"/>
+				<reportElement key="staticText-2" positionType="Float" x="0" y="5" width="124" height="15" uuid="f8f0e8bc-a969-49f1-8df0-711acc1d5345"/>
 				<textElement verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9" isBold="false" isUnderline="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{itemText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{itemText}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-1" positionType="Float" x="124" y="5" width="22" height="15"/>
+				<reportElement key="staticText-1" positionType="Float" x="124" y="5" width="22" height="15" uuid="4525fef9-04aa-48ee-93a2-8734df99c19f"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9" isBold="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{quantityText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{quantityText}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-4" positionType="Float" x="146" y="5" width="50" height="15">
+				<reportElement key="staticText-4" positionType="Float" x="146" y="5" width="50" height="15" uuid="ef51610e-ce02-47c6-bc3d-9e05539149b0">
 					<printWhenExpression><![CDATA[$P{showSubtotal}==true]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9" isBold="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{subtotalHeaderText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{subtotalHeaderText}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement key="line-1" positionType="Float" x="0" y="19" width="198" height="1"/>
+				<reportElement key="line-1" positionType="Float" x="0" y="19" width="196" height="1" uuid="e340fa62-d8e4-4837-839d-536ec2492468"/>
 				<graphicElement>
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</graphicElement>
@@ -348,9 +348,9 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="13" splitType="Prevent">
+		<band height="29" splitType="Prevent">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField" x="0" y="0" width="124" height="12" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField" x="0" y="0" width="124" height="12" isRemoveLineWhenBlank="true" uuid="e58c2327-de53-484c-9374-83950ec9894c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -360,10 +360,11 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{itemName}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[( $F{itemName}.startsWith("   * ZZZZ")?
+    "   * "+$F{itemName}.substring(9) : $F{itemName} )]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField" x="146" y="0" width="50" height="12" isRemoveLineWhenBlank="true">
+				<reportElement key="textField" x="146" y="0" width="50" height="12" isRemoveLineWhenBlank="true" uuid="48b62bdc-773a-43f9-9cb8-fd19f71d511a">
 					<printWhenExpression><![CDATA[$P{showSubtotal}==true]]></printWhenExpression>
 				</reportElement>
 				<box>
@@ -375,10 +376,10 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{itemSubtotal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{itemSubtotal}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField" x="124" y="0" width="22" height="12"/>
+				<reportElement key="textField" x="124" y="0" width="22" height="12" uuid="35e41c44-09d0-4b69-a5a9-fd7f0aaeb6c3"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -388,8 +389,16 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{itemQty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{itemQty}]]></textFieldExpression>
 			</textField>
+			<componentElement>
+				<reportElement x="0" y="12" width="196" height="17" isRemoveLineWhenBlank="true" uuid="66f5e95c-034a-4908-8ec5-6a55d73c9f7c">
+					<printWhenExpression><![CDATA[$F{itemName}.startsWith( "   * ZZZZ" )]]></printWhenExpression>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$F{itemName}.substring(9)]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
 		</band>
 	</detail>
 	<columnFooter>
@@ -402,32 +411,32 @@
 		<band splitType="Prevent"/>
 	</lastPageFooter>
 	<summary>
-		<band height="331" splitType="Prevent">
+		<band height="344" splitType="Prevent">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="staticText-8" x="32" y="58" width="114" height="13">
+				<reportElement key="staticText-8" x="32" y="58" width="114" height="13" uuid="adbf604f-7992-4c9f-a0a8-a458361d9d5b">
 					<printWhenExpression><![CDATA[$P{tipAmount}!=null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{tipsText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{tipsText}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="staticText-5" x="32" y="6" width="114" height="13"/>
+				<reportElement key="staticText-5" x="32" y="6" width="114" height="13" uuid="ed7296dd-8554-4d38-bdd7-96a31b4f5965"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{subTotalText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{subTotalText}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="staticText-7" x="32" y="84" width="114" height="13" isRemoveLineWhenBlank="true"/>
+				<reportElement key="staticText-7" x="32" y="84" width="114" height="13" isRemoveLineWhenBlank="true" uuid="148eda93-aee4-4950-81c2-4fdafff2914d"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{totalAmountText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{totalAmountText}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement key="line-2" x="0" y="3" width="198" height="1">
+				<reportElement key="line-2" x="0" y="4" width="196" height="1" uuid="b64d41fb-656b-45d3-83dc-0f36a5d706d9">
 					<printWhenExpression><![CDATA[$P{showFooter}==true]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
@@ -435,7 +444,7 @@
 				</graphicElement>
 			</line>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField-1" x="146" y="136" width="50" height="13" isRemoveLineWhenBlank="true">
+				<reportElement key="textField-1" x="146" y="152" width="50" height="13" isRemoveLineWhenBlank="true" uuid="48dbd599-5e4d-406b-805a-0907d1705982">
 					<printWhenExpression><![CDATA[$P{dueAmountText}!=null]]></printWhenExpression>
 				</reportElement>
 				<box>
@@ -446,19 +455,19 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{dueAmount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{dueAmount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="staticText-6" x="32" y="32" width="114" height="13">
+				<reportElement key="staticText-6" x="32" y="32" width="114" height="13" uuid="48cabb35-5819-4176-a40d-b8d9faddba1b">
 					<printWhenExpression><![CDATA[$P{taxAmount}!=null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{taxText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{taxText}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField" x="146" y="6" width="50" height="13"/>
+				<reportElement key="textField" x="146" y="6" width="50" height="13" uuid="6b2d992f-a277-4ff3-b3bc-a0e4a8b5e212"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -468,10 +477,10 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{subtotalAmount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{subtotalAmount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField" x="146" y="84" width="50" height="13" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField" x="146" y="84" width="50" height="13" isRemoveLineWhenBlank="true" uuid="7768d605-f5fc-4191-9eb1-fad880fa6ac6"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -481,10 +490,10 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{totalAmount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{totalAmount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField" x="146" y="32" width="50" height="13" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField" x="146" y="32" width="50" height="13" isRemoveLineWhenBlank="true" uuid="a7b0c00c-e12a-4896-b25f-79bb24852a51"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -494,19 +503,19 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{taxAmount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{taxAmount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="staticText-9" x="32" y="136" width="114" height="13" isRemoveLineWhenBlank="true">
+				<reportElement key="staticText-9" x="32" y="152" width="114" height="13" isRemoveLineWhenBlank="true" uuid="a42a4848-af4b-4cbc-b205-4027f961f8fa">
 					<printWhenExpression><![CDATA[$P{dueAmount}!=null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{dueAmountText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{dueAmountText}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField" isPrintRepeatedValues="false" x="146" y="58" width="50" height="13" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField" isPrintRepeatedValues="false" x="146" y="58" width="50" height="13" isRemoveLineWhenBlank="true" uuid="e006128b-5989-46df-861c-bda497cb3351"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -516,10 +525,12 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{tipAmount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{tipAmount}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField" x="146" y="110" width="50" height="13" isRemoveLineWhenBlank="true"/>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField" x="146" y="113" width="50" height="13" isRemoveLineWhenBlank="true" uuid="9ab79315-0d15-4134-ae0b-d66175a1fcee">
+					<printWhenExpression><![CDATA[$P{paidAmount}.equals("0.00")]]></printWhenExpression>
+				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -529,26 +540,28 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{paidAmount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{paidAmount}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="staticText-7" x="32" y="110" width="114" height="13" isRemoveLineWhenBlank="true"/>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
+				<reportElement key="staticText-7" x="32" y="113" width="114" height="13" isRemoveLineWhenBlank="true" uuid="66809578-0e78-4f09-bbed-74ad70d5428b">
+					<printWhenExpression><![CDATA[$P{paidAmount}.equals("0.00")]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{paidAmountText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{paidAmountText}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="staticText-8" x="32" y="45" width="114" height="13">
+				<reportElement key="staticText-8" x="32" y="45" width="114" height="13" uuid="bb30a17b-9f28-46e9-b646-9024e0f7bd2e">
 					<printWhenExpression><![CDATA[$P{serviceCharge}!=null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{serviceChargeText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{serviceChargeText}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField" x="146" y="45" width="50" height="13" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField" x="146" y="45" width="50" height="13" isRemoveLineWhenBlank="true" uuid="64c624c9-8815-495c-b110-362395bc62a5"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -558,19 +571,19 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{serviceCharge}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{serviceCharge}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="staticText-6" x="32" y="19" width="114" height="13">
+				<reportElement key="staticText-6" x="32" y="19" width="114" height="13" uuid="51a1dd58-b28e-4128-8c39-1fc8b169e4eb">
 					<printWhenExpression><![CDATA[$P{discountAmount}!=null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{discountText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{discountText}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField" x="146" y="19" width="50" height="13" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField" x="146" y="19" width="50" height="13" isRemoveLineWhenBlank="true" uuid="357338d4-3d41-4f44-9da9-70a729e0adc8"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -580,10 +593,10 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{discountAmount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{discountAmount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField-1" positionType="Float" x="0" y="315" width="198" height="12" isRemoveLineWhenBlank="true">
+				<reportElement key="textField-1" positionType="Float" x="0" y="331" width="196" height="12" isRemoveLineWhenBlank="true" uuid="66dfedb7-f00f-4b5a-b95e-99357eb82255">
 					<printWhenExpression><![CDATA[$P{showFooter}==true]]></printWhenExpression>
 				</reportElement>
 				<box>
@@ -594,19 +607,19 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{footerMessage}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{footerMessage}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="staticText-8" x="32" y="71" width="114" height="13" isRemoveLineWhenBlank="true">
+				<reportElement key="staticText-8" x="32" y="71" width="114" height="13" isRemoveLineWhenBlank="true" uuid="dd1ca61c-2d66-4cb6-ac4a-116dedd1fa04">
 					<printWhenExpression><![CDATA[$P{deliveryCharge}!=null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{deliveryChargeText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{deliveryChargeText}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField" isPrintRepeatedValues="false" x="146" y="71" width="50" height="13" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField" isPrintRepeatedValues="false" x="146" y="71" width="50" height="13" isRemoveLineWhenBlank="true" uuid="832d2880-8404-44c7-a3fd-11d34281281c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -616,19 +629,19 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{deliveryCharge}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{deliveryCharge}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="staticText-9" x="32" y="149" width="114" height="13" isRemoveLineWhenBlank="true">
+				<reportElement key="staticText-9" x="32" y="165" width="114" height="13" isRemoveLineWhenBlank="true" uuid="e110e98b-7506-46fa-a2fe-bb2754792d2e">
 					<printWhenExpression><![CDATA[$P{changedAmount} != null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{changeAmountText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{changeAmountText}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField-1" x="146" y="149" width="50" height="13" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField-1" x="146" y="165" width="50" height="13" isRemoveLineWhenBlank="true" uuid="61a74ef9-0865-45d0-b56b-4b84de348cc6"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -637,10 +650,10 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{changedAmount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{changedAmount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField-1" x="0" y="175" width="196" height="13" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField-1" x="0" y="191" width="196" height="13" isRemoveLineWhenBlank="true" uuid="95b94031-18ed-4088-95b8-bbbabee42675"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -649,28 +662,28 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="html">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{additionalProperties}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{additionalProperties}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="staticText-9" positionType="Float" x="0" y="283" width="198" height="13" isRemoveLineWhenBlank="true">
+				<reportElement key="staticText-9" positionType="Float" x="0" y="299" width="196" height="13" isRemoveLineWhenBlank="true" uuid="38d892df-e9a9-4fbe-826d-a5c184604cf0">
 					<printWhenExpression><![CDATA[$P{cardPayment}==true]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{cardInformation}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{cardInformation}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="staticText-9" positionType="Float" x="0" y="299" width="198" height="13" isRemoveLineWhenBlank="true">
+				<reportElement key="staticText-9" positionType="Float" x="0" y="315" width="196" height="13" isRemoveLineWhenBlank="true" uuid="83a97a03-81ed-498b-95e6-2139fa492b8d">
 					<printWhenExpression><![CDATA[$P{cardPayment}==true]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{copyType}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{copyType}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="0" y="188" width="196" height="26" isRemoveLineWhenBlank="true">
+				<reportElement positionType="Float" x="0" y="204" width="196" height="26" isRemoveLineWhenBlank="true" uuid="86e7db80-3c57-4bf6-92d1-1b563aa6b81c">
 					<printWhenExpression><![CDATA[$P{cardPayment}==true]]></printWhenExpression>
 				</reportElement>
 				<textElement verticalAlignment="Bottom">
@@ -679,7 +692,7 @@
 				<text><![CDATA[Tips :                              ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="0" y="214" width="196" height="31" isRemoveLineWhenBlank="true">
+				<reportElement positionType="Float" x="0" y="230" width="196" height="31" isRemoveLineWhenBlank="true" uuid="b8495ff6-0a7d-40f3-89df-4aead61672ad">
 					<printWhenExpression><![CDATA[$P{cardPayment}==true]]></printWhenExpression>
 				</reportElement>
 				<textElement verticalAlignment="Bottom">
@@ -688,16 +701,16 @@
 				<text><![CDATA[Total:                              ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="staticText-7" x="32" y="123" width="114" height="13" isRemoveLineWhenBlank="true">
+				<reportElement key="staticText-7" x="32" y="139" width="114" height="13" isRemoveLineWhenBlank="true" uuid="83a7b674-9b0d-4de5-996d-f562b21d5a77">
 					<printWhenExpression><![CDATA[$P{adjustAmount}!=null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{adjustAmountText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{adjustAmountText}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField" x="146" y="123" width="50" height="13" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField" x="146" y="139" width="50" height="13" isRemoveLineWhenBlank="true" uuid="5c00961b-7e8d-4f1d-b354-54388fe1a9aa"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -707,10 +720,10 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{adjustAmount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{adjustAmount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField" x="146" y="97" width="50" height="13" isRemoveLineWhenBlank="true">
+				<reportElement key="textField" x="146" y="97" width="50" height="13" isRemoveLineWhenBlank="true" uuid="86295ec6-43dd-4ae5-9bd1-323bfa1c1fef">
 					<printWhenExpression><![CDATA[$P{tenderedAmount}!=null]]></printWhenExpression>
 				</reportElement>
 				<box>
@@ -722,19 +735,19 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{tenderedAmount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{tenderedAmount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="staticText-7" x="32" y="97" width="114" height="13" isRemoveLineWhenBlank="true">
+				<reportElement key="staticText-7" x="32" y="97" width="114" height="13" isRemoveLineWhenBlank="true" uuid="2975ab83-c267-4e33-9e5e-2d281b948645">
 					<printWhenExpression><![CDATA[$P{tenderedAmount}!=null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{tenderedAmountText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{tenderedAmountText}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="0" y="245" width="196" height="31" isRemoveLineWhenBlank="true">
+				<reportElement positionType="Float" x="0" y="261" width="196" height="31" isRemoveLineWhenBlank="true" uuid="62247096-56f8-4f6f-9d48-8f1704f7baf4">
 					<printWhenExpression><![CDATA[$P{cardPayment}==true && $P{showSignatureField}]]></printWhenExpression>
 				</reportElement>
 				<textElement verticalAlignment="Bottom">
@@ -743,16 +756,16 @@
 				<text><![CDATA[Sign :                              ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="staticText-119" x="32" y="162" width="114" height="13" isRemoveLineWhenBlank="true">
+				<reportElement key="staticText-119" x="32" y="178" width="114" height="13" isRemoveLineWhenBlank="true" uuid="ac0556e9-2bc6-4673-9193-f6efeaaab4ca">
 					<printWhenExpression><![CDATA[$P{refundAmount} != null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Monospaced" size="9" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{refundAmountText}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{refundAmountText}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement key="textField-111" x="146" y="162" width="50" height="13" isRemoveLineWhenBlank="true"/>
+				<reportElement key="textField-111" x="146" y="178" width="50" height="13" isRemoveLineWhenBlank="true" uuid="bc6013cd-41f5-4225-bedf-6b798ff0808b"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -761,8 +774,40 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Monospaced" size="9" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$P{refundAmount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{refundAmount}]]></textFieldExpression>
 			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="staticText-7" x="32" y="126" width="114" height="13" isRemoveLineWhenBlank="true" uuid="31850781-2d24-4a50-8d56-801c2f465011">
+					<printWhenExpression><![CDATA[!$P{paidAmount}.equals("0.00")]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="Monospaced" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{paidAmountText}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="textField" x="146" y="126" width="50" height="13" isRemoveLineWhenBlank="true" uuid="54a43dc5-2f3d-428c-b093-7413a4814b20">
+					<printWhenExpression><![CDATA[!$P{paidAmount}.equals("0.00")]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Monospaced" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{paidAmount}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-2" x="0" y="111" width="196" height="1" uuid="06dc19df-7c0e-413a-b2f1-90f3dc0a5f4f">
+					<printWhenExpression><![CDATA[$P{showFooter}==true]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
 		</band>
 	</summary>
 </jasperReport>
