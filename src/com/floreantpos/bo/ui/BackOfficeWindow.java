@@ -24,10 +24,8 @@
 package com.floreantpos.bo.ui;
 
 import java.awt.ComponentOrientation;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Locale;
@@ -54,6 +52,7 @@ import com.floreantpos.model.UserType;
 import com.floreantpos.swing.PosUIManager;
 import com.floreantpos.table.ShowTableBrowserAction;
 import com.jidesoft.swing.JideTabbedPane;
+import net.authorize.xml.Message;
 
 /**
  *
@@ -108,21 +107,30 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 
 		menuBar.removeAll();
 
+		//TODO:  permissions might need changing based on different criteria as  explorer, report, etc doesn't really capture user roles
 		if (newUserType == null) {
 			createAdminMenu(menuBar);
 			createExplorerMenu(menuBar);
+			createPaymentMenu(menuBar);
+			createUserMenu(menuBar);
+			createOtherMenu(menuBar);
 			createReportMenu(menuBar);
+			createUntrustedReportMenu(menuBar);
 			createFloorMenu(menuBar);
 		}
 		else {
 			if (permissions != null && permissions.contains(UserPermission.PERFORM_ADMINISTRATIVE_TASK)) {
 				createAdminMenu(menuBar);
+				createUserMenu(menuBar);
+				createPaymentMenu(menuBar);
 			}
 			if (permissions != null && permissions.contains(UserPermission.VIEW_EXPLORERS)) {
 				createExplorerMenu(menuBar);
+				createOtherMenu(menuBar);
 			}
 			if (permissions != null && permissions.contains(UserPermission.VIEW_REPORTS)) {
 				createReportMenu(menuBar);
+				createUntrustedReportMenu(menuBar);
 			}
 		}
 		createFloorMenu(menuBar);
@@ -139,7 +147,7 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 
 		// provide a way to close the window if run in full screen mode with no window manager
 		if(TerminalConfig.isFullscreenMode()) {
-			JMenu windowMenu = new JMenu(Messages.getString("BackOfficeWindow.3"));
+			JMenu windowMenu = new JMenu(Messages.getString("BackOfficeWindow.3")); //$NON-NLS-1$
 			windowMenu.add(new CloseDialogAction());
 			menuBar.add(windowMenu);
 		}
@@ -149,29 +157,35 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 
 	private void createReportMenu(JMenuBar menuBar) {
 		JMenu reportMenu = new JMenu(com.floreantpos.POSConstants.REPORTS);
-		reportMenu.add(new SalesReportAction());
-		reportMenu.add(new OpenTicketSummaryReportAction());
-		reportMenu.add(new HourlyLaborReportAction());
+		reportMenu.add(new JournalReportAction());
 		reportMenu.add(new PayrollReportAction());
-		reportMenu.add(new EmployeeAttendanceAction());
+		reportMenu.add(new SalesBalanceReportAction());
+		reportMenu.add(new SalesExceptionReportAction());
+		reportMenu.add(new SalesReportAction());
+		reportMenu.add(new TipsReportAction());
+		menuBar.add(reportMenu);
+	}
+
+	private void createUntrustedReportMenu(JMenuBar menuBar) {
+		// These reports have not been tested by me, verify functionality before using
+		JMenu reportMenu = new JMenu(Messages.getString("BackOfficeWindow.5")); //$NON-NLS-1$
+		reportMenu.add(new SalesDetailReportAction());
+		reportMenu.add(new ServerProductivityReportAction());
 		reportMenu.add(new KeyStatisticsSalesReportAction());
+		reportMenu.add(new EmployeeAttendanceAction());
+		reportMenu.add(new HourlyLaborReportAction());
+		reportMenu.add(new OpenTicketSummaryReportAction());
 		reportMenu.add(new SalesAnalysisReportAction());
 		reportMenu.add(new CreditCardReportAction());
 		reportMenu.add(new CustomPaymentReportAction());
 		reportMenu.add(new MenuUsageReportAction());
-		reportMenu.add(new ServerProductivityReportAction());
-		reportMenu.add(new JournalReportAction());
-		reportMenu.add(new SalesBalanceReportAction());
-		reportMenu.add(new SalesExceptionReportAction());
-		reportMenu.add(new SalesDetailReportAction());
-		reportMenu.add(new TipsReportAction());
 		//reportMenu.add(new PurchaseReportAction());
 		//reportMenu.add(new InventoryOnHandReportAction());
 		menuBar.add(reportMenu);
 	}
 
 	private void createExplorerMenu(JMenuBar menuBar) {
-		JMenu explorerMenu = new JMenu(com.floreantpos.POSConstants.EXPLORERS);
+		JMenu explorerMenu = new JMenu(Messages.getString("BackOfficeWindow.4")); //$NON-NLS-1$
 		menuBar.add(explorerMenu);
 		JMenu subMenuPizza = new JMenu(Messages.getString("BackOfficeWindow.1")); //$NON-NLS-1$
 
@@ -183,14 +197,8 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 		explorerMenu.add(new ItemExplorerAction());
 		explorerMenu.add(new ModifierGroupExplorerAction());
 		explorerMenu.add(new ModifierExplorerAction());
-		explorerMenu.add(new ShiftExplorerAction());
-		explorerMenu.add(new CouponExplorerAction());
+		explorerMenu.add(new MultiplierExplorerAction());
 		explorerMenu.add(new CookingInstructionExplorerAction());
-		explorerMenu.add(new TaxExplorerAction());
-		explorerMenu.add(new CustomPaymentBrowserAction());
-		explorerMenu.add(new DrawerPullReportExplorerAction());
-		explorerMenu.add(new TicketExplorerAction());
-		explorerMenu.add(new AttendanceHistoryAction());
 		explorerMenu.add(new PizzaExplorerAction());
 		//explorerMenu.add(subMenuPizza);
 
@@ -198,9 +206,6 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 		subMenuPizza.add(new PizzaCrustExplorerAction());
 		subMenuPizza.add(new PizzaItemExplorerAction());
 		subMenuPizza.add(new PizzaModifierExplorerAction());
-		explorerMenu.add(new MultiplierExplorerAction());
-		explorerMenu.add(new GiftCertificateExplorerAction());
-		explorerMenu.add(new CustomerExplorerAction());
 
 		OrderServiceExtension plugin = (OrderServiceExtension) ExtensionManager.getPlugin(OrderServiceExtension.class);
 		if (plugin == null) {
@@ -210,16 +215,43 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 		plugin.createCustomerMenu(explorerMenu);
 	}
 
+	private void createUserMenu(JMenuBar menuBar) {
+		JMenu userMenu = new JMenu(Messages.getString("BackOfficeWindow.6")); //$NON-NLS-1$
+		userMenu.add(new UserExplorerAction());
+		userMenu.add(new UserTypeExplorerAction());
+		userMenu.addSeparator();
+		userMenu.add(new AttendanceHistoryAction());
+		userMenu.add(new ShiftExplorerAction());
+		userMenu.add(new ViewGratuitiesAction());
+		menuBar.add(userMenu);
+	}
+
+	private void createPaymentMenu(JMenuBar menuBar) {
+		JMenu paymentMenu = new JMenu(Messages.getString("BackOfficeWindow.7")); //$NON-NLS-1$
+		paymentMenu.add(new CouponExplorerAction());
+		paymentMenu.add(new CustomPaymentBrowserAction());
+		paymentMenu.add(new GiftCertificateExplorerAction());
+		menuBar.add(paymentMenu);
+	}
+
+	private void createOtherMenu(JMenuBar menuBar) {
+		JMenu otherMenu = new JMenu(Messages.getString("BackOfficeWindow.8")); //$NON-NLS-1$
+		otherMenu.add(new CustomerExplorerAction());
+		otherMenu.add(new DrawerPullReportExplorerAction());
+		otherMenu.add(new TicketExplorerAction());
+		otherMenu.add(new PosTransactionExplorerAction());
+		menuBar.add(otherMenu);
+	}
+
 	private void createAdminMenu(JMenuBar menuBar) {
-		JMenu adminMenu = new JMenu(com.floreantpos.POSConstants.ADMIN);
+		JMenu adminMenu = new JMenu(Messages.getString("BackOfficeWindow.9")); //$NON-NLS-1$
 		adminMenu.add(new ConfigureRestaurantAction());
 		adminMenu.add(new CurrencyExplorerAction());
-		adminMenu.add(new UserExplorerAction());
-		adminMenu.add(new UserTypeExplorerAction());
-		adminMenu.add(new ViewGratuitiesAction());
+		adminMenu.add(new LanguageSelectionAction());
+		adminMenu.add(new TaxExplorerAction());
+		adminMenu.addSeparator();
 		adminMenu.add(new DataExportAction());
 		adminMenu.add(new DataImportAction());
-		adminMenu.add(new LanguageSelectionAction());
 		menuBar.add(adminMenu);
 	}
 
@@ -321,14 +353,4 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 		this.user = backOfficeUser;
 		createMenus();
 	}
-
-	//	public static BackOfficeWindow getInstance() {
-	//		if (instance == null) {
-	//			instance = new BackOfficeWindow();
-	//			Application.getInstance().setBackOfficeWindow(instance);
-	//		}
-	//
-	//		return instance;
-	//	}
-
 }
