@@ -4,12 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.*;
 
+import com.floreantpos.ui.dialog.BeanEditorDialog;
+import com.floreantpos.ui.forms.GiftCertificateForm;
 import net.miginfocom.swing.MigLayout;
 
 import org.jdesktop.swingx.JXDatePicker;
@@ -81,8 +82,9 @@ public class GiftCertificateExplorer extends TransparentPanel {
 	}
 
 	private void addButtonPanel() {
-		JButton btnVoid = new JButton(POSConstants.DELETE);
-		btnVoid.addActionListener(new ActionListener() {
+
+		JButton btnDelete = new JButton(POSConstants.DELETE);
+		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					int index = table.getSelectedRow();
@@ -92,51 +94,66 @@ public class GiftCertificateExplorer extends TransparentPanel {
 					}
 
 					index = table.convertRowIndexToModel(index);
-					List<GiftCertificate> giftCertificates = new ArrayList<GiftCertificate>();
 					GiftCertificate giftCertificate = tableModel.getRows().get(index);
-					giftCertificates.add(giftCertificate);
-
 					if (POSMessageDialog.showYesNoQuestionDialog(GiftCertificateExplorer.this, POSConstants.CONFIRM_DELETE, POSConstants.DELETE) != JOptionPane.YES_OPTION) {
 						return;
 					}
 
-					//TODO GiftCertificateDAO.getInstance().deleteGiftCertificates(giftCertificates);
-					// tableModel.deleteItem(index);
+					GiftCertificateDAO.getInstance().delete(giftCertificate);
+					tableModel.deleteItem(index);
 					table.repaint();
 				} catch (Exception x) {
 					BOMessageDialog.showError(POSConstants.ERROR_MESSAGE, x);
 				}
 			}
-
 		});
 
-		JButton btnVoidAll = new JButton(POSConstants.DELETE_ALL);
-		btnVoidAll.addActionListener(new ActionListener() {
+		JButton editButton = new JButton(com.floreantpos.POSConstants.EDIT);
+		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					List<GiftCertificate> giftCertificates = tableModel.getRows();
-
-					if (giftCertificates.isEmpty()) {
+					int index = table.getSelectedRow();
+					if (index < 0) {
+						POSMessageDialog.showMessage(POSUtil.getBackOfficeWindow(), POSConstants.SELECT_ONE_TICKET_TO_EDIT);
 						return;
 					}
+					index = table.convertRowIndexToModel(index);
+					GiftCertificate giftCertificate = tableModel.getRows().get(index);
 
-					if (POSMessageDialog.showYesNoQuestionDialog(GiftCertificateExplorer.this, POSConstants.CONFIRM_DELETE, POSConstants.DELETE_ALL) != JOptionPane.YES_OPTION) {
+					GiftCertificateForm editor = new GiftCertificateForm();
+					editor.setBean(giftCertificate);
+					BeanEditorDialog dialog = new BeanEditorDialog(POSUtil.getBackOfficeWindow(), editor);
+					dialog.open();
+					if (dialog.isCanceled())
 						return;
-					}
-
-					//TODO GiftCertificateDAO.getInstance().deleteGiftCertificates(giftCertificates);
 					refresh();
-
-				} catch (Exception x) {
-					BOMessageDialog.showError(POSConstants.ERROR_MESSAGE, x);
+				} catch (Throwable x) {
+					BOMessageDialog.showError(com.floreantpos.POSConstants.ERROR_MESSAGE, x);
 				}
 			}
+		});
 
+		JButton newButton = new JButton(com.floreantpos.POSConstants.ADD);
+		newButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					GiftCertificateForm editor = new GiftCertificateForm();
+					editor.createNew();
+					BeanEditorDialog dialog = new BeanEditorDialog(POSUtil.getBackOfficeWindow(), editor);
+					dialog.open();
+					if (dialog.isCanceled())
+						return;
+					refresh();
+				} catch (Throwable x) {
+					BOMessageDialog.showError(com.floreantpos.POSConstants.ERROR_MESSAGE, x);
+				}
+			}
 		});
 
 		TransparentPanel panel = new TransparentPanel();
-		panel.add(btnVoid);
-		panel.add(btnVoidAll);
+		panel.add(btnDelete);
+		panel.add(editButton);
+		panel.add(newButton);
 		add(panel, BorderLayout.SOUTH);
 	}
 
