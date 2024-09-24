@@ -49,5 +49,27 @@ public class DrawerPullReportDAO extends BaseDrawerPullReportDAO {
 			closeSession(session);
 		}
 	}
-	
+
+	public DrawerPullReport findPriorReport(Integer reportId){
+		Session session = null;
+		try {
+			session = getSession();
+			DrawerPullReport report = (DrawerPullReport) session.get(DrawerPullReport.class, reportId);
+			if(report == null){
+				return null;
+			}
+			Criteria criteria = session.createCriteria(getReferenceClass());
+			criteria.add(Restrictions.lt(DrawerPullReport.PROP_ID, reportId));
+			criteria.add(Restrictions.eq(DrawerPullReport.PROP_TERMINAL, report.getTerminal()));
+			criteria.addOrder(org.hibernate.criterion.Order.desc(DrawerPullReport.PROP_ID));
+			criteria.setMaxResults(1);
+			DrawerPullReport priorReport = (DrawerPullReport) criteria.uniqueResult();
+			if(priorReport != null){
+				return priorReport;
+			}
+		} finally {
+			closeSession(session);
+		}
+		return null;
+	}
 }

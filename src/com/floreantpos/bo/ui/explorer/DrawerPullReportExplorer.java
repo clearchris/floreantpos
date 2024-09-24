@@ -43,6 +43,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import com.floreantpos.bo.actions.PosTransactionExplorerAction;
+import com.floreantpos.model.Ticket;
 import net.miginfocom.swing.MigLayout;
 
 import org.jdesktop.swingx.JXDatePicker;
@@ -72,6 +74,7 @@ public class DrawerPullReportExplorer extends TransparentPanel {
 	private JButton btnGo = new JButton(com.floreantpos.POSConstants.GO);
 	private JButton btnEditActualAmount = new JButton(com.floreantpos.POSConstants.EDIT_ACTUAL_AMOUNT);
 	private JButton btnPrint = new JButton(Messages.getString("DrawerPullReportExplorer.0")); //$NON-NLS-1$
+	private JButton btnTransactions = new JButton(Messages.getString("DrawerPullReportExplorer.2")); //$NON-NLS-1$
 	private static SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd MMM, yyyy hh:mm a"); //$NON-NLS-1$
 	private TableColumnModelExt columnModel;
 	private JXTable table;
@@ -100,6 +103,7 @@ public class DrawerPullReportExplorer extends TransparentPanel {
 		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		bottomPanel.add(btnEditActualAmount);
 		bottomPanel.add(btnPrint);
+		bottomPanel.add(btnTransactions);
 		add(bottomPanel, BorderLayout.SOUTH);
 
 		btnPrint.addActionListener(new ActionListener() {
@@ -169,6 +173,29 @@ public class DrawerPullReportExplorer extends TransparentPanel {
 			}
 
 		});
+
+		btnTransactions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				try {
+					int selectedRow = table.getSelectedRow();
+					if (selectedRow < 0) {
+						BOMessageDialog.showError(DrawerPullReportExplorer.this, Messages.getString("DrawerPullReportExplorer.1")); //$NON-NLS-1$
+						return;
+					}
+					DrawerPullExplorerTableModel model = (DrawerPullExplorerTableModel) table.getModel();
+					DrawerPullReport report = (DrawerPullReport) model.getRowData(selectedRow);
+					DrawerPullReportDAO dao = new DrawerPullReportDAO();
+					DrawerPullReport priorReport = dao.findPriorReport(report.getId());
+					PosTransactionExplorerAction action =
+							new PosTransactionExplorerAction(priorReport.getReportTime(), report.getReportTime(), report.getTerminal());
+					action.actionPerformed(e);
+				} catch (Exception x) {
+					BOMessageDialog.showError(POSConstants.ERROR_MESSAGE, x);
+				}
+			}
+		});
+
 	}
 
 	private void restoreTableColumnsVisibility() {
