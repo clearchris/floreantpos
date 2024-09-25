@@ -29,6 +29,7 @@ import javax.swing.*;
 
 import com.floreantpos.actions.PosAction;
 import com.floreantpos.actions.ShowTicketAction;
+import com.floreantpos.bo.actions.PosTransactionExplorerAction;
 import net.miginfocom.swing.MigLayout;
 
 import org.jdesktop.swingx.JXDatePicker;
@@ -185,10 +186,30 @@ public class TicketExplorer extends TransparentPanel {
 			}
 		});
 
+		JButton btnTransactions = new JButton("Transactions");
+		btnTransactions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					int index = table.getSelectedRow();
+					if (index < 0) {
+
+					} else {
+						index = table.convertRowIndexToModel(index);
+						Ticket ticket = tableModel.getRows().get(index);
+						PosTransactionExplorerAction action = new PosTransactionExplorerAction(ticket.getId());
+						action.actionPerformed(e);
+					}
+				} catch (Exception x) {
+					BOMessageDialog.showError(POSConstants.ERROR_MESSAGE, x);
+				}
+			}
+		});
+
 		TransparentPanel panel = new TransparentPanel();
 		panel.add(btnVoid);
 		panel.add(btnVoidAll);
 		panel.add(btnView);
+		panel.add(btnTransactions);
 		add(panel, BorderLayout.SOUTH);
 	}
 

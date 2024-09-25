@@ -110,8 +110,8 @@ public class PosTransactionDAO extends BasePosTransactionDAO {
 			}
 
 			if (from != null && to != null) {
-				//criteria.add(Restrictions.ge(PosTransaction.PROP_TRANSACTION_TIME, from));
-				//criteria.add(Restrictions.le(PosTransaction.PROP_TRANSACTION_TIME, to));
+				criteria.add(Restrictions.ge(PosTransaction.PROP_TRANSACTION_TIME, from));
+				criteria.add(Restrictions.le(PosTransaction.PROP_TRANSACTION_TIME, to));
 			}
 
 			return criteria.list();
@@ -136,6 +136,27 @@ public class PosTransactionDAO extends BasePosTransactionDAO {
 			closeSession(session);
 		}
 	}
+
+	public List<? extends PosTransaction> findTransactionsByTicketId(Class transactionClass, String ticketId) {
+		Session session = null;
+
+		try {
+			session = getSession();
+			Criteria criteria = session.createCriteria(transactionClass);
+			criteria.add(Restrictions.isNotNull(PosTransaction.PROP_TICKET));
+			if (ticketId != null) {
+				criteria.add(Restrictions.eq(PosTransaction.PROP_TICKET, new Integer(ticketId)));
+			}
+			return criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
 
 	public TransactionSummary getTransactionSummary(Terminal terminal, Class transactionClass, Date from, Date to) {
 		Session session = null;
