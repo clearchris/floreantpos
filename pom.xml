@@ -348,10 +348,6 @@
 			<version>5.6.0</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>itext</artifactId>
-					<groupId>com.lowagie</groupId>
-				</exclusion>
-				<exclusion>
 					<artifactId>commons-collections</artifactId>
 					<groupId>commons-collections</groupId>
 				</exclusion>
