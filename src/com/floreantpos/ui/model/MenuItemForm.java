@@ -193,7 +193,11 @@ public class MenuItemForm extends BeanEditor<MenuItem> implements ActionListener
 		shiftTable.setModel(shiftTableModel = new ShiftTableModel(menuItem.getShifts()));
 		priceTable.setModel(priceTableModel = new PriceByOrderTypeTableModel(menuItem.getProperties()));
 
-		setBean(menuItem);
+	    setBean(menuItem);
+
+	    setLayout(new BorderLayout());
+		add(tabbedPane, BorderLayout.CENTER);
+	    setPreferredSize(new Dimension(1100, 500)); // Adjust the width and height as needed
 	}
 
 	protected void doSelectImageFile() {
@@ -552,28 +556,14 @@ public class MenuItemForm extends BeanEditor<MenuItem> implements ActionListener
 				{ null, null, null, null }, { null, null, null, null } }, new String[] { "Title 1", "Title 2", "Title 3", "Title 4" })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		jScrollPane2.setViewportView(shiftTable);
 
-		org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(tabShift);
-		tabShift.setLayout(jPanel3Layout);
-		jPanel3Layout.setHorizontalGroup(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING).add(
-				jPanel3Layout
-						.createSequentialGroup()
-						.addContainerGap(76, Short.MAX_VALUE)
-						.add(jPanel3Layout
-								.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-								.add(org.jdesktop.layout.GroupLayout.TRAILING, jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 670,
-										org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-								.add(org.jdesktop.layout.GroupLayout.TRAILING,
-										jPanel3Layout.createSequentialGroup().add(btnAddShift).add(5, 5, 5).add(btnDeleteShift))).addContainerGap()));
-		jPanel3Layout.setVerticalGroup(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING).add(
-				jPanel3Layout.createSequentialGroup()
-						.add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 345, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-						.add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE).add(btnAddShift).add(btnDeleteShift))
-						.addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
-
+		tabShift.setLayout(new BorderLayout());
+		tabShift.add(jScrollPane2, BorderLayout.CENTER);
+		JPanel buttonPanel2 = new JPanel();
+		buttonPanel2.add(btnAddShift);
+		buttonPanel2.add(btnDeleteShift);
+		tabShift.add(buttonPanel2, BorderLayout.SOUTH);
 		tabbedPane.addTab(com.floreantpos.POSConstants.SHIFTS, tabShift);
 
-		//
 
 		btnNewPrice.setText(Messages.getString("MenuItemForm.9")); //$NON-NLS-1$
 		btnNewPrice.addActionListener(new ActionListener() {
