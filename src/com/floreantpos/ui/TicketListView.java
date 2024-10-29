@@ -22,11 +22,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -40,6 +41,8 @@ import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.TableColumn;
 
 import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.decorator.ColorHighlighter;
+import org.jdesktop.swingx.decorator.HighlightPredicate;
 import org.jdesktop.swingx.table.ColumnControlButton;
 import org.jdesktop.swingx.table.TableColumnExt;
 import org.jdesktop.swingx.table.TableColumnModelExt;
@@ -56,6 +59,7 @@ import com.floreantpos.model.DataUpdateInfo;
 import com.floreantpos.model.OrderType;
 import com.floreantpos.model.Ticket;
 import com.floreantpos.model.User;
+import com.floreantpos.model.util.DateUtil;
 import com.floreantpos.model.dao.DataUpdateInfoDAO;
 import com.floreantpos.model.dao.TicketDAO;
 import com.floreantpos.swing.POSToggleButton;
@@ -124,9 +128,23 @@ public class TicketListView extends JPanel implements ITicketList {
 		table.setRowHeight(PosUIManager.getSize(60));
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		boolean hasOnlineOrderPlugin = ExtensionManager.getPlugin(OnlineOrderPlugin.class) != null;
-		table.setDefaultRenderer(Object.class, new PosTableRenderer(hasOnlineOrderPlugin));
+		table.setDefaultRenderer(Object.class, new TicketListViewTableCellRenderer());
+		table.setDefaultRenderer(Number.class, new TicketListViewTableCellRenderer());
+		table.setDefaultRenderer(Date.class, new TicketListViewTableCellRenderer());
 		table.setGridColor(Color.LIGHT_GRAY);
 		table.getTableHeader().setPreferredSize(new Dimension(100, PosUIManager.getSize(40)));
+
+		// highlight today's orders
+		HighlightPredicate createdToday = (renderer, adapter) -> {
+			Date created = (Date) adapter.getValue(3);  // created date is in column 3
+		    ZoneId localZoneId = ZoneId.systemDefault();
+			Date startOfDay = DateUtil.startOfDay(new Date());
+			ZonedDateTime zdt = ZonedDateTime.ofInstant(startOfDay.toInstant(), localZoneId);
+			ZonedDateTime zdt2 = ZonedDateTime.ofInstant(created.toInstant(), localZoneId);
+			return zdt2.isAfter(zdt);
+		};
+		ColorHighlighter highlighter = new ColorHighlighter(createdToday, Color.YELLOW, null);
+		table.addHighlighter(highlighter);
 
 		columnModel = (TableColumnModelExt) table.getColumnModel();
 		columnModel.getColumn(0).setPreferredWidth(hasOnlineOrderPlugin ? 40 : 30);
@@ -452,7 +470,6 @@ public class TicketListView extends JPanel implements ITicketList {
 	}
 
 	private class TicketListTableModel extends PaginatedTableModel {
-		private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd MMM, yyyy h:mm");
 		public TicketListTableModel() {
 			super(new String[] { POSConstants.TICKET_LIST_COLUMN_ID, POSConstants.TICKET_LIST_COLUMN_TABLE, POSConstants.TICKET_LIST_COLUMN_SERVER,
 					POSConstants.TICKET_LIST_COLUMN_CREATE_DATE, POSConstants.TICKET_LIST_COLUMN_CUSTOMER, POSConstants.TICKET_LIST_COLUMN_DELIVERY_ADDRESS,
@@ -482,7 +499,7 @@ public class TicketListView extends JPanel implements ITicketList {
 					return owner.getFirstName();
 
 				case 3:
-					return dateTimeFormatter.format(ticket.getCreateDate());
+					return ticket.getCreateDate();
 
 				case 4:
 					String customerName = ticket.getProperty(Ticket.CUSTOMER_NAME);
