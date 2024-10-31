@@ -52,5 +52,8 @@ public class CreditCardTransaction extends BaseCreditCardTransaction {
 
 /*[CONSTRUCTOR MARKER END]*/
 
-
+	@Override
+	public String getRef() {
+		return REF;
+	}
 }

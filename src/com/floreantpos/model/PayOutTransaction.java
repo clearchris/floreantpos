@@ -65,4 +65,8 @@ public class PayOutTransaction extends BasePayOutTransaction {
 		return type;
 	}
 
+	@Override
+	public String getRef() {
+		return REF;
+	}
 }

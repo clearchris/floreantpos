@@ -187,6 +187,10 @@ public class PosTransaction extends BasePosTransaction {
 		return String.valueOf(ticket.getId());
 	}
 
+	public String getRef() {
+		return REF;
+	}
+
 	public void setId(Object generateGlobalId) {
 		if (generateGlobalId instanceof String) {
 			super.setId(NumberUtils.toInt(String.valueOf(generateGlobalId)));

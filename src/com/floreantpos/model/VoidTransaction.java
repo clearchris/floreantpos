@@ -55,6 +55,11 @@ public class VoidTransaction extends BaseVoidTransaction {
 /*[CONSTRUCTOR MARKER END]*/
 
 	@Override
+	public String getRef() {
+		return REF;
+	}
+
+	@Override
 	public String getTransactionType() {
 		String type = super.getTransactionType();
 		

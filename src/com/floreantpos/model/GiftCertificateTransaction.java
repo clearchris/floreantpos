@@ -52,5 +52,8 @@ public class GiftCertificateTransaction extends BaseGiftCertificateTransaction {
 
 /*[CONSTRUCTOR MARKER END]*/
 
-
+	@Override
+	public String getRef() {
+		return REF;
+	}
 }

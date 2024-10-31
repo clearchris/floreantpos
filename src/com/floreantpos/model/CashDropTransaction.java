@@ -52,5 +52,9 @@ public class CashDropTransaction extends BaseCashDropTransaction {
 
 /*[CONSTRUCTOR MARKER END]*/
 
+	@Override
+	public String getRef() {
+		return REF;
+	}
 
 }

@@ -52,5 +52,8 @@ public class RefundTransaction extends BaseRefundTransaction {
 
 /*[CONSTRUCTOR MARKER END]*/
 
-
+	@Override
+	public String getRef() {
+		return REF;
+	}
 }

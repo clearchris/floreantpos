@@ -256,7 +256,7 @@ public class PosTransactionExplorer extends TransparentPanel {
                 case 4:
                     return (transaction.getUser() == null) ? "" : "" + transaction.getUser();
                 case 5:
-                    return transaction.getTransactionType();
+                    return transaction.getRef();
                 case 6:
                     return transaction.getTransactionType();
                 case 7:

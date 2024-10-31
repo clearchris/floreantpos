@@ -38,5 +38,9 @@ public class CardTransaction extends BaseCardTransaction {
 
 /*[CONSTRUCTOR MARKER END]*/
 
+	@Override
+	public String getRef() {
+		return REF;
+	}
 
 }

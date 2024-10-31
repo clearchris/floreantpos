@@ -32,5 +32,8 @@ public class CustomPaymentTransaction extends BaseCustomPaymentTransaction {
 	}
 
 	/*[CONSTRUCTOR MARKER END]*/
-
+	@Override
+	public String getRef() {
+		return REF;
+	}
 }
