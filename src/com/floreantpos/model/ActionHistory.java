@@ -50,4 +50,5 @@ public class ActionHistory extends BaseActionHistory {
 	public final static String GROUP_SETTLE = Messages.getString("ActionHistory.8");//added //$NON-NLS-1$
 	public final static String PAY_OUT = Messages.getString("ActionHistory.9");//added //$NON-NLS-1$
 	public final static String PAY_TIPS = Messages.getString("ActionHistory.10");//added //$NON-NLS-1$
+	public final static String DELETE_CHECK = Messages.getString("ActionHistory.11");//added //$NON-NLS-1$
 }

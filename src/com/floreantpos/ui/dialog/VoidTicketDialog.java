@@ -247,42 +247,10 @@ public class VoidTicketDialog extends POSDialog {
 	}
 
 	private void btnVoidActionPerformed(java.awt.event.ActionEvent evt) {
+		// allowing a partial refund of voided ticket causes more issues than it solves
+		// partial refunds should be handled by item level voids to keep the accounting clean
 		try {
-			double refundAmount = 0;
-
-			RefundTransaction refundTransaction = null;
-
-			if (ticket.getPaidAmount() > 0) {
-				double tipsAmount = ticket.getGratuityAmount();
-				double ticketTotalWithoutTips = NumberUtil.roundToTwoDigit(ticket.getTotalAmount() - tipsAmount);
-				double paidAmount = ticket.getPaidAmount();
-
-				refundAmount = NumberSelectionDialog2.takeDoubleInput("Enter refund amount", paidAmount < ticketTotalWithoutTips ? ticket.getPaidAmount()
-						: paidAmount - tipsAmount);
-
-				if (refundAmount == -1)
-					return;
-
-				if (tipsAmount > 0) {
-					if (POSMessageDialog.showYesNoQuestionDialog(POSUtil.getFocusedWindow(), "Do you want to refund tips?", "Confirm") == JOptionPane.YES_OPTION) {
-						Gratuity gratuity = ticket.getGratuity();
-						gratuity.setRefunded(true);
-						refundAmount += gratuity.getAmount();
-					}
-				}
-				if (refundAmount > paidAmount) {
-					POSMessageDialog.showMessage(POSUtil.getFocusedWindow(), "Refund amount cannot be greater than paid amount.");
-					return;
-				}
-				refundTransaction = doCreateRefundTransaction(ticket, refundAmount);
-			}
-			else {
-				Gratuity gratuity = ticket.getGratuity();
-				if (gratuity != null) {
-					gratuity.setAmount(0.0);
-				}
-			}
-
+			double tipsAmount = ticket.getGratuityAmount();
 			VoidReason voidReason = (VoidReason) cbVoidReasons.getSelectedItem();
 			if (voidReason != null) {
 				ticket.setVoidReason(voidReason.getReasonText());
@@ -301,25 +269,26 @@ public class VoidTicketDialog extends POSDialog {
 			}
 
 			try {
-				String title = "- " + Messages.getString("VoidTicketDialog.0"); //$NON-NLS-1$ //$NON-NLS-2$
-				String data = Messages.getString("VoidTicketDialog.1") + ticket.getId() + " was voided."; //$NON-NLS-1$ //$NON-NLS-2$
+				// Build a detailed void receipt
+				StringBuilder receipt = new StringBuilder();
+				receipt.append("- ").append(Messages.getString("VoidTicketDialog.0")).append("\n");
+				receipt.append(Messages.getString("VoidTicketDialog.1")).append(ticket.getId()).append(" was voided.\n");
+				receipt.append("Void Reason: ").append(ticket.getVoidReason()).append("\n");
+				receipt.append("Voided By: ").append(ticket.getVoidedBy()).append("\n");
+				receipt.append("Items Voided:\n");
+				for (TicketItem item : ticket.getTicketItems()) {
+					receipt.append(" - ").append(item.getName()).append(" x").append(item.getItemCount()).append("\n");
+				}
+				receipt.append("Total Amount: ").append(NumberUtil.formatNumber(ticket.getTotalAmount())).append("\n");
+				receipt.append("Tips Amount: ").append(NumberUtil.formatNumber(tipsAmount)).append("\n");
 
-				if (refundTransaction != null && refundAmount > 0)
-					ReceiptPrintService.printTransaction(refundTransaction);
-
-				ReceiptPrintService.printGenericReport(title, data);
+				// Print the detailed void receipt
+				ReceiptPrintService.printGenericReport("- " + Messages.getString("VoidTicketDialog.0"), receipt.toString());
 			} catch (Exception ee) {
 				String message = Messages.getString("VoidTicketDialog.9") + ee.getMessage(); //$NON-NLS-1$
 				POSMessageDialog.showError(Application.getPosWindow(), message, ee);
 			}
 			canceled = false;
-
-			//save the action
-			ActionHistoryDAO.getInstance().saveHistory(
-					Application.getCurrentUser(),
-					ActionHistory.VOID_CHECK,
-					com.floreantpos.POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL
-							+ ":" + ticket.getId() + "; Total" + ": " + NumberUtil.formatNumber(ticket.getTotalAmount()), ticket.getId()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 			dispose();
 		} catch (Exception e) {

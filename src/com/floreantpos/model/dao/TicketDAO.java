@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.floreantpos.model.*;
+import com.floreantpos.util.NumberUtil;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -39,27 +41,6 @@ import org.hibernate.transform.ResultTransformer;
 import com.floreantpos.Messages;
 import com.floreantpos.POSConstants;
 import com.floreantpos.main.Application;
-import com.floreantpos.model.DataUpdateInfo;
-import com.floreantpos.model.Gratuity;
-import com.floreantpos.model.InventoryItem;
-import com.floreantpos.model.InventoryTransaction;
-import com.floreantpos.model.InventoryTransactionType;
-import com.floreantpos.model.MenuItem;
-import com.floreantpos.model.OrderType;
-import com.floreantpos.model.PaymentStatusFilter;
-import com.floreantpos.model.PaymentType;
-import com.floreantpos.model.PosTransaction;
-import com.floreantpos.model.Recepie;
-import com.floreantpos.model.RecepieItem;
-import com.floreantpos.model.Shift;
-import com.floreantpos.model.ShopTableStatus;
-import com.floreantpos.model.Terminal;
-import com.floreantpos.model.Ticket;
-import com.floreantpos.model.TicketItem;
-import com.floreantpos.model.TransactionType;
-import com.floreantpos.model.User;
-import com.floreantpos.model.UserType;
-import com.floreantpos.model.VoidTransaction;
 import com.floreantpos.model.util.TicketSummary;
 import com.floreantpos.swing.PaginatedTableModel;
 
@@ -137,6 +118,7 @@ public class TicketDAO extends BaseTicketDAO {
 		Session session = null;
 		Transaction tx = null;
 		Terminal terminal = Application.getInstance().getTerminal();
+		Date date = new Date();
 
 		try {
 			session = createNewSession();
@@ -145,8 +127,14 @@ public class TicketDAO extends BaseTicketDAO {
 
 			ticket.setVoided(true);
 			ticket.setClosed(true);
-			ticket.setClosingDate(new Date());
+			ticket.setClosingDate(date);
 			ticket.setTerminal(terminal);
+
+			Gratuity gratuity = ticket.getGratuity();
+			if (gratuity != null) {
+				gratuity.setRefunded(true);
+				session.update(gratuity);
+			}
 
 			if (ticket.isPaid()) {
 				VoidTransaction transaction = null;
@@ -162,7 +150,7 @@ public class TicketDAO extends BaseTicketDAO {
 
 				transaction.setTicket(ticket);
 				transaction.setTerminal(terminal);
-				transaction.setTransactionTime(new Date());
+				transaction.setTransactionTime(date);
 				transaction.setTransactionType(TransactionType.DEBIT.name());
 				transaction.setPaymentType(PaymentType.CASH.name());
 				transaction.setAmount(ticket.getPaidAmount());
@@ -177,8 +165,21 @@ public class TicketDAO extends BaseTicketDAO {
 			session.update(ticket);
 			session.update(terminal);
 
+			// log voids
+			ActionHistory history = new ActionHistory();
+			history.setActionName(ActionHistory.VOID_CHECK);
+			history.setDescription(POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL
+					+ ":" + ticket.getId() + "; Total" + ": " +
+					NumberUtil.formatNumber(ticket.getTotalAmount()));
+			history.setPerformer(Application.getCurrentUser());
+			history.setActionTime(date);
+			history.setTicketId(ticket.getId());
+			history.setActionName(com.floreantpos.POSConstants.VOID);
+			session.save(history);
+
 			session.flush();
 			tx.commit();
+
 		} catch (Exception x) {
 			try {
 				tx.rollback();
@@ -981,8 +982,21 @@ public class TicketDAO extends BaseTicketDAO {
 		try {
 			session = createNewSession();
 			tx = session.beginTransaction();
+			Date date = new Date();
 
 			for (Ticket ticket : tickets) {
+				// log ticket delete
+				ActionHistory history = new ActionHistory();
+				history.setActionName(ActionHistory.DELETE_CHECK);
+				history.setDescription(POSConstants.RECEIPT_REPORT_TICKET_NO_LABEL
+						+ ":" + ticket.getId() + "; Total" + ": " +
+						NumberUtil.formatNumber(ticket.getTotalAmount()));
+				history.setPerformer(Application.getCurrentUser());
+				history.setActionTime(date);
+				history.setTicketId(ticket.getId());
+				history.setActionName(com.floreantpos.POSConstants.VOID);
+				session.save(history);
+
 				super.delete(ticket, session);
 				//KitchenTicketDAO.getInstance().deleteKitchenTicket(ticket.getId());
 			}
