@@ -759,6 +759,8 @@ public class TicketItem extends BaseTicketItem implements ITicketItem {
 
 	@Override
 	public String getSubTotalAmountDisplay() {
+		if(getTaxRate()>0)
+			return NumberUtil.formatNumber(getSubtotalAmount())+"T";
 		return NumberUtil.formatNumber(getSubtotalAmount());
 	}
 
