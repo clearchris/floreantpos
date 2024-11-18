@@ -271,19 +271,20 @@ public class VoidTicketDialog extends POSDialog {
 			try {
 				// Build a detailed void receipt
 				StringBuilder receipt = new StringBuilder();
-				receipt.append("- ").append(Messages.getString("VoidTicketDialog.0")).append("\n");
-				receipt.append(Messages.getString("VoidTicketDialog.1")).append(ticket.getId()).append(" was voided.\n");
-				receipt.append("Void Reason: ").append(ticket.getVoidReason()).append("\n");
-				receipt.append("Voided By: ").append(ticket.getVoidedBy()).append("\n");
-				receipt.append("Items Voided:\n");
+				receipt.append(Messages.getString("VoidTicketDialog.0")).append("\n");
+				receipt.append(Messages.getString("VoidTicketDialog.1"));
+				receipt.append(ticket.getId()).append(" " + Messages.getString("VoidTicketDialog.2"));
+				receipt.append(Messages.getString("VoidTicketDialog.3")).append(ticket.getVoidReason()).append("\n");
+				receipt.append(Messages.getString("VoidTicketDialog.4")).append(ticket.getVoidedBy()).append("\n");
+				receipt.append(Messages.getString("VoidTicketDialog.5"));
 				for (TicketItem item : ticket.getTicketItems()) {
 					receipt.append(" - ").append(item.getName()).append(" x").append(item.getItemCount()).append("\n");
 				}
-				receipt.append("Total Amount: ").append(NumberUtil.formatNumber(ticket.getTotalAmount())).append("\n");
-				receipt.append("Tips Amount: ").append(NumberUtil.formatNumber(tipsAmount)).append("\n");
+				receipt.append(Messages.getString("VoidTicketDialog.6")).append(NumberUtil.formatNumber(ticket.getTotalAmount())).append("\n");
+				receipt.append(Messages.getString("VoidTicketDialog.7")).append(NumberUtil.formatNumber(tipsAmount)).append("\n");
 
 				// Print the detailed void receipt
-				ReceiptPrintService.printGenericReport("- " + Messages.getString("VoidTicketDialog.0"), receipt.toString());
+				ReceiptPrintService.printGenericReport(Messages.getString("VoidTicketDialog.0"), receipt.toString());
 			} catch (Exception ee) {
 				String message = Messages.getString("VoidTicketDialog.9") + ee.getMessage(); //$NON-NLS-1$
 				POSMessageDialog.showError(Application.getPosWindow(), message, ee);
