@@ -4,7 +4,7 @@
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="3.0000000000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="43"/>
+	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -17,6 +17,7 @@
 	<parameter name="fromDate" class="java.util.Date" isForPrompting="false"/>
 	<parameter name="toDate" class="java.util.Date" isForPrompting="false"/>
 	<parameter name="reportHeader" class="net.sf.jasperreports.engine.JasperReport"/>
+	<parameter name="reportTitle" class="java.lang.String" isForPrompting="false"/>
 	<field name="ticketId" class="java.lang.Integer"/>
 	<field name="date" class="java.lang.String"/>
 	<field name="tip" class="java.lang.Double"/>
@@ -38,7 +39,7 @@
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right">
-						<font isBold="false" pdfFontName="Helvetica-Bold"/>
+						<font isBold="false" pdfFontName="SansSerif"/>
 					</textElement>
 					<text><![CDATA[User ID:]]></text>
 				</staticText>
@@ -51,7 +52,7 @@
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement>
-						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+						<font isBold="true" pdfFontName="SansSerif"/>
 					</textElement>
 					<text><![CDATA[User Name:]]></text>
 				</staticText>
@@ -64,7 +65,7 @@
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Left">
-						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+						<font isBold="true" pdfFontName="SansSerif"/>
 					</textElement>
 					<text><![CDATA[Ticket ID]]></text>
 				</staticText>
@@ -77,7 +78,7 @@
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Left">
-						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+						<font isBold="true" pdfFontName="SansSerif"/>
 					</textElement>
 					<text><![CDATA[Date]]></text>
 				</staticText>
@@ -90,7 +91,7 @@
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right">
-						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+						<font isBold="true" pdfFontName="SansSerif"/>
 					</textElement>
 					<text><![CDATA[Amount]]></text>
 				</staticText>
@@ -142,7 +143,7 @@
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right">
-						<font isBold="false" pdfFontName="Helvetica-Bold"/>
+						<font isBold="false" pdfFontName="SansSerif"/>
 					</textElement>
 					<text><![CDATA[Name:]]></text>
 				</staticText>
@@ -170,7 +171,7 @@
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right">
-						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+						<font isBold="true" pdfFontName="SansSerif"/>
 					</textElement>
 					<text><![CDATA[Total:]]></text>
 				</staticText>
@@ -204,19 +205,6 @@
 				</subreportParameter>
 				<subreportExpression><![CDATA[$P{reportHeader}]]></subreportExpression>
 			</subreport>
-			<staticText>
-				<reportElement key="staticText-1" positionType="Float" x="1" y="29" width="533" height="25" uuid="f7db7f79-7f2b-4435-a92e-05f2e18d91cf"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font size="18" isBold="true" pdfFontName="Helvetica-Bold"/>
-				</textElement>
-				<text><![CDATA[Tips Report]]></text>
-			</staticText>
 			<staticText>
 				<reportElement key="staticText-10" positionType="Float" x="0" y="74" width="85" height="15" uuid="1fc54390-a5f1-4583-bc1d-c035598ce37e"/>
 				<box>
@@ -292,6 +280,13 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{toDate}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="28" width="535" height="31" uuid="1daf2e79-a476-4825-9a49-b7e0b197328a"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tips Report]]></text>
+			</staticText>
 		</band>
 	</title>
 	<pageHeader>
@@ -341,14 +336,14 @@
 	<pageFooter>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement x="90" y="14" width="350" height="16" uuid="421f042d-9902-4bc9-9473-38eb1c866320"/>
-				<textElement textAlignment="Center">
+				<reportElement x="0" y="15" width="224" height="15" uuid="421f042d-9902-4bc9-9473-38eb1c866320"/>
+				<textElement textAlignment="Left">
 					<font size="9"/>
 				</textElement>
 				<text><![CDATA[Generated by Floreant POS (www.floreant.org)]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement key="textField-10" x="440" y="14" width="93" height="16" uuid="9f0ec388-f749-453b-b0a6-a228e0a01305"/>
+				<reportElement key="textField-10" x="309" y="15" width="198" height="15" uuid="9f0ec388-f749-453b-b0a6-a228e0a01305"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -356,7 +351,11 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA["Page: " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Page: " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="507" y="15" width="28" height="15" uuid="955c3fb8-3027-4a13-930b-ce534a6eeee4"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
