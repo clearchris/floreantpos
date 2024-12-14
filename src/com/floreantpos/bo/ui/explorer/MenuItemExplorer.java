@@ -75,6 +75,7 @@ public class MenuItemExplorer extends TransparentPanel {
 		tableModel.addColumn(POSConstants.VISIBLE.toUpperCase(), "visible"); //$NON-NLS-1$
 		tableModel.addColumn(POSConstants.FOOD_GROUP.toUpperCase(), "parent"); //$NON-NLS-1$
 		tableModel.addColumn(POSConstants.TAX.toUpperCase() + " " + POSConstants.GROUP.toUpperCase(), "taxGroup"); //$NON-NLS-1$
+		tableModel.addColumn(Messages.getString("MenuItemExplorer.20"), MenuItem.PROP_SERVICE_CHARGE); //$NON-NLS-1$
 		tableModel.addColumn(Messages.getString("MenuItemExplorer.21"), "sortOrder"); //$NON-NLS-1$ //$NON-NLS-2$
 		tableModel.addColumn(Messages.getString("MenuItemExplorer.23"), "buttonColor"); //$NON-NLS-1$ //$NON-NLS-2$
 		tableModel.addColumn(Messages.getString("MenuItemExplorer.25"), "textColor"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -510,10 +511,11 @@ public class MenuItemExplorer extends TransparentPanel {
 		columnWidth.add(50);
 		columnWidth.add(50);
 		columnWidth.add(140);
-		columnWidth.add(70);
-		columnWidth.add(70);
 		columnWidth.add(100);
 		columnWidth.add(100);
+		columnWidth.add(50);
+		columnWidth.add(30);
+		columnWidth.add(30);
 		columnWidth.add(200);
 
 		return columnWidth;

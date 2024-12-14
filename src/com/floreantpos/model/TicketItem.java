@@ -759,9 +759,13 @@ public class TicketItem extends BaseTicketItem implements ITicketItem {
 
 	@Override
 	public String getSubTotalAmountDisplay() {
+		String subTotalAmountDisplay = NumberUtil.formatNumber(getSubtotalAmount());
 		if(getTaxRate()>0)
-			return NumberUtil.formatNumber(getSubtotalAmount())+"T";
-		return NumberUtil.formatNumber(getSubtotalAmount());
+			subTotalAmountDisplay+="T";
+		// service change has been added to ticket and menu item is service charge eligible
+		if(this.getTicket().getManualServiceCharge() && this.getMenuItem().getServiceCharge() != null)
+			subTotalAmountDisplay+="S";
+		return subTotalAmountDisplay;
 	}
 
 	@Override

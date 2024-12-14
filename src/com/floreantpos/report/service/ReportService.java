@@ -275,11 +275,13 @@ public class ReportService {
 			//gross non-taxable sales
 			report.setGrossNonTaxableSalesAmount(calculateGrossSales(session, fromDate, toDate, user, false, false));
 			report.setTaxableLessDiscount(calculateGrossSales(session, fromDate, toDate, user, true, true));
+			report.setNonTaxableLessDiscount(calculateGrossSales(session, fromDate, toDate, user, false, true));
 			//discount
 			report.setDiscountAmount(calculateDiscount(session, fromDate, toDate, user));
 			//tax
 			report.setSalesTaxAmount(calculateTax(session, fromDate, toDate, user));
 			report.setChargedTipsAmount(calculateTips(session, fromDate, toDate, user));
+			report.setServiceChargesAmount(calculateServiceCharges(session, fromDate, toDate, user));
 
 			report.setCashReceiptsAmount(calculateCreditReceipt(session, CashTransaction.class, fromDate, toDate, user));
 			report.setCreditCardReceiptsAmount(calculateCreditReceipt(session, CreditCardTransaction.class, fromDate, toDate, user));
@@ -453,6 +455,24 @@ public class ReportService {
 		criteria.add(Restrictions.eq(Ticket.PROP_PAID, Boolean.TRUE));
 
 		criteria.setProjection(Projections.sum("g." + Gratuity.PROP_AMOUNT)); //$NON-NLS-1$
+
+		return getDoubleAmount(criteria.uniqueResult());
+	}
+
+	private double calculateServiceCharges(Session session, Date fromDate, Date toDate, User user) {
+		//service charges
+		Criteria criteria = session.createCriteria(Ticket.class);
+		criteria.add(Restrictions.ge(Ticket.PROP_CREATE_DATE, fromDate));
+		criteria.add(Restrictions.le(Ticket.PROP_CREATE_DATE, toDate));
+
+		if (user != null) {
+			criteria.add(Restrictions.eq(Ticket.PROP_OWNER, user));
+		}
+		criteria.add(Restrictions.eq(Ticket.PROP_VOIDED, Boolean.FALSE));
+		criteria.add(Restrictions.eq(Ticket.PROP_REFUNDED, Boolean.FALSE));
+		criteria.add(Restrictions.eq(Ticket.PROP_PAID, Boolean.TRUE));
+
+		criteria.setProjection(Projections.sum(Ticket.PROP_SERVICE_CHARGE));
 
 		return getDoubleAmount(criteria.uniqueResult());
 	}

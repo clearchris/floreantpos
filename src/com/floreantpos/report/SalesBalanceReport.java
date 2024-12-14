@@ -42,6 +42,7 @@ public class SalesBalanceReport {
 	private double cashBackAmount;
 	private double receiptDiffAmount;
 	private double grossTipsPaidAmount;
+	private double serviceChargesAmount;
 	private double tipsDiscountAmount;
 	private double cashPayoutAmount;
 	private double cashAccountableAmount;
@@ -55,6 +56,7 @@ public class SalesBalanceReport {
 	private double amexAmount;
 	private double discoveryAmount;
 	private double taxableLessDiscount;
+	private double nonTaxableLessDiscount;
 
 	public double getArReceiptsAmount() {
 		return arReceiptsAmount;
@@ -102,6 +104,14 @@ public class SalesBalanceReport {
 
 	public void setChargedTipsAmount(double chargedTipsAmount) {
 		this.chargedTipsAmount = chargedTipsAmount;
+	}
+
+	public double getServiceChargesAmount() {
+		return serviceChargesAmount;
+	}
+
+	public void setServiceChargesAmount(double serviceChargesAmount) {
+		this.serviceChargesAmount = serviceChargesAmount;
 	}
 
 	public double getCoCurrentAmount() {
@@ -188,6 +198,12 @@ public class SalesBalanceReport {
 	}
 
 	public double getTaxableLessDiscount(){ return taxableLessDiscount; }
+
+	public void setNonTaxableLessDiscount(double nonTaxableLessDiscount) {
+		this.nonTaxableLessDiscount = nonTaxableLessDiscount;
+	}
+
+	public double getNonTaxableLessDiscount(){ return nonTaxableLessDiscount; }
 
 	public double getGrossReceiptsAmount() {
 		return grossReceiptsAmount;
@@ -288,7 +304,7 @@ public class SalesBalanceReport {
 	public void calculate() {
 		netSalesAmount = (grossTaxableSalesAmount + grossNonTaxableSalesAmount) - discountAmount;
 		totalRevenueAmount = netSalesAmount + salesTaxAmount;
-		grossReceiptsAmount = totalRevenueAmount + payInsAmount + chargedTipsAmount;
+		grossReceiptsAmount = totalRevenueAmount + payInsAmount + chargedTipsAmount + serviceChargesAmount;
 		receiptDiffAmount = grossReceiptsAmount - cashReceiptsAmount - creditCardReceiptsAmount - arReceiptsAmount - giftCertReturnAmount
 				+ giftCertChangeAmount + cashBackAmount;
 		cashAccountableAmount = cashReceiptsAmount - grossTipsPaidAmount + tipsDiscountAmount - cashPayoutAmount - giftCertChangeAmount - cashBackAmount;
@@ -327,5 +343,4 @@ public class SalesBalanceReport {
 	public void setDiscoveryAmount(double discoveryAmount) {
 		this.discoveryAmount = discoveryAmount;
 	}
-
 }

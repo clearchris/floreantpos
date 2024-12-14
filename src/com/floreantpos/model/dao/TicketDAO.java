@@ -26,6 +26,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.floreantpos.model.*;
+import com.floreantpos.model.util.DateUtil;
+import com.floreantpos.report.ServiceChargeReportData;
 import com.floreantpos.util.NumberUtil;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -43,6 +45,7 @@ import com.floreantpos.POSConstants;
 import com.floreantpos.main.Application;
 import com.floreantpos.model.util.TicketSummary;
 import com.floreantpos.swing.PaginatedTableModel;
+import org.hibernate.transform.Transformers;
 
 public class TicketDAO extends BaseTicketDAO {
 	private final static TicketDAO instance = new TicketDAO();
@@ -272,6 +275,52 @@ public class TicketDAO extends BaseTicketDAO {
 			}
 			return 0;
 		} finally {
+			closeSession(session);
+		}
+	}
+
+	public List<ServiceChargeReportData> createServiceChargeReport(Date fromDate, Date toDate) {
+		return createServiceChargeReport(fromDate, toDate, null);
+	}
+
+	public List<ServiceChargeReportData> createServiceChargeReport(Date fromDate, Date toDate, User user) {
+		Session session = null;
+
+		try {
+			session = getSession();
+
+			fromDate = DateUtil.startOfDay(fromDate);
+			toDate = DateUtil.endOfDay(toDate);
+
+			Criteria criteria = session.createCriteria(Ticket.class);
+			if (user != null)
+				criteria.add(Restrictions.eq(Ticket.PROP_OWNER, user));
+			criteria.add(Restrictions.ge(Ticket.PROP_CREATE_DATE, fromDate));
+			criteria.add(Restrictions.le(Ticket.PROP_CREATE_DATE, toDate));
+			criteria.add(Restrictions.eq(Ticket.PROP_PAID, Boolean.TRUE));
+			criteria.add(Restrictions.eq(Ticket.PROP_VOIDED, Boolean.FALSE));
+			criteria.add(Restrictions.eq(Ticket.PROP_REFUNDED, Boolean.FALSE));
+			criteria.add(Restrictions.gt(Ticket.PROP_SERVICE_CHARGE, 0.0));
+
+			criteria.createAlias(Ticket.PROP_OWNER, "o");
+
+			criteria.addOrder(Order.asc("o." + User.PROP_AUTO_ID));
+			criteria.addOrder(Order.asc(Ticket.PROP_CREATE_DATE));
+
+			ProjectionList projections = Projections.projectionList();
+			projections.add(Projections.property(Ticket.PROP_ID), "ticketId");
+			projections.add(Projections.property(Ticket.PROP_CREATE_DATE), "date");
+			projections.add(Projections.property(Ticket.PROP_SERVICE_CHARGE), "amount");
+			projections.add(Projections.property("o." + User.PROP_AUTO_ID), "userId");
+			projections.add(Projections.property("o." + User.PROP_FIRST_NAME), "userFirstName");
+			projections.add(Projections.property("o." + User.PROP_LAST_NAME), "userLastName");
+
+			criteria.setProjection(projections);
+			criteria.setResultTransformer(Transformers.aliasToBean(ServiceChargeReportData.class));
+
+			return criteria.list();
+
+		}  finally {
 			closeSession(session);
 		}
 	}

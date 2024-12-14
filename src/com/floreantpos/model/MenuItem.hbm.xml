@@ -75,6 +75,10 @@
 			<column name="TAX_GROUP_ID" />
 		</many-to-one>
 
+		<!-- uni-directional many-to-one association to ServiceCharge -->
+		<many-to-one class="com.floreantpos.model.ServiceCharge" lazy="false" name="serviceCharge">
+			<column name="SERVICE_CHARGE_ID" />
+		</many-to-one>
 
 		<many-to-one class="com.floreantpos.model.Recepie" lazy="false" cascade="all" name="recepie">
 			<column name="RECEPIE" />

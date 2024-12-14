@@ -32,6 +32,7 @@ public abstract class BaseTicket  implements Comparable, Serializable {
 	public static String PROP_GRATUITY = "gratuity"; //$NON-NLS-1$
 	public static String PROP_TAX_AMOUNT = "taxAmount"; //$NON-NLS-1$
 	public static String PROP_SERVICE_CHARGE = "serviceCharge"; //$NON-NLS-1$
+	public static String PROP_MANUAL_SERVICE_CHARGE = "manualServiceCharge"; //$NON-NLS-1$
 	public static String PROP_VOID_REASON = "voidReason"; //$NON-NLS-1$
 	public static String PROP_DRAWER_RESETTED = "drawerResetted"; //$NON-NLS-1$
 	public static String PROP_ADJUSTMENT_AMOUNT = "adjustmentAmount"; //$NON-NLS-1$
@@ -56,7 +57,6 @@ public abstract class BaseTicket  implements Comparable, Serializable {
 	public static String PROP_EXTRA_DELIVERY_INFO = "extraDeliveryInfo"; //$NON-NLS-1$
 	public static String PROP_CLOSING_DATE = "closingDate"; //$NON-NLS-1$
 	public static String PROP_ID = "id"; //$NON-NLS-1$
-
 
 	// constructors
 	public BaseTicket () {
@@ -110,6 +110,7 @@ public abstract class BaseTicket  implements Comparable, Serializable {
 		protected java.lang.Boolean taxExempt;
 		protected java.lang.Boolean reOpened;
 		protected java.lang.Double serviceCharge;
+		protected java.lang.Boolean manualServiceCharge;
 		protected java.lang.Double deliveryCharge;
 		protected java.lang.Integer customerId;
 		protected java.lang.String deliveryAddress;
@@ -628,6 +629,22 @@ public abstract class BaseTicket  implements Comparable, Serializable {
 	 */
 	public void setServiceCharge (java.lang.Double serviceCharge) {
 		this.serviceCharge = serviceCharge;
+	}
+
+
+
+	/**
+	 * Return the value associated with the column: MANUAL_SERVICE_CHARGE
+	 */
+	public java.lang.Boolean getManualServiceCharge () {
+		return manualServiceCharge == null ? Boolean.FALSE : manualServiceCharge; }
+
+	/**
+	 * Set the value related to the column: MANUAL_SERVICE_CHARGE
+	 * @param manualServiceCharge the MANUAL_SERVICE_CHARGE value
+	 */
+	public void setManualServiceCharge (java.lang.Boolean manualServiceCharge) {
+		this.manualServiceCharge = manualServiceCharge;
 	}
 
 

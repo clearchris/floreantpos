@@ -637,20 +637,27 @@ public class Ticket extends BaseTicket {
 	//	}
 
 	public double calculateServiceCharge() {
-		/*if (getType() != OrderType.DINE_IN) {
-			return 0;
-		}*/
+		double serviceChargeTotal = 0.0;
 
-		Restaurant restaurant = Application.getInstance().getRestaurant();
-		double serviceChargePercentage = restaurant.getServiceChargePercentage();
-
-		double serviceCharge = 0.0;
-
-		if (serviceChargePercentage > 0.0) {
-			serviceCharge = (getSubtotalAmount() - getDiscountAmount()) * (serviceChargePercentage / 100.0);
+		if(this.getManualServiceCharge()){
+			List<TicketItem> ticketItems = getTicketItems();
+			for (TicketItem item : ticketItems) {
+				ServiceCharge serviceCharge = item.getMenuItem().getServiceCharge();
+				if(serviceCharge != null) {
+					serviceChargeTotal += serviceCharge.getRate()/100 * item.getSubtotalAmount();
+				}
+			}
 		}
+		else {
+			Restaurant restaurant = Application.getInstance().getRestaurant();
+			double serviceChargePercentage = restaurant.getServiceChargePercentage();
 
-		return NumberUtil.roundToTwoDigit(fixInvalidAmount(serviceCharge));
+			if (serviceChargePercentage > 0.0) {
+				serviceChargeTotal = (getSubtotalAmount() - getDiscountAmount()) * (serviceChargePercentage / 100.0);
+			}
+		}
+		this.setServiceCharge(NumberUtil.roundToTwoDigit(fixInvalidAmount(serviceChargeTotal)));
+		return this.getServiceCharge();
 	}
 
 	public OrderType getOrderType() {

@@ -80,6 +80,7 @@ public class SettleTicketDialog extends ViewPanel implements PaymentListener, Ti
 	private JTextField tfTax;
 	private JTextField tfTotal;
 	private JTextField tfGratuity;
+	private JTextField tfServiceCharge;
 	private SettleTicketProcessor ticketProcessor = null;
 	private boolean canceled = false;
 
@@ -159,6 +160,9 @@ public class SettleTicketDialog extends ViewPanel implements PaymentListener, Ti
 		}
 		else {
 			tfGratuity.setText("0.00"); //$NON-NLS-1$
+		}
+		if(ticket.getServiceCharge() != null) {
+			tfServiceCharge.setText(NumberUtil.formatNumber(ticket.getServiceCharge()));
 		}
 		tfTotal.setText(NumberUtil.formatNumber(ticket.getTotalAmount()));
 	}
@@ -343,6 +347,16 @@ public class SettleTicketDialog extends ViewPanel implements PaymentListener, Ti
 		tfGratuity.setEditable(false);
 		tfGratuity.setHorizontalAlignment(SwingConstants.TRAILING);
 
+		JLabel lblServiceCharge = new javax.swing.JLabel();
+		lblServiceCharge.setFont(lblServiceCharge.getFont().deriveFont(Font.PLAIN, PosUIManager.getFontSize(16)));
+		lblServiceCharge.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+		lblServiceCharge.setText(Messages.getString("SettleTicketDialog.9") + ":" + " " + CurrencyUtil.getCurrencySymbol()); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+
+		tfServiceCharge = new javax.swing.JTextField(10);
+		tfServiceCharge.setFont(tfServiceCharge.getFont().deriveFont(Font.PLAIN, PosUIManager.getFontSize(16)));
+		tfServiceCharge.setEditable(false);
+		tfServiceCharge.setHorizontalAlignment(SwingConstants.TRAILING);
+
 		JLabel lblTotal = new javax.swing.JLabel();
 		lblTotal.setFont(lblTotal.getFont().deriveFont(Font.BOLD, PosUIManager.getFontSize(18)));
 		lblTotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -365,6 +379,8 @@ public class SettleTicketDialog extends ViewPanel implements PaymentListener, Ti
 			ticketAmountPanel.add(lblDeliveryCharge, "newline,growx,aligny center"); //$NON-NLS-1$
 			ticketAmountPanel.add(tfDeliveryCharge, "growx,aligny center"); //$NON-NLS-1$
 		}
+		ticketAmountPanel.add(lblServiceCharge, "newline,growx,aligny center"); //$NON-NLS-1$
+		ticketAmountPanel.add(tfServiceCharge, "growx,aligny center"); //$NON-NLS-1$
 		ticketAmountPanel.add(lblGratuity, "newline,growx,aligny center"); //$NON-NLS-1$
 		ticketAmountPanel.add(tfGratuity, "growx,aligny center"); //$NON-NLS-1$
 		ticketAmountPanel.add(lblTotal, "newline,growx,aligny center"); //$NON-NLS-1$

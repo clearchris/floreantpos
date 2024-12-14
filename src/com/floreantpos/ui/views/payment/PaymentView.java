@@ -72,6 +72,7 @@ public class PaymentView extends JPanel {
 	private com.floreantpos.swing.PosButton btnCancel;
 	private com.floreantpos.swing.PosButton btnCash;
 	private com.floreantpos.swing.PosButton btnPrint;
+	private com.floreantpos.swing.PosButton btnServiceCharge;
 	private com.floreantpos.swing.PosButton btnCreditCard;
 	private com.floreantpos.swing.PosButton btnDebitCard;
 	private com.floreantpos.swing.PosButton btnGift;
@@ -376,7 +377,7 @@ public class PaymentView extends JPanel {
 
 		calcButtonPanel.add(centerPanel, "span 4,growx"); //$NON-NLS-1$
 
-		btnGratuity = new PosButton(com.floreantpos.POSConstants.ADD_GRATUITY_TEXT);
+		btnGratuity = new PosButton(Messages.getString("PaymentView.24")); //$NON-NLS-1$
 		btnGratuity.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				doSetGratuity();
@@ -407,6 +408,18 @@ public class PaymentView extends JPanel {
 		panel4.add(btnPrint);
 
 		calcButtonPanel.add(panel4, "span 4,growx"); //$NON-NLS-1$
+
+		btnServiceCharge = new PosButton(Messages.getString("PaymentView.25"));
+		btnServiceCharge.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ticketProcessor.doSetServiceCharge();
+			}
+		});
+
+		JPanel panel5 = new JPanel(new GridLayout(1, 0, 5, 5));
+		panel5.add(btnServiceCharge);
+		calcButtonPanel.add(panel5, "span 4,growx"); //$NON-NLS-1$
+
 		leftPanel.add(calcButtonPanel, BorderLayout.CENTER);
 
 		actionButtonPanel = new com.floreantpos.swing.TransparentPanel();

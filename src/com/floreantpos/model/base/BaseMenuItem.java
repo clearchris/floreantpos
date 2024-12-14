@@ -40,7 +40,7 @@ public abstract class BaseMenuItem  implements Comparable, Serializable {
 	public static String PROP_ID = "id"; //$NON-NLS-1$
 	public static String PROP_BUY_PRICE = "buyPrice"; //$NON-NLS-1$
 	public static String PROP_BUTTON_COLOR_CODE = "buttonColorCode"; //$NON-NLS-1$
-
+	public static String PROP_SERVICE_CHARGE = "serviceCharge"; //$NON-NLS-1$
 
 	// constructors
 	public BaseMenuItem () {
@@ -107,6 +107,7 @@ public abstract class BaseMenuItem  implements Comparable, Serializable {
 	private com.floreantpos.model.TaxGroup taxGroup;
 	private com.floreantpos.model.Recepie recepie;
 	private com.floreantpos.model.PrinterGroup printerGroup;
+	private com.floreantpos.model.ServiceCharge serviceCharge;
 
 	// collections
 	private java.util.List<com.floreantpos.model.PizzaPrice> pizzaPriceList;
@@ -513,7 +514,19 @@ public abstract class BaseMenuItem  implements Comparable, Serializable {
 		this.parent = parent;
 	}
 
+    /**
+	 * Return the value associated with the column: SERVICE_CHARGE_ID
+	 */
+	public com.floreantpos.model.ServiceCharge getServiceCharge () {
+					return serviceCharge;
+			}
 
+	/**
+	 * Set the value related to the column: SERVICE_CHARGE_ID
+	 */
+	public void setServiceCharge (com.floreantpos.model.ServiceCharge serviceCharge) {
+		this.serviceCharge = serviceCharge;
+	}
 
 	/**
 	 * Return the value associated with the column: TAX_GROUP_ID

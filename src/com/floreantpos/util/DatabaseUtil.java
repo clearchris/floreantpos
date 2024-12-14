@@ -47,6 +47,7 @@ import com.floreantpos.model.OrderType;
 import com.floreantpos.model.PizzaCrust;
 import com.floreantpos.model.PosTransaction;
 import com.floreantpos.model.Restaurant;
+import com.floreantpos.model.ServiceCharge;
 import com.floreantpos.model.Shift;
 import com.floreantpos.model.Tax;
 import com.floreantpos.model.Terminal;

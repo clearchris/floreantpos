@@ -163,6 +163,7 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 		reportMenu.add(new SalesExceptionReportAction());
 		reportMenu.add(new SalesReportAction());
 		reportMenu.add(new TipsReportAction());
+		reportMenu.add(new ServiceChargesReportAction());
 		menuBar.add(reportMenu);
 	}
 
@@ -231,6 +232,7 @@ public class BackOfficeWindow extends javax.swing.JFrame {
 		paymentMenu.add(new CouponExplorerAction());
 		paymentMenu.add(new CustomPaymentBrowserAction());
 		paymentMenu.add(new GiftCertificateExplorerAction());
+		paymentMenu.add(new ServiceChargeExplorerAction());
 		menuBar.add(paymentMenu);
 	}
 

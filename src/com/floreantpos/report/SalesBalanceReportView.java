@@ -158,10 +158,10 @@ public class SalesBalanceReportView extends JPanel {
 		map.put("netSales", NumberUtil.formatNumber(report.getNetSalesAmount())); //$NON-NLS-1$
 		map.put("salesTaxes", NumberUtil.formatNumber(report.getSalesTaxAmount())); //$NON-NLS-1$
 		map.put("totalRevenues", NumberUtil.formatNumber(report.getTotalRevenueAmount())); //$NON-NLS-1$
-		map.put("taxableLessDiscount", NumberUtil.formatNumber(report.getTaxableLessDiscount())); //$NON-NLS-1$
 		map.put("giftCertSold", NumberUtil.formatNumber(report.getGiftCertSalesAmount())); //$NON-NLS-1$
 		map.put("payIns", NumberUtil.formatNumber(report.getPayInsAmount())); //$NON-NLS-1$
 		map.put("chargedTips", NumberUtil.formatNumber(report.getChargedTipsAmount())); //$NON-NLS-1$
+		map.put("serviceCharges", NumberUtil.formatNumber(report.getServiceChargesAmount())); //$NON-NLS-1$
 		map.put("grossReceipts", NumberUtil.formatNumber(report.getGrossReceiptsAmount())); //$NON-NLS-1$
 		map.put("cashReceipts", NumberUtil.formatNumber(report.getCashReceiptsAmount())); //$NON-NLS-1$
 		map.put("creditCardReceipts", NumberUtil.formatNumber(report.getCreditCardReceiptsAmount())); //$NON-NLS-1$
@@ -180,11 +180,17 @@ public class SalesBalanceReportView extends JPanel {
 		map.put("coOverShort", NumberUtil.formatNumber(report.getOverShortAmount())); //$NON-NLS-1$
 		map.put("days", String.valueOf((int) ((toDate.getTime() - fromDate.getTime()) * (1.15740741 * Math.pow(10, -8))) + 1)); //$NON-NLS-1$
 
-		map.put("visaCreditCardSum", NumberUtil.formatNumber(report.getVisaCreditCardAmount())); //$NON-NLS-1$
-		map.put("mastercardSum", NumberUtil.formatNumber(report.getMasterCardAmount())); //$NON-NLS-1$
-		map.put("amexSum", NumberUtil.formatNumber(report.getAmexAmount())); //$NON-NLS-1$
-		map.put("discoverySum", NumberUtil.formatNumber(report.getDiscoveryAmount())); //$NON-NLS-1$
-		
+		// if using an external payment service, the following fields will be zero, don't display them
+		if( !(report.getAmexAmount() == 0 && report.getDiscoveryAmount() == 0 && report.getMasterCardAmount() == 0 && report.getVisaCreditCardAmount() == 0)) {
+			map.put("visaCreditCardSum", NumberUtil.formatNumber(report.getVisaCreditCardAmount())); //$NON-NLS-1$
+			map.put("mastercardSum", NumberUtil.formatNumber(report.getMasterCardAmount())); //$NON-NLS-1$
+			map.put("amexSum", NumberUtil.formatNumber(report.getAmexAmount())); //$NON-NLS-1$
+			map.put("discoverySum", NumberUtil.formatNumber(report.getDiscoveryAmount())); //$NON-NLS-1$
+		}
+
+		map.put("taxableLessDiscount", NumberUtil.formatNumber(report.getTaxableLessDiscount())); //$NON-NLS-1$
+		map.put("nonTaxableLessDiscount", NumberUtil.formatNumber(report.getNonTaxableLessDiscount())); //$NON-NLS-1$
+
 //		map.put("totalReceipts", NumberUtil.formatNumber(report.getCreditCardReceiptsAmount()));
 //		map.put("totalTips", NumberUtil.formatNumber(report.getGrossTipsPaidAmount()));
 

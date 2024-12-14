@@ -27,9 +27,11 @@ import java.util.List;
 
 import javax.swing.*;
 
+import com.floreantpos.Messages;
 import com.floreantpos.actions.PosAction;
 import com.floreantpos.actions.ShowTicketAction;
 import com.floreantpos.bo.actions.PosTransactionExplorerAction;
+import com.floreantpos.model.ServiceCharge;
 import net.miginfocom.swing.MigLayout;
 
 import org.jdesktop.swingx.JXDatePicker;
@@ -216,6 +218,7 @@ public class TicketExplorer extends TransparentPanel {
 	class TicketExplorerTableModel extends ListTableModel<Ticket> {
 		String[] columnNames = { POSConstants.ID, POSConstants.CREATED_BY.toUpperCase(), POSConstants.CREATE_TIME.toUpperCase(),
 				POSConstants.SETTLE_TIME.toUpperCase(), POSConstants.SUBTOTAL.toUpperCase(), POSConstants.DISCOUNT.toUpperCase(),
+				Messages.getString("TicketExplorer.1").toUpperCase(),
 				POSConstants.TAX.toUpperCase(), POSConstants.TOTAL, POSConstants.PAID, POSConstants.VOID, POSConstants.TICKET_TYPE };
 
 		@Override
@@ -260,17 +263,21 @@ public class TicketExplorer extends TransparentPanel {
 					return Double.valueOf(ticket.getDiscountAmount());
 
 				case 6:
-					return Double.valueOf(ticket.getTaxAmount());
+					return Double.valueOf(ticket.getServiceCharge());
 
 				case 7:
-					return Double.valueOf(ticket.getTotalAmount());
+					return Double.valueOf(ticket.getTaxAmount());
 
 				case 8:
-					return Boolean.valueOf(ticket.isPaid());
+					return Double.valueOf(ticket.getTotalAmount());
 
 				case 9:
-					return Boolean.valueOf(ticket.isVoided());
+					return Boolean.valueOf(ticket.isPaid());
+
 				case 10:
+					return Boolean.valueOf(ticket.isVoided());
+
+				case 11:
 					return ticket.getTicketType();
 			}
 			return null;

@@ -260,6 +260,16 @@ public class SettleTicketProcessor implements CardInputListener {
 		doInformListenerPaymentUpdate();
 	}
 
+	public void doSetServiceCharge() {
+		if (ticket == null)
+			return;
+
+		ticket.setManualServiceCharge(ticket.getManualServiceCharge()==null? true : !ticket.getManualServiceCharge());
+		ticket.calculateServiceCharge();
+		OrderController.saveOrder(ticket);
+		doInformListenerPaymentUpdate();
+	}
+
 	public static void showTransactionCompleteMsg(final double dueAmount, final double tenderedAmount, Ticket ticket, PosTransaction transaction) {
 		try {
 			Application.getPosWindow().setGlassPaneVisible(true);

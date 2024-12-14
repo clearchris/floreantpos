@@ -120,6 +120,7 @@ public abstract class _RootDAO extends com.floreantpos.model.dao._BaseRootDAO {
 		configuration.addClass(GuestCheckPrint.class);
 		configuration.addClass(OnlineOrder.class);
 		configuration.addClass(GiftCertificate.class);
+		configuration.addClass(ServiceCharge.class);
 
 		configureInventoryClasses(configuration);
 

@@ -12,5 +12,5 @@ public class DatabaseVersionHistory {
 	 * added properties (table :RESTAURANT_PROPERTIES) in Restaurant.
 	 * 
 	 */
-	public final static int DATABASE_VERSION = 101;
+	public final static int DATABASE_VERSION = 113;
 }
