@@ -35,7 +35,10 @@ import org.apache.commons.collections4.set.UnmodifiableSortedSet;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.jdesktop.swingx.calendar.DateUtils;
 
 import com.floreantpos.Messages;
@@ -104,145 +107,100 @@ public class SalesReport extends Report {
 		Date date1 = DateUtils.startOfDay(getStartDate());
 		Date date2 = DateUtils.endOfDay(getEndDate());
 
-		//List<Ticket> tickets = TicketDAO.getInstance().findTickets(date1, date2, getReportType() == Report.REPORT_TYPE_1 ? true : false, getTerminal());
-
 		GenericDAO dao = new GenericDAO();
 		Session session = null;
 
-		//try {
+		try {
 			session = dao.getSession();
 
-			Criteria criteria = session.createCriteria(TicketItem.class, "item"); //$NON-NLS-1$
-			criteria.createCriteria("ticket", "t"); //$NON-NLS-1$ //$NON-NLS-2$
-			//ProjectionList projectionList = Projections.projectionList();
-			//projectionList.add(Projections.sum(TicketItem.PROP_ITEM_COUNT));
-			//projectionList.add(Projections.sum(TicketItem.PROP_SUBTOTAL_AMOUNT));
-			//projectionList.add(Projections.sum(TicketItem.PROP_DISCOUNT_AMOUNT));
-			//criteria.setProjection(projectionList);
-			if(!isIncludedFreeItems())
-				criteria.add(Restrictions.ne("item." + TicketItem.PROP_UNIT_PRICE,0.0));
-			if(getMenuGroup()!=null && getMenuGroup() instanceof MenuGroup)
+			// Criteria for TicketItem
+			Criteria criteria = session.createCriteria(TicketItem.class, "item");
+			criteria.createCriteria("ticket", "t");
+
+			if (!isIncludedFreeItems()) {
+				criteria.add(Restrictions.ne("item." + TicketItem.PROP_UNIT_PRICE, 0.0));
+			}
+			if (getMenuGroup() != null && getMenuGroup() instanceof MenuGroup) {
 				criteria.add(Restrictions.eq("item." + TicketItem.PROP_GROUP_NAME, getMenuGroup().getName()));
-			criteria.add(Restrictions.ge("t." + Ticket.PROP_CREATE_DATE, date1)); //$NON-NLS-1$
-			criteria.add(Restrictions.le("t." + Ticket.PROP_CREATE_DATE, date2)); //$NON-NLS-1$
-			criteria.add(Restrictions.eq("t." + Ticket.PROP_PAID, Boolean.TRUE)); //$NON-NLS-1$
+			}
+			criteria.add(Restrictions.ge("t." + Ticket.PROP_CREATE_DATE, date1));
+			criteria.add(Restrictions.le("t." + Ticket.PROP_CREATE_DATE, date2));
+			criteria.add(Restrictions.eq("t." + Ticket.PROP_PAID, Boolean.TRUE));
 			criteria.add(Restrictions.eq("t." + Ticket.PROP_VOIDED, Boolean.FALSE));
 			criteria.add(Restrictions.eq("t." + Ticket.PROP_REFUNDED, Boolean.FALSE));
 			criteria.add(Restrictions.eq("t." + Ticket.PROP_CLOSED, Boolean.TRUE));
 			criteria.addOrder(Order.asc("item." + TicketItem.PROP_NAME));
 
-			List<TicketItem> list = criteria.list();
+			ProjectionList projections = Projections.projectionList();
+			projections.add(Projections.groupProperty("item." + TicketItem.PROP_ITEM_ID), "uniqueId");
+			projections.add(Projections.groupProperty("item." + TicketItem.PROP_NAME), "name");
+			projections.add(Projections.groupProperty("item." + TicketItem.PROP_UNIT_PRICE), "price");
+			projections.add(Projections.groupProperty("item." + TicketItem.PROP_TAX_RATE), "taxRate");
+			//TODO: fractional items not handled - item quantity vs count
+			projections.add(Projections.sum("item." + TicketItem.PROP_ITEM_COUNT), "quantity");
+			projections.add(Projections.sum("item." + TicketItem.PROP_TOTAL_AMOUNT_WITHOUT_MODIFIERS), "grossTotal");
+			projections.add(Projections.sum("item." + TicketItem.PROP_DISCOUNT_AMOUNT), "discount");
+			projections.add(Projections.sum("item." + TicketItem.PROP_TAX_AMOUNT_WITHOUT_MODIFIERS), "taxTotal");
+			projections.add(Projections.sum("item." + TicketItem.PROP_SUBTOTAL_AMOUNT_WITHOUT_MODIFIERS), "total");
 
-			HashMap<String, ReportItem> itemMap = new HashMap<String, ReportItem>();
-			HashMap<String, ReportItem> modifierMap = new HashMap<String, ReportItem>();
+			criteria.setProjection(projections);
+			criteria.setResultTransformer(Transformers.aliasToBean(ReportItem.class));
 
-			String key = null;
-			for (TicketItem ticketItem : list) {
+			List<ReportItem> itemList = criteria.list();
 
-				if (ticketItem.getItemId() == null) {
-					key = ticketItem.getName();
-				}
-				else {
-					key = ticketItem.getItemId().toString();
-				}
-				key += "-" + ticketItem.getName() + ticketItem.getUnitPrice() + ticketItem.getTaxRate(); //$NON-NLS-1$
+			itemReportModel = new SalesReportModel();
+			itemReportModel.setItems(itemList);
+			itemReportModel.calculateTotalQuantity();
+			itemReportModel.calculateDiscountTotal();
+			itemReportModel.calculateGrossTotal();
+			itemReportModel.calculateTaxTotal();
+			itemReportModel.calculateGrandTotal();
+			itemReportModel.calculateTotal();
 
-				ReportItem reportItem = itemMap.get(key);
+			// Repeat the same process for modifiers
+			Criteria modifierCriteria = session.createCriteria(TicketItemModifier.class, "modifier");
+			modifierCriteria.createCriteria("ticketItem", "item");
+			modifierCriteria.createCriteria("item.ticket", "t");
 
-				if (reportItem == null) {
-					reportItem = new ReportItem();
-					reportItem.setId(key);
-					reportItem.setUniqueId(ticketItem.getItemId().toString());
-					reportItem.setPrice(ticketItem.getUnitPrice());
-					reportItem.setName(ticketItem.getName());
-					reportItem.setTaxRate(ticketItem.getTaxRate());
-
-					itemMap.put(key, reportItem);
-				}
-
-				//set the quantity
-				if (ticketItem.isFractionalUnit()) {
-					reportItem.setQuantity(ticketItem.getItemQuantity() + reportItem.getQuantity());
-				}
-				else {
-					reportItem.setQuantity(ticketItem.getItemCount() + reportItem.getQuantity());
-				}
-
-				//reportItem.setQuantity(ticketItem.getItemCount() + reportItem.getQuantity());
-
-				reportItem.setGrossTotal(reportItem.getGrossTotal() + ticketItem.getTotalAmountWithoutModifiers());
-				reportItem.setDiscount(reportItem.getDiscount() + ticketItem.getDiscountAmount());
-				reportItem.setTaxTotal(reportItem.getTaxTotal() + ticketItem.getTaxAmountWithoutModifiers());
-				reportItem.setTotal(reportItem.getTotal() + ticketItem.getSubtotalAmountWithoutModifiers());
-
-				List<TicketItemModifier> modifiers = ticketItem.getTicketItemModifiers();
-				if (modifiers != null) {
-					for (TicketItemModifier modifier : modifiers) {
-						if (modifier.getUnitPrice() == 0 && !isIncludedFreeItems()) {
-							continue;
-						}
-
-						if (modifier.getModifierId() == null) {
-							key = modifier.getName();
-						}
-						else {
-							key = modifier.getModifierId().toString();
-						}
-						key += "-" + modifier.getName() + modifier.getModifierType() + "-" + modifier.getUnitPrice() + modifier.getTaxRate(); //$NON-NLS-1$ //$NON-NLS-2$
-
-						ReportItem modifierReportItem = modifierMap.get(key);
-						if (modifierReportItem == null) {
-							modifierReportItem = new ReportItem();
-							modifierReportItem.setId(key);
-							modifierReportItem.setUniqueId(modifier.getModifierId().toString());
-
-							modifierReportItem.setPrice(modifier.getUnitPrice());
-							modifierReportItem.setName(modifier.getName());
-							modifierReportItem.setTaxRate(modifier.getTaxRate());
-
-							modifierMap.put(key, modifierReportItem);
-						}
-						modifierReportItem.setQuantity(modifierReportItem.getQuantity() + modifier.getItemCount() * ticketItem.getItemCount());
-						modifierReportItem.setGrossTotal(modifierReportItem.getGrossTotal() + modifier.getTotalAmount());
-						modifierReportItem.setTaxTotal(modifierReportItem.getTaxTotal() + modifier.getTaxAmount());
-						modifierReportItem.setTotal(modifierReportItem.getTotal() + modifier.getSubTotalAmount());
-					}
-				}
+			if (!isIncludedFreeItems()) {
+				modifierCriteria.add(Restrictions.ne("modifier." + TicketItemModifier.PROP_UNIT_PRICE, 0.0));
 			}
+			modifierCriteria.add(Restrictions.ge("t." + Ticket.PROP_CREATE_DATE, date1));
+			modifierCriteria.add(Restrictions.le("t." + Ticket.PROP_CREATE_DATE, date2));
+			modifierCriteria.add(Restrictions.eq("t." + Ticket.PROP_PAID, Boolean.TRUE));
+			modifierCriteria.add(Restrictions.eq("t." + Ticket.PROP_VOIDED, Boolean.FALSE));
+			modifierCriteria.add(Restrictions.eq("t." + Ticket.PROP_REFUNDED, Boolean.FALSE));
+			modifierCriteria.add(Restrictions.eq("t." + Ticket.PROP_CLOSED, Boolean.TRUE));
+			modifierCriteria.addOrder(Order.asc("modifier." + TicketItemModifier.PROP_NAME));
 
+			ProjectionList modifierProjections = Projections.projectionList();
+			modifierProjections.add(Projections.groupProperty("modifier." + TicketItemModifier.PROP_MODIFIER_ID), "uniqueId");
+			modifierProjections.add(Projections.groupProperty("modifier." + TicketItemModifier.PROP_NAME), "name");
+			modifierProjections.add(Projections.groupProperty("modifier." + TicketItemModifier.PROP_UNIT_PRICE), "price");
+			modifierProjections.add(Projections.groupProperty("modifier." + TicketItemModifier.PROP_TAX_RATE), "taxRate");
+			modifierProjections.add(Projections.sum("modifier." + TicketItemModifier.PROP_ITEM_COUNT), "quantity");
+			modifierProjections.add(Projections.sum("modifier." + TicketItemModifier.PROP_TOTAL_AMOUNT), "grossTotal");
+			modifierProjections.add(Projections.sum("modifier." + TicketItemModifier.PROP_TAX_AMOUNT), "taxTotal");
+			modifierProjections.add(Projections.sum("modifier." + TicketItemModifier.PROP_SUB_TOTAL_AMOUNT), "total");
 
-		itemReportModel = new SalesReportModel();
+			modifierCriteria.setProjection(modifierProjections);
+			modifierCriteria.setResultTransformer(Transformers.aliasToBean(ReportItem.class));
 
-		List<ReportItem> itemList = new ArrayList<ReportItem>(itemMap.values());
-		Collections.sort(itemList, new Comparator<ReportItem>() {
+			List<ReportItem> modifierList = modifierCriteria.list();
 
-			public int compare(ReportItem o1, ReportItem o2) {
-				return Integer.parseInt(o1.getUniqueId()) - Integer.parseInt(o2.getUniqueId());
+			modifierReportModel = new SalesReportModel();
+			modifierReportModel.setItems(modifierList);
+			modifierReportModel.calculateTotalQuantity();
+			modifierReportModel.calculateGrossTotal();
+			modifierReportModel.calculateTaxTotal();
+			modifierReportModel.calculateGrandTotal();
+			modifierReportModel.calculateTotal();
+		} finally {
+			if (session != null) {
+				session.close();
 			}
-		});
-
-		itemReportModel.setItems(itemList);
-		itemReportModel.calculateTotalQuantity();
-		itemReportModel.calculateDiscountTotal();
-		itemReportModel.calculateGrossTotal();
-		itemReportModel.calculateTaxTotal();
-		itemReportModel.calculateGrandTotal();
-		itemReportModel.calculateTotal();
-
-		modifierReportModel = new SalesReportModel();
-
-		List<ReportItem> modifierList = new ArrayList<ReportItem>(modifierMap.values());
-		Collections.sort(modifierList, new Comparator<ReportItem>() {
-
-			public int compare(ReportItem o1, ReportItem o2) {
-				return Integer.parseInt(o1.getUniqueId()) - Integer.parseInt(o2.getUniqueId());
-			}
-		});
-		modifierReportModel.setItems(modifierList);
-		modifierReportModel.calculateTotalQuantity();
-		modifierReportModel.calculateGrossTotal();
-		modifierReportModel.calculateTaxTotal();
-		modifierReportModel.calculateGrandTotal();
-		modifierReportModel.calculateTotal();
+		}
 	}
+
+
 }

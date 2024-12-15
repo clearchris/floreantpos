@@ -109,8 +109,7 @@ public class ReportItem {
 		return uniqueId;
 	}
 
-	public void setUniqueId(String uniqueId) {
-		this.uniqueId = uniqueId;
+	public void setUniqueId(Integer uniqueId) {
+		this.uniqueId = String.valueOf(uniqueId);
 	}
-
 }

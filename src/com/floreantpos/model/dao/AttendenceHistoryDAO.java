@@ -25,6 +25,8 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import com.floreantpos.Messages;
@@ -37,6 +39,7 @@ import com.floreantpos.model.User;
 import com.floreantpos.model.UserType;
 import com.floreantpos.report.AttendanceReportData;
 import com.floreantpos.report.PayrollReportData;
+import org.hibernate.transform.Transformers;
 
 public class AttendenceHistoryDAO extends BaseAttendenceHistoryDAO {
 
@@ -148,9 +151,6 @@ public class AttendenceHistoryDAO extends BaseAttendenceHistoryDAO {
 
 	public List<PayrollReportData> findPayroll(Date from, Date to) {
 		Session session = null;
-
-		ArrayList<PayrollReportData> list = new ArrayList<PayrollReportData>();
-
 		try {
 			session = getSession();
 			Criteria criteria = session.createCriteria(AttendenceHistory.class);
@@ -158,29 +158,32 @@ public class AttendenceHistoryDAO extends BaseAttendenceHistoryDAO {
 			criteria.add(Restrictions.le(AttendenceHistory.PROP_CLOCK_OUT_TIME, to));
 			criteria.addOrder(Order.asc(AttendenceHistory.PROP_USER));
 			criteria.addOrder(Order.asc(AttendenceHistory.PROP_CLOCK_IN_TIME));
-			List list2 = criteria.list();
 
-			for (Iterator iterator = list2.iterator(); iterator.hasNext();) {
-				AttendenceHistory history = (AttendenceHistory) iterator.next();
-				PayrollReportData data = new PayrollReportData();
-				data.setFrom(history.getClockInTime());
-				data.setTo(history.getClockOutTime());
-				data.setDate(history.getClockInTime());
-				data.setUser(history.getUser());
+			ProjectionList projections = Projections.projectionList();
+			projections.add(Projections.property(AttendenceHistory.PROP_CLOCK_IN_TIME), "from");
+			projections.add(Projections.property(AttendenceHistory.PROP_CLOCK_OUT_TIME), "to");
+			projections.add(Projections.property(AttendenceHistory.PROP_CLOCK_IN_TIME), "date");
+			projections.add(Projections.property(AttendenceHistory.PROP_USER), "user");
+
+			criteria.setProjection(projections);
+			criteria.setResultTransformer(Transformers.aliasToBean(PayrollReportData.class));
+
+			List<PayrollReportData> payrollDataList = criteria.list();
+			for (PayrollReportData data : payrollDataList) {
 				data.calculate();
-
-				list.add(data);
 			}
 
-			return list;
+			return payrollDataList;
 		} catch (Exception e) {
-			throw new PosException(Messages.getString("AttendenceHistoryDAO.6"), e); //$NON-NLS-1$
+			throw new PosException(Messages.getString("AttendenceHistoryDAO.6"), e);
 		} finally {
 			if (session != null) {
 				session.close();
 			}
 		}
 	}
+
+
 
 	public List<AttendanceReportData> findAttendance(Date from, Date to, User user) {
 		Session session = null;
